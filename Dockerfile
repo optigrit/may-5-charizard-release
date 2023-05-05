@@ -1,6 +1,6 @@
 FROM node:16 as build
 
-WORKDIR /app
+WORKDIR /
 COPY . .
 RUN npm install
 RUN npm run build
