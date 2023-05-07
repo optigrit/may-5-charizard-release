@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box } from "@mui/system";
 import SideBarResponsive from "../../components/SideBarResponsive/index";
 // import Carousel1 from '../../components/Carousel/index';
-import WeekTopPerformers from "../../components/Week top perfomers/index";
+import WeekTopPerformers from "../../components/WeekTopPerfomers/index";
 import ContestContainer from "../../components/CodingContests/ContestHome/ContestContainer";
 import RankingContainer from "../../components/Ranking/RankingContainer";
 import Carousel1 from "../../components/CarouselForBanner";
@@ -102,7 +102,7 @@ const ContestHome = () => {
   const getRanks = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_URL}main/globalrankings/dev`,
+        `${process.env.REACT_APP_URL}globalrankings/DEV`,
         config
       );
       setRankings(res.data);
@@ -202,10 +202,10 @@ const ContestHome = () => {
               <RankingContainer title="Global Ranking" rankings={rankings} />
             </Grid>
 
-            <RankingContainer
+            {/* <RankingContainer
               title="Global Ranking for testers"
               rankings={rankings}
-            />
+            /> */}
           </Grid>
         </Grid>
       </Box>

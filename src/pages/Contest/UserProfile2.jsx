@@ -21,12 +21,12 @@ import dayjs from "dayjs";
 import { manipulateuserdata } from "../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
 import { useNavigate } from "react-router-dom";
-import UserInformation from "../../components/Userprofile components/UserInformation";
-import PersonalInformation from "../../components/Userprofile components/PersonalInformation";
-import ProfessionalInformation from "../../components/Userprofile components/ProfessionalInformation";
-import AdditionalInformation from "../../components/Userprofile components/AdditionalInformation";
-import HeatMap from "../../components/Userprofile components/HeatMap";
-import ChartsComponent from "../../components/Userprofile components/ChartsComponent";
+import UserInformation from "../../components/UserprofileComponents/UserInformation";
+import PersonalInformation from "../../components/UserprofileComponents/PersonalInformation";
+import ProfessionalInformation from "../../components/UserprofileComponents/ProfessionalInformation";
+import AdditionalInformation from "../../components/UserprofileComponents/AdditionalInformation";
+import HeatMap from "../../components/UserprofileComponents/HeatMap";
+import ChartsComponent from "../../components/UserprofileComponents/ChartsComponent";
 import CircleIcon from "@mui/icons-material/Circle";
 import { Circle } from "@mui/icons-material";
 

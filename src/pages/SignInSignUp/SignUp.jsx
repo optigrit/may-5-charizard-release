@@ -9,6 +9,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
+import { LoadingButton } from '@mui/lab';
 import axios from "axios";
 import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -36,6 +37,7 @@ function SignUp() {
     mobile: "",
     password: "",
   });
+  const [loader, setLoader] = useState(false);
 
   const lastNameRef = useRef(null);
   const userNameRef = useRef(null);
@@ -67,6 +69,7 @@ function SignUp() {
   };
 
   const SignUpApi = async () => {
+    setLoader(true)
     try {
       const { data } = await axios.post(
         `${process.env.REACT_APP_URL}signup`,
@@ -74,10 +77,12 @@ function SignUp() {
       );
       setMessage(data?.message);
       setOpen(true);
+      setLoader(false)
       handlealert("Sign up successfully now sign in", "success");
       Navigate("/sign-in", { replace: true });
     } catch (err) {
-      handlealert("This email is already in use try signing in", "error");
+      setLoader(false)
+      handlealert(err.response?.data, "error");
     }
   };
 
@@ -344,14 +349,15 @@ function SignUp() {
                 }}
               />
             </Box> */}
-            <Button
+            <LoadingButton
               variant="contained"
               fullWidth
               sx={{ fontWeight: "400" }}
               onClick={() => SignUpApi()}
+              loading={loader}
             >
               Sign Up
-            </Button>
+            </LoadingButton>
             {/* <Grid
               item
               xs={12}
@@ -420,7 +426,8 @@ function SignUp() {
             p: "16px",
             backgroundColor: "#EBEFFF",
             height: { xs: "400px", md: "100vh" },
-            fontSize: "55px"
+            fontSize: "55px",
+            fontFamily: "Light",
           }}
           display="flex"
           alignItems={"center"}

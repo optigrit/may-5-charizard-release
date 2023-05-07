@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
+import { LoadingButton } from '@mui/lab';
 import axios from "axios";
 import React, { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
@@ -27,10 +28,15 @@ const SignIn = () => {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+
+  const [loader, setLoader] = useState(false);
   
   const passwordRef = useRef(null);
 
   const dispatch = useDispatch();
+
+  // Regex for validating the Email Address 
+  const validEmailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   const handlealert = (text, type) => {
     dispatch(
@@ -48,29 +54,39 @@ const SignIn = () => {
 
   const LoginApi = async (e) => {
     // e.preventDefault();
+    setLoader(true)
     try {
       const { data } = await axios.post(
         `${process.env.REACT_APP_URL}signin`,
         userData
       );
       localStorage.setItem("Token", data?.token);
-      localStorage.setItem("Username", data?.username);
+      // localStorage.setItem("Username", data?.username);
       // dispatch(manipulateuserdata(ADD_USER_DATA,data?.username))
       if (data.msg === "Incorrect Password") {
+        setLoader(false)
         handlealert(data?.msg, "error");
       } else if (data.msg === "please verify by the link you get in mail") {
+        setLoader(false)
         handlealert(data?.msg, "error");
       } else if (data?.msg === "please signUp first") {
+        setLoader(false)
         handlealert(
           "This email hasn't been registered try signing up",
           "error"
         );
       } else {
+        setLoader(false)
         handlealert(data?.msg, "success");
         navigate("/", { replace: true });
       }
     } catch (err) {
-      handlealert(err, "error");
+      setLoader(false)
+      if(!(userData.email.match(validEmailRegex))){
+        handlealert("Invalid Email", "error")
+      }else {
+        handlealert(err.message, "error")
+      }
     }
   };
 
@@ -248,14 +264,15 @@ const SignIn = () => {
                   Forgot Password
                 </Button>
               </Grid>
-              <Button
+              <LoadingButton
                 variant="contained"
                 fullWidth
                 sx={{ fontWeight: "400" }}
                 onClick={() => LoginApi()}
+                loading={loader}
               >
                 Sign in
-              </Button>
+              </LoadingButton>
               {/* <Grid
                 item
                 xs={12}
@@ -328,7 +345,8 @@ const SignIn = () => {
               p: "16px",
               backgroundColor: "#EBEFFF",
               height: { xs: "400px", md: "100vh" },
-              fontSize: '55px'
+              fontSize: '55px',
+              fontFamily: 'Light'
             }}
             display="flex"
             alignItems={"center"}

@@ -2,7 +2,7 @@ import React, { useState, useEffect, memo, useMemo } from "react";
 import { Box } from "@mui/system";
 import SideBarResponsive from "../../components/SideBarResponsive/index";
 import ContestBanner from "../../components/Banner/ContestBanner";
-import ScorableProblems from "../../components/CodingContests/ContestDetailPage/Scorable problems/ScorableProblems";
+import ScorableProblems from "../../components/CodingContests/ContestDetailPage/ScorableProblems/ScorableProblems";
 import Announcements from "../../components/CodingContests/ContestDetailPage/announcements/Announcements";
 import RecruiterSponsor from "../../components/CodingContests/ContestDetailPage/RecruiterSponsor/RecruiterSponsor";
 import RulesRegulations from "../../components/CodingContests/ContestDetailPage/rulesRegulations/RulesRegulations";

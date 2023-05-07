@@ -1,39 +1,41 @@
 .App {
   text-align: left;
 }
-* {
+*{
   padding: 0px;
   margin: 0px;
 }
-.react-multi-carousel-item {
-  width: auto !important;
+.react-multi-carousel-item{
+  width: auto!important;
 }
-::-webkit-scrollbar {
-  scroll-behavior: smooth;
+::-webkit-scrollbar{
+  scroll-behavior:smooth;
   display: none;
 }
-.css-b55bz9-MuiAccordionDetails-root {
-  padding-bottom: 4px !important;
+.css-b55bz9-MuiAccordionDetails-root{
+  padding-bottom: 4px!important;
 }
 .css-1ktfkqf-MuiPaper-root-MuiAccordion-root:before {
-  background-color: none !important;
-  height: 0px !important;
+  background-color: none!important;
+  height: 0px!important;
 }
 .css-1ktfkqf-MuiPaper-root-MuiAccordion-root.Mui-expanded {
-  margin: 0px !important;
+  margin:0px!important;
 }
 .css-rfc7yz-MuiButtonBase-root-MuiAccordionSummary-root.Mui-expanded {
-  min-height: 0px !important;
+  min-height: 0px!important;
 }
 .css-o4b71y-MuiAccordionSummary-content.Mui-expanded {
-  margin: 0px !important;
+  margin: 0px!important;
 }
-.css-8lmqg5-MuiButtonBase-root-MuiAccordionSummary-root.Mui-expanded {
-  min-height: 0px !important;
+.css-8lmqg5-MuiButtonBase-root-MuiAccordionSummary-root.Mui-expanded{
+  min-height: 0px!important;
+
 }
-.css-1nwevky-MuiPaper-root-MuiAccordion-root.Mui-expanded {
-  margin: 0px !important;
+.css-1nwevky-MuiPaper-root-MuiAccordion-root.Mui-expanded{
+  margin: 0px!important;
 }
+
 
 .player-wrapper {
   position: relative;
@@ -48,32 +50,42 @@
 
 .css-18rllz0-MuiButtonBase-root-MuiTab-root.Mui-selected {
   background-color: white;
-  color: #000000;
+  color : #000000
 }
+
+
+
+
 
 @media (max-width: 1200px) {
-  .css-nmb2eu-MuiButtonBase-root-MuiPaginationItem-root {
-    margin: 0 !important;
-  }
+  .css-nmb2eu-MuiButtonBase-root-MuiPaginationItem-root{
+    margin: 0!important;  }
 }
-.css-1q3630s-MuiButtonBase-root-MuiAccordionSummary-root.Mui-expanded {
-  min-height: 48px !important;
-  padding: 8px 0px !important;
+.css-1q3630s-MuiButtonBase-root-MuiAccordionSummary-root.Mui-expanded{
+  min-height: 48px!important;
+  padding: 8px 0px!important;
 }
 .css-1hxgtjz-MuiPaper-root-MuiAccordion-root:first-of-type {
-  border-top-left-radius: 0px !important;
-  border-top-right-radius: 0px !important;
+  border-top-left-radius: 0px!important;
+  border-top-right-radius: 0px!important;
 }
 .css-8qi110-MuiPaper-root-MuiAccordion-root:last-of-type {
-  border-bottom-left-radius: 0px !important;
-  border-bottom-right-radius: 0px !important;
+  border-bottom-left-radius: 0px!important;
+  border-bottom-right-radius: 0px!important;
 }
 
-.css-uvpc2p-MuiPaper-root-MuiAccordion-root:before {
-  height: 0px !important;
+.css-uvpc2p-MuiPaper-root-MuiAccordion-root:before{
+  height: 0px!important;
+
 }
-.css-o4b71y-MuiAccordionSummary-content {
-  margin: 8px 0px !important;
+.css-o4b71y-MuiAccordionSummary-content{
+  margin: 8px 0px!important;
+}
+
+@font-face {
+  font-family: "Light";   /*Can be any text*/
+  src: local("bodoni"),
+    url("./fonts/bodoni.ttf") format("truetype");
 }
 
 /* 
