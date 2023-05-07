@@ -1,8 +1,10 @@
+# Stage 0 - Build Frontend Assets
 FROM node:16 as build
 
-WORKDIR /usr/app
-COPY ./ /usr/app
+WORKDIR /app
+COPY package*.json ./
 RUN npm install
+COPY . .
 RUN npm run build
 
 # Stage 1 - Serve Frontend Assets
