@@ -12,6 +12,7 @@ import {
   REMOVE_ITEM_FROM_WISHLIST,
 } from "../../Redux/AddToWishlist/Wishlist-Constants";
 import bannerImage from "../../assets/CourseImages/SideBanner.png";
+import { coursesAPI } from "../../api/requests/coursesApi";
 
 const WishList = () => {
   const drawerWidth = 240;
@@ -22,34 +23,20 @@ const WishList = () => {
     (state) => state.WishlistReducer.wishlistItems
   );
   const dispatch = useDispatch();
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `bearer ${Token}`,
-    },
-  };
 
   const handleRemoveWishlist = async (item) => {
-    await axios
-      .delete(`${process.env.REACT_APP_URL}course/stage/${item.id}`, config)
-      .then((res) => {
+      await coursesAPI.removeFromWishList(item.id)
+      .then((res)=>{
         dispatch(manipulateWishList(REMOVE_ITEM_FROM_WISHLIST, item?.id));
       })
-      .catch((err) => {
-      });
+      .catch((err)=>{})
   };
   const handleMoveToCart = (item) => {
     dispatch(manipulateWishList(REMOVE_ITEM_FROM_WISHLIST, item?.id));
     addCourseTocart(item);
   };
   const addCourseTocart = async (item) => {
-    await axios
-      .post(
-        `${process.env.REACT_APP_URL}course/stage/${item?.id}`,
-        { stage: "CART" },
-        config
-      )
+    await coursesAPI.addCourseToWishListOrCart("CART", item.id)
       .then((res) => {
         getCourseFromCart();
       })
@@ -57,10 +44,9 @@ const WishList = () => {
   };
 
   const getCourseFromCart = async () => {
-    await axios
-      .get(`${process.env.REACT_APP_URL}courses/stage/CART`, config)
+    await coursesAPI.getCourses("CART")
       .then((res) => {
-        res.data.map((item) => {
+        res.map((item) => {
           if (
             CartLength?.filter((cartItems) => cartItems.id === item.id).length
           ) {
@@ -73,8 +59,7 @@ const WishList = () => {
   };
 
   const handleRemoveItem = async (item) => {
-    await axios
-      .delete(`${process.env.REACT_APP_URL}course/stage/${item?.id}`, config)
+    await coursesAPI.removeCourseFromCart(item.id)
       .then((res) => {
         dispatch(manipulateCart(REMOVE_ITEM, item?.id));
       })
@@ -88,12 +73,7 @@ const WishList = () => {
   };
 
   const addCourseToWishlistApi = async (item) => {
-    await axios
-      .post(
-        `${process.env.REACT_APP_URL}course/stage/${item?.id}`,
-        { stage: "WISHLIST" },
-        config
-      )
+    await coursesAPI.addCourseToWishListOrCart("WISHLIST", item.id)
       .then((res) => {
         getAllWishlistCourses();
       })
@@ -101,10 +81,9 @@ const WishList = () => {
   };
 
   const getAllWishlistCourses = async () => {
-    await axios
-      .get(`${process.env.REACT_APP_URL}courses/stage/WISHLIST`, config)
+    await coursesAPI.getCourses("WISHLIST")
       .then((res) => {
-        res?.data?.map((item) => {
+        res?.map((item) => {
           if (
             WishlistItems?.filter(
               (wishlistItem) => wishlistItem?.id === item.id

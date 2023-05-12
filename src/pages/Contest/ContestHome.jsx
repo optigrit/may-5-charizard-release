@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/system";
-import SideBarResponsive from "../../components/SideBarResponsive/index";
-// import Carousel1 from '../../components/Carousel/index';
-import WeekTopPerformers from "../../components/WeekTopPerfomers/index";
 import ContestContainer from "../../components/CodingContests/ContestHome/ContestContainer";
 import RankingContainer from "../../components/Ranking/RankingContainer";
 import Carousel1 from "../../components/CarouselForBanner";
-import axios from "axios";
-import { Fab, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import Image1 from "./Images/Banner1.png";
 import Image2 from "./Images/BannerContestPageSecond.png";
-import MenuIcon from "@mui/icons-material/Menu";
+import { contestAPI } from "../../api/requests/contestAPI";
 
 const BannerData = [Image1];
 const BannerData2 = [Image2];
@@ -69,53 +65,35 @@ const topPerformers = [
 
 const ContestHome = () => {
   useEffect(() => {
-    getContest();
+    getContests();
   }, []);
 
   const [Contests, setContests] = useState([]);
 
   const [togglemenu, setTogglemenu] = useState(false);
-  console.log(togglemenu, "togglemenu");
 
-  const Token = localStorage.getItem("Token");
 
-  const config = {
-    headers: { Authorization: `bearer ${Token}` },
-  };
-
-  const getContest = async () => {
+  const getContests = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_URL}contest`,
-        config
-      );
-      if (res.data !== "no upcoming contests for now") {
-        setContests(res.data);
+      const data = await contestAPI.getContests()
+      if (data !== "no upcoming contests for now") {
+        setContests(data);
       }
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const [rankings, setRankings] = useState([]);
 
   const getRanks = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_URL}globalrankings/DEV`,
-        config
-      );
-      setRankings(res.data);
-    } catch (err) {
-      console.log(err);
-    }
+      const res = await contestAPI.getGlobalRanks(1)
+      setRankings(Object.keys(res).length === 0 ? [] : []);
+    } catch (err) {}
   };
-
   useEffect(() => {
     getRanks();
   }, []);
 
-  // 3,45,600
   var presentContests = [];
   var upcomingContests = [];
   var d = Math.floor(Date.now() / 1000);

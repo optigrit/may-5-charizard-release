@@ -25,10 +25,7 @@ import UserInformation from "../../components/UserprofileComponents/UserInformat
 import PersonalInformation from "../../components/UserprofileComponents/PersonalInformation";
 import ProfessionalInformation from "../../components/UserprofileComponents/ProfessionalInformation";
 import AdditionalInformation from "../../components/UserprofileComponents/AdditionalInformation";
-import HeatMap from "../../components/UserprofileComponents/HeatMap";
-import ChartsComponent from "../../components/UserprofileComponents/ChartsComponent";
-import CircleIcon from "@mui/icons-material/Circle";
-import { Circle } from "@mui/icons-material";
+import { contestAPI } from "../../api/requests/contestAPI";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -95,8 +92,8 @@ const UserProfile2 = () => {
   const [username, setUsername] = useState(null);
   const [isUserProfileInProduct, setIsUserProfileInProduct] = useState(true);
   const [courses, setCourses] = useState();
-  const [companyName, setCompanyName] = useState(null)
-  const [position, setPosition] = useState(null)
+  const [companyName, setCompanyName] = useState(null);
+  const [position, setPosition] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -160,18 +157,15 @@ const UserProfile2 = () => {
 
   const getContests = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_URL}user/contests/0`,
-        config
-      );
-      setContests(res.data);
+      const data = await contestAPI.getContests();
+      setContests(data);
     } catch (err) {}
   };
 
   const getCourses = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_URL}user/courses`,
+        `${process.env.REACT_APP_URL}user/courses/0`,
         config
       );
       setCourses(res.data);
@@ -267,8 +261,8 @@ const UserProfile2 = () => {
     setAddress(profile?.address);
     setProfilePhotoLink(profile?.profilePhotoLink);
     setResume(profile?.resumeLink);
-    setCompanyName(profile?.companyName)
-    setPosition(profile?.position)
+    setCompanyName(profile?.companyName);
+    setPosition(profile?.position);
   }, [profile]);
 
   useEffect(() => {
@@ -359,7 +353,7 @@ const UserProfile2 = () => {
               aria-label="tabs"
               variant={"scrollable"}
               allowScrollButtonsMobile
-              tabItemContainerStyle={{position: "fixed", bottom:"0"}}
+              tabItemContainerStyle={{ position: "fixed", bottom: "0" }}
               scrollButtons="auto"
               sx={{
                 md: { size: "small" },
@@ -525,7 +519,7 @@ const UserProfile2 = () => {
               position={position}
               setPosition={setPosition}
             />
-          </TabPanel> 
+          </TabPanel>
           <TabPanel value={value} index={3}>
             <AdditionalInformation
               resume={resume}

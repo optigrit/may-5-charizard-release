@@ -238,7 +238,6 @@ const Coursevideo = () => {
     }
 
     prevOpen.current = openMenu;
-    console.log(openMenu, "openMenu");
   }, [openMenu]);
 
   const handleProgress = (state) => {
@@ -278,9 +277,7 @@ const Coursevideo = () => {
         config
       );
       return data;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   const updateState = (data) => {
     setStage(data.data.courseStage);
@@ -301,9 +298,7 @@ const Coursevideo = () => {
         },
         config
       );
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
   const getuserprogress = async () => {
     try {
@@ -312,9 +307,7 @@ const Coursevideo = () => {
         config
       );
       return data;
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   useEffect(() => {
@@ -391,9 +384,7 @@ const Coursevideo = () => {
       );
       setComments(data.commentsData);
       setTotalcomments(parseInt(data.commentsCount));
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const userinfo = async () => {
@@ -403,9 +394,7 @@ const Coursevideo = () => {
         config
       );
       setCurrentuser(data);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const addcomments = async () => {
@@ -421,10 +410,7 @@ const Coursevideo = () => {
       setTotalcomments((a) => a + 1);
       comments.unshift(data[0]);
       setComments([...comments]);
-    } catch (err) {
-      console.log(err);
-    }
-    console.log("start end");
+    } catch (err) {}
   };
 
   useEffect(() => {
@@ -439,9 +425,7 @@ const Coursevideo = () => {
         { newComment: editcom, commentId: Id },
         config
       );
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const deletecomments = async (i) => {
@@ -453,9 +437,7 @@ const Coursevideo = () => {
       comments.splice(i, 1);
       setTotalcomments((a) => a - 1);
       setComments([...comments]);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const givelikes = async (Id, isDisliked, i) => {
@@ -475,9 +457,7 @@ const Coursevideo = () => {
         comments[i].isLiked = { id: Id };
       }
       setComments([...comments]);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const givedislike = async (Id, isLikes, i) => {
@@ -497,9 +477,7 @@ const Coursevideo = () => {
         comments[i].isDisLiked = { id: Id };
       }
       setComments([...comments]);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const removelike = async (Id, i) => {
@@ -512,9 +490,7 @@ const Coursevideo = () => {
       comments[i].likes = comments[i].likes - 1;
       comments[i].isLiked = null;
       setComments([...comments]);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
   const removedislike = async (Id, i) => {
     try {
@@ -526,9 +502,7 @@ const Coursevideo = () => {
       comments[i].dislikes = comments[i].dislikes - 1;
       comments[i].isDisLiked = null;
       setComments([...comments]);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
   const handleLike = (Id, isLikes, isDisliked, i) => {
     setLike(!like);
@@ -558,9 +532,7 @@ const Coursevideo = () => {
         config
       );
       return data;
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const givereplylikes = async (Id, isDisliked, i) => {
@@ -580,9 +552,7 @@ const Coursevideo = () => {
         reeply[i].isLiked = { id: Id };
       }
       setReeply([...reeply]);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
   const givereplydislikes = async (Id, isLiked, i) => {
     try {
@@ -601,9 +571,7 @@ const Coursevideo = () => {
         reeply[i].isDisLiked = { id: Id };
       }
       setReeply([...reeply]);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
   const removereplylikes = async (Id, i) => {
     try {
@@ -615,9 +583,7 @@ const Coursevideo = () => {
       reeply[i].likes = reeply[i].likes - 1;
       reeply[i].isLiked = null;
       setReeply([...reeply]);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
   const removereplydislikes = async (Id, i) => {
     try {
@@ -629,9 +595,7 @@ const Coursevideo = () => {
       reeply[i].dislikes = reeply[i].dislikes - 1;
       reeply[i].isDisLiked = null;
       setReeply([...reeply]);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const handleRlike = (Id, isLiked, isDisliked, ii) => {
@@ -687,9 +651,7 @@ const Coursevideo = () => {
         config
       );
       handlealert("report submitted", "success");
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const addreply = async (Id) => {
@@ -705,9 +667,7 @@ const Coursevideo = () => {
       setTotalreplies(totalreplies + 1);
       reeply.unshift(data[0]);
       setReeply([...reeply]);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
   const handleReply = async (Id) => {
     setRid(Id);
@@ -911,7 +871,8 @@ const Coursevideo = () => {
                       textTransform: { xs: "capitalize", sm: "uppercase" },
                     }}
                     onClick={() => {
-                        buycourse();setBuy(true)
+                      buycourse();
+                      setBuy(true);
                     }}
                   >
                     Buy Now
@@ -1003,7 +964,7 @@ const Coursevideo = () => {
             )}
             {buy && (
               <>
-                <Box sx={{ width: "100%" }}>
+                <Box sx={{ width: "100%",}}>
                   <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     <Tabs
                       value={value}
@@ -1153,227 +1114,342 @@ const Coursevideo = () => {
                         </Button>
                       </Grid>
                     </Grid>
-                    <Grid item xs={12}    sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "1rem",mt:"16px"
-                        }}>
-                  
-                        {comments?.map((values, i) => (
-                          <Box sx={{ display: "flex", gap: "1rem" }}>
-                            <Avatar
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "1rem",
+                        mt: "16px",
+                      }}
+                    >
+                      {comments?.map((values, i) => (
+                        <Box sx={{ display: "flex", gap: "1rem" }}>
+                          <Avatar
+                            sx={{
+                              width: { xs: 32, md: 42 },
+                              height: { xs: 32, md: 42 },
+                              alignItems: "center",
+                              fontSize: { xs: "16px", md: "20px" },
+                              textTransform: "uppercase",
+                            }}
+                            alt={values.userData?.username}
+                            src={values.userData?.profilePhotoLink}
+                          >
+                            {values.userData?.username.charAt(0)}
+                          </Avatar>
+                          <Stack
+                            direction="column"
+                            spacing={1}
+                            sx={{ width: "100%" }}
+                          >
+                            <Box
                               sx={{
-                                width: { xs: 32, md: 42 },
-                                height: { xs: 32, md: 42 },
+                                display: "flex",
+                                justifyContent: "space-between",
+                                width: "100%",
                                 alignItems: "center",
-                                fontSize: { xs: "16px", md: "20px" },
-                                textTransform: "uppercase",
                               }}
-                              alt={values.userData?.username}
-                              src={values.userData?.profilePhotoLink}
                             >
-                              {values.userData?.username.charAt(0)}
-                            </Avatar>
+                              <Stack direction="row" spacing={0.5}>
+                                <Typography
+                                  sx={{
+                                    fontSize: "13px",
+                                    fontWeight: "bold",
+                                    color: "#292929",
+                                  }}
+                                >
+                                  {values.userData?.firstName}{" "}
+                                  {values.userData?.lastName}
+                                </Typography>
+                                <Typography
+                                  sx={{
+                                    fontSize: "12px",
+                                    fontWeight: "400",
+                                    color: "#A0A0A0",
+                                  }}
+                                >
+                                  {moment(values.created_at).fromNow()}
+                                </Typography>
+                              </Stack>
+                              <Box sx={{ position: "relative" }}>
+                                <MoreVertIcon
+                                  sx={{ cursor: "pointer" }}
+                                  onClick={() => {
+                                    handleDot(values.id, i);
+                                  }}
+                                />
+                                {dot && values.id === Id && (
+                                  <Paper
+                                    elevation={1}
+                                    select
+                                    sx={{
+                                      width: "130px",
+                                      padding: "8px 0px 8px 0px",
+                                      alignItems: "center",
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      position: "absolute",
+                                      right: "1rem",
+                                      textAlign: "left",
+                                    }}
+                                  >
+                                    <MenuItem
+                                      sx={{
+                                        width: "130px",
+                                        display: "flex",
+                                        justifyContent: "space-around",
+                                        fontSize: "14px",
+                                      }}
+                                      onClick={() => {
+                                        setEditcomm(true);
+                                        setOpen(true);
+                                        setDot(false);
+                                      }}
+                                    >
+                                      <EditOutlinedIcon />
+                                      Edit
+                                    </MenuItem>
+                                    <MenuItem
+                                      sx={{
+                                        width: "130px",
+                                        display: "flex",
+                                        justifyContent: "space-around",
+                                        fontSize: "14px",
+                                      }}
+                                      onClick={() => {
+                                        deletecomments(i);
+                                        setDot(false);
+                                      }}
+                                    >
+                                      <DeleteOutlinedIcon />
+                                      Delete
+                                    </MenuItem>
+                                  </Paper>
+                                )}
+                              </Box>
+                            </Box>
+                            <Typography
+                              sx={{ color: "#505050", fontSize: "14px" }}
+                            >
+                              {values.comment}
+                            </Typography>
                             <Stack
-                              direction="column"
-                              spacing={1}
-                              sx={{ width: "100%" }}
+                              direction="row"
+                              spacing={2}
+                              textAlign={"center"}
                             >
+                              <Box
+                                onClick={() => {
+                                  handleLike(
+                                    values.id,
+                                    values.isLiked,
+                                    values.isDisLiked,
+                                    i
+                                  );
+                                }}
+                                sx={{ cursor: "pointer" }}
+                              >
+                                {values.isLiked ? (
+                                  <ThumbUpAltIcon
+                                    color="primary"
+                                    sx={{
+                                      fontSize: { xs: "16px", md: "18px" },
+                                    }}
+                                  />
+                                ) : (
+                                  <ThumbUpOutlinedIcon
+                                    color="#717478"
+                                    sx={{
+                                      fontSize: { xs: "16px", md: "18px" },
+                                    }}
+                                  />
+                                )}
+                              </Box>
+                              <Typography
+                                sx={{
+                                  fontSize: "13px",
+                                  fontWeight: "400",
+                                  color: "#A0A0A0",
+                                }}
+                              >
+                                {values.likes}
+                              </Typography>
+                              <Box
+                                onClick={() => {
+                                  handleDislike(
+                                    values.id,
+                                    values.isLiked,
+                                    values.isDisLiked,
+                                    i
+                                  );
+                                }}
+                                sx={{ cursor: "pointer" }}
+                              >
+                                {values.isDisLiked ? (
+                                  <ThumbDownIcon
+                                    color="primary"
+                                    sx={{
+                                      fontSize: { xs: "16px", md: "18px" },
+                                    }}
+                                  />
+                                ) : (
+                                  <ThumbDownOffAltRoundedIcon
+                                    color="#717478"
+                                    sx={{
+                                      fontSize: { xs: "16px", md: "18px" },
+                                    }}
+                                  />
+                                )}
+                              </Box>
+                              <Typography
+                                sx={{
+                                  fontSize: "13px",
+                                  fontWeight: "400",
+                                  color: "#A0A0A0",
+                                }}
+                              >
+                                {values.dislikes}
+                              </Typography>
+                              <Button
+                                variant="text"
+                                sx={{ textTransform: "capitalize" }}
+                                size="small"
+                                onClick={() => {
+                                  setOpenreply(!openreply);
+                                  setCommments(false);
+                                  handleReply(values.id);
+                                }}
+                              >
+                                Reply
+                              </Button>
+                            </Stack>
+                            {openreply && values.id === rid && (
                               <Box
                                 sx={{
                                   display: "flex",
-                                  justifyContent: "space-between",
                                   width: "100%",
-                                  alignItems: "center",
+                                  gap: "10px",
                                 }}
                               >
-                                <Stack direction="row" spacing={0.5}>
-                                  <Typography
+                                <Stack
+                                  direction="row"
+                                  spacing={1}
+                                  sx={{
+                                    alignItems: "baseline",
+                                    width: "100%",
+                                  }}
+                                >
+                                  <Avatar
                                     sx={{
-                                      fontSize: "13px",
-                                      fontWeight: "bold",
-                                      color: "#292929",
+                                      width: { xs: 24, md: 32 },
+                                      height: { xs: 24, md: 32 },
+                                      alignItems: "center",
+                                      fontSize: { xs: "14px", md: "16px" },
+                                      textTransform: "uppercase",
+                                      mt: "0px",
                                     }}
+                                    alt={currentuser?.username}
+                                    src={currentuser?.profilePhotoLink}
                                   >
-                                    {values.userData?.firstName}{" "}
-                                    {values.userData?.lastName}
-                                  </Typography>
-                                  <Typography
-                                    sx={{
-                                      fontSize: "12px",
-                                      fontWeight: "400",
-                                      color: "#A0A0A0",
-                                    }}
-                                  >
-                                    {moment(values.created_at).fromNow()}
-                                  </Typography>
-                                </Stack>
-                                <Box sx={{ position: "relative" }}>
-                                  <MoreVertIcon
-                                    sx={{ cursor: "pointer" }}
-                                    onClick={() => {
-                                      handleDot(values.id, i);
+                                    {currentuser?.username.charAt(0)}
+                                  </Avatar>
+                                  <TextField
+                                    fullWidth
+                                    label="Type your reply..."
+                                    variant="standard"
+                                    size="small"
+                                    value={userreply}
+                                    onChange={(e) => {
+                                      setUserreply(e.target.value);
                                     }}
                                   />
-                                  {dot && values.id === Id && (
-                                    <Paper
-                                      elevation={1}
-                                      select
-                                      sx={{
-                                        width: "130px",
-                                        padding: "8px 0px 8px 0px",
-                                        alignItems: "center",
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        position: "absolute",
-                                        right: "1rem",
-                                        textAlign: "left",
-                                      }}
-                                    >
-                                      <MenuItem
-                                        sx={{
-                                          width: "130px",
-                                          display: "flex",
-                                          justifyContent: "space-around",
-                                          fontSize: "14px",
-                                        }}
-                                        onClick={() => {
-                                          setEditcomm(true);
-                                          setOpen(true);
-                                          setDot(false);
-                                        }}
-                                      >
-                                        <EditOutlinedIcon />
-                                        Edit
-                                      </MenuItem>
-                                      <MenuItem
-                                        sx={{
-                                          width: "130px",
-                                          display: "flex",
-                                          justifyContent: "space-around",
-                                          fontSize: "14px",
-                                        }}
-                                        onClick={() => {
-                                          deletecomments(i);
-                                          setDot(false);
-                                        }}
-                                      >
-                                        <DeleteOutlinedIcon />
-                                        Delete
-                                      </MenuItem>
-                                    </Paper>
-                                  )}
-                                </Box>
-                              </Box>
-                              <Typography
-                                sx={{ color: "#505050", fontSize: "14px" }}
-                              >
-                                {values.comment}
-                              </Typography>
-                              <Stack
-                                direction="row"
-                                spacing={2}
-                                textAlign={"center"}
-                              >
-                                <Box
-                                  onClick={() => {
-                                    handleLike(
-                                      values.id,
-                                      values.isLiked,
-                                      values.isDisLiked,
-                                      i
-                                    );
-                                  }}
-                                  sx={{ cursor: "pointer" }}
-                                >
-                                  {values.isLiked ? (
-                                    <ThumbUpAltIcon
-                                      color="primary"
-                                      sx={{
-                                        fontSize: { xs: "16px", md: "18px" },
-                                      }}
-                                    />
-                                  ) : (
-                                    <ThumbUpOutlinedIcon
-                                      color="#717478"
-                                      sx={{
-                                        fontSize: { xs: "16px", md: "18px" },
-                                      }}
-                                    />
-                                  )}
-                                </Box>
-                                <Typography
+                                </Stack>
+                                <Stack
+                                  direction="row"
+                                  spacing={1}
                                   sx={{
-                                    fontSize: "13px",
-                                    fontWeight: "400",
-                                    color: "#A0A0A0",
+                                    justifyContent: "flex-end",
+                                    alignItems: "end",
                                   }}
                                 >
-                                  {values.likes}
-                                </Typography>
-                                <Box
-                                  onClick={() => {
-                                    handleDislike(
-                                      values.id,
-                                      values.isLiked,
-                                      values.isDisLiked,
-                                      i
-                                    );
-                                  }}
-                                  sx={{ cursor: "pointer" }}
-                                >
-                                  {values.isDisLiked ? (
-                                    <ThumbDownIcon
-                                      color="primary"
-                                      sx={{
-                                        fontSize: { xs: "16px", md: "18px" },
-                                      }}
-                                    />
-                                  ) : (
-                                    <ThumbDownOffAltRoundedIcon
-                                      color="#717478"
-                                      sx={{
-                                        fontSize: { xs: "16px", md: "18px" },
-                                      }}
-                                    />
-                                  )}
-                                </Box>
-                                <Typography
-                                  sx={{
-                                    fontSize: "13px",
-                                    fontWeight: "400",
-                                    color: "#A0A0A0",
-                                  }}
-                                >
-                                  {values.dislikes}
-                                </Typography>
-                                <Button
-                                  variant="text"
-                                  sx={{ textTransform: "capitalize" }}
-                                  size="small"
-                                  onClick={() => {
-                                    setOpenreply(!openreply);
-                                    setCommments(false);
-                                    handleReply(values.id);
-                                  }}
-                                >
-                                  Reply
-                                </Button>
-                              </Stack>
-                              {openreply && values.id === rid && (
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    width: "100%",
-                                    gap: "10px",
-                                  }}
-                                >
-                                  <Stack
-                                    direction="row"
-                                    spacing={1}
+                                  <Button
+                                    variant="text"
+                                    size="small"
                                     sx={{
-                                      alignItems: "baseline",
-                                      width: "100%",
+                                      fontSize: {
+                                        xs: "11px",
+                                        sm: "12px",
+                                        mds: "13px",
+                                      },
+                                      p: { xs: "2px", md: "4px 16px" },
+                                      height: "32px",
+                                      textTransform: {
+                                        xs: "capitalize",
+                                        md: "uppercase",
+                                      },
+                                    }}
+                                    onClick={() => {
+                                      setUserreply("");
+                                    }}
+                                  >
+                                    Cancel
+                                  </Button>
+                                  <Button
+                                    variant="contained"
+                                    size="small"
+                                    sx={{
+                                      fontSize: {
+                                        xs: "11px",
+                                        sm: "12px",
+                                        mds: "13px",
+                                      },
+                                      p: { xs: "2px", md: "4px 16px" },
+                                      height: "32px",
+                                      textTransform: {
+                                        xs: "capitalize",
+                                        md: "uppercase",
+                                      },
+                                    }}
+                                    onClick={() => {
+                                      addreply(values.id);
+                                      setUserreply("");
+                                      setCommments(true);
+                                    }}
+                                  >
+                                    Comment
+                                  </Button>
+                                </Stack>
+                              </Box>
+                            )}
+                            {openreply && values.id === rid && (
+                              <Box sx={{ display: "flex" }}>
+                                <ExpandMoreIcon
+                                  color="primary"
+                                  onClick={() => {
+                                    setCommments(!commments);
+                                  }}
+                                  sx={{ cursor: "pointer" }}
+                                />
+                                <Typography color="primary">
+                                  {totalreplies}
+                                </Typography>
+                              </Box>
+                            )}
+                            {commments && values.id === rid && (
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  gap: "10px",
+                                }}
+                              >
+                                {reeply?.map((valuess, ii) => (
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      gap: { xs: "12px", md: "1rem" },
                                     }}
                                   >
                                     <Avatar
@@ -1383,356 +1459,241 @@ const Coursevideo = () => {
                                         alignItems: "center",
                                         fontSize: { xs: "14px", md: "16px" },
                                         textTransform: "uppercase",
-                                        mt: "0px",
                                       }}
-                                      alt={currentuser?.username}
-                                      src={currentuser?.profilePhotoLink}
+                                      alt={valuess.userData?.username}
+                                      src={valuess.userData?.profilePhotoLink}
                                     >
-                                      {currentuser?.username.charAt(0)}
+                                      {valuess.userData?.username.charAt(0)}
                                     </Avatar>
-                                    <TextField
-                                    fullWidth
-                                      label="Type your reply..."
-                                      variant="standard"
-                                      size="small"
-                                      value={userreply}
-                                      onChange={(e) => {
-                                        setUserreply(e.target.value);
-                                      }}
-                                    />
-                                  </Stack>
-                                  <Stack
-                                    direction="row"
-                                    spacing={1}
-                                    sx={{
-                                      justifyContent: "flex-end",
-                                      alignItems: "end",
-                                    }}
-                                  >
-                                    <Button
-                                      variant="text"
-                                      size="small"
-                                      sx={{
-                                        fontSize: {
-                                          xs: "11px",
-                                          sm: "12px",
-                                          mds: "13px",
-                                        },
-                                        p: { xs: "2px", md: "4px 16px" },
-                                        height: "32px",
-                                        textTransform: {
-                                          xs: "capitalize",
-                                          md: "uppercase",
-                                        },
-                                      }}
-                                      onClick={() => {
-                                        setUserreply("");
-                                      }}
+                                    <Stack
+                                      direction="column"
+                                      spacing={1}
+                                      sx={{ width: "100%" }}
                                     >
-                                      Cancel
-                                    </Button>
-                                    <Button
-                                      variant="contained"
-                                      size="small"
-                                      sx={{
-                                        fontSize: {
-                                          xs: "11px",
-                                          sm: "12px",
-                                          mds: "13px",
-                                        },
-                                        p: { xs: "2px", md: "4px 16px" },
-                                        height: "32px",
-                                        textTransform: {
-                                          xs: "capitalize",
-                                          md: "uppercase",
-                                        },
-                                      }}
-                                      onClick={() => {
-                                        addreply(values.id);
-                                        setUserreply("");
-                                        setCommments(true);
-                                      }}
-                                    >
-                                      Comment
-                                    </Button>
-                                  </Stack>
-                                </Box>
-                              )}
-                              {openreply && values.id === rid && (
-                                <Box sx={{ display: "flex" }}>
-                                  <ExpandMoreIcon
-                                    color="primary"
-                                    onClick={() => {
-                                      setCommments(!commments);
-                                    }}
-                                    sx={{ cursor: "pointer" }}
-                                  />
-                                  <Typography color="primary">
-                                    {totalreplies}
-                                  </Typography>
-                                </Box>
-                              )}
-                              {commments && values.id === rid && (
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: "10px",
-                                  }}
-                                >
-                                  {reeply?.map((valuess, ii) => (
-                                    <Box
-                                      sx={{
-                                        display: "flex",
-                                        gap: { xs: "12px", md: "1rem" },
-                                      }}
-                                    >
-                                      <Avatar
+                                      <Box
                                         sx={{
-                                          width: { xs: 24, md: 32 },
-                                          height: { xs: 24, md: 32 },
+                                          display: "flex",
+                                          justifyContent: "space-between",
+                                          gap: "12px",
                                           alignItems: "center",
-                                          fontSize: { xs: "14px", md: "16px" },
-                                          textTransform: "uppercase",
                                         }}
-                                        alt={valuess.userData?.username}
-                                        src={valuess.userData?.profilePhotoLink}
-                                      >
-                                        {valuess.userData?.username.charAt(0)}
-                                      </Avatar>
-                                      <Stack
-                                        direction="column"
-                                        spacing={1}
-                                        sx={{ width: "100%" }}
                                       >
                                         <Box
+                                          spacing={0.5}
                                           sx={{
                                             display: "flex",
-                                            justifyContent: "space-between",
-                                            gap: "12px",
-                                            alignItems: "center",
+                                            flexDirection: "row",
+                                            gap: "8px",
                                           }}
                                         >
-                                          <Box
-                                            spacing={0.5}
-                                            sx={{
-                                              display: "flex",
-                                              flexDirection: "row",
-                                              gap: "8px",
-                                            }}
-                                          >
-                                            <Typography
-                                              sx={{
-                                                fontSize: "13px",
-                                                fontWeight: "500",
-                                                color: "#292929",
-                                                display:
-                                                  "-webkit-box!important",
-                                                WebkitLineClamp: 1,
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                                WebkitBoxOrient: " vertical",
-                                              }}
-                                            >
-                                              {valuess.userData?.firstName}{" "}
-                                              {valuess.userData?.lastName}
-                                            </Typography>
-                                            <Typography
-                                              sx={{
-                                                fontSize: "12px",
-                                                fontWeight: "400",
-                                                color: "#A0A0A0",
-                                                display:
-                                                  "-webkit-box!important",
-                                                WebkitLineClamp: 1,
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                                WebkitBoxOrient: " vertical",
-                                              }}
-                                            >
-                                              {moment(
-                                                valuess.created_at
-                                              ).fromNow()}
-                                            </Typography>
-                                          </Box>
-                                          <Box sx={{ position: "relative" }}>
-                                            <MoreVertIcon
-                                              sx={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                                handleDot(valuess.id);
-                                              }}
-                                            />
-                                            {dot && valuess.id === Id && (
-                                              <Paper
-                                                elevation={1}
-                                                select
-                                                sx={{
-                                                  width: "130px",
-                                                  padding: "5px 0px 5px 0px",
-                                                  alignItems: "center",
-                                                  display: "flex",
-                                                  flexDirection: "column",
-                                                  position: "absolute",
-                                                  right: "1rem",
-                                                  textAlign: "left",
-                                                }}
-                                              >
-                                                <MenuItem
-                                                  sx={{
-                                                    width: "130px",
-                                                    display: "flex",
-                                                    justifyContent:
-                                                      "space-around",
-                                                    fontSize: "14px",
-                                                  }}
-                                                  onClick={() => {
-                                                    setOpen(true);
-                                                    setReportdesc(true);
-                                                    setReportid(valuess.id);
-                                                  }}
-                                                >
-                                                  <OutlinedFlagIcon />
-                                                  report
-                                                </MenuItem>
-                                              </Paper>
-                                            )}
-                                          </Box>
-                                        </Box>
-                                        <Typography
-                                          sx={{
-                                            color: "#111112",
-                                            fontSize: {
-                                              xs: "14px",
-                                              md: "16px",
-                                              margin: "0px!important",
-                                            },
-                                          }}
-                                        >
-                                          {valuess.comment}
-                                        </Typography>
-                                        <Stack direction="row" spacing={2}>
-                                          <Box
-                                            onClick={() => {
-                                              handleRlike(
-                                                valuess.id,
-                                                valuess.isLiked,
-                                                valuess.isDisLiked,
-                                                ii
-                                              );
-                                            }}
-                                            sx={{ cursor: "pointer" }}
-                                          >
-                                            {valuess.isLiked ? (
-                                              <ThumbUpAltIcon
-                                                color="primary"
-                                                sx={{
-                                                  fontSize: {
-                                                    xs: "16px",
-                                                    md: "18px",
-                                                  },
-                                                }}
-                                              />
-                                            ) : (
-                                              <ThumbUpOutlinedIcon
-                                                color="#717478"
-                                                sx={{
-                                                  fontSize: {
-                                                    xs: "16px",
-                                                    md: "18px",
-                                                  },
-                                                }}
-                                              />
-                                            )}
-                                          </Box>
                                           <Typography
                                             sx={{
                                               fontSize: "13px",
-                                              fontWeight: "400",
-                                              color: "#A0A0A0",
+                                              fontWeight: "500",
+                                              color: "#292929",
+                                              display: "-webkit-box!important",
+                                              WebkitLineClamp: 1,
+                                              overflow: "hidden",
+                                              textOverflow: "ellipsis",
+                                              WebkitBoxOrient: " vertical",
                                             }}
                                           >
-                                            {valuess.likes}
-                                          </Typography>
-                                          <Box
-                                            onClick={() => {
-                                              handleRdislike(
-                                                valuess.id,
-                                                valuess.isLiked,
-                                                valuess.isDisLiked,
-                                                ii
-                                              );
-                                            }}
-                                            sx={{ cursor: "pointer" }}
-                                          >
-                                            {valuess.isDisLiked ? (
-                                              <ThumbDownIcon
-                                                color="primary"
-                                                sx={{
-                                                  fontSize: {
-                                                    xs: "16px",
-                                                    md: "18px",
-                                                  },
-                                                }}
-                                              />
-                                            ) : (
-                                              <ThumbDownOffAltRoundedIcon
-                                                color="#717478"
-                                                sx={{
-                                                  fontSize: {
-                                                    xs: "16px",
-                                                    md: "18px",
-                                                  },
-                                                }}
-                                              />
-                                            )}
-                                          </Box>
-                                          <Typography
-                                            sx={{
-                                              fontSize: "13px",
-                                              fontWeight: "400",
-                                              color: "#A0A0A0",
-                                            }}
-                                          >
-                                            {valuess.dislikes}
+                                            {valuess.userData?.firstName}{" "}
+                                            {valuess.userData?.lastName}
                                           </Typography>
                                           <Typography
                                             sx={{
                                               fontSize: "12px",
-                                              fontWeight: "bold",
-                                              color: "#292929",
-                                              cursor: "pointer",
+                                              fontWeight: "400",
+                                              color: "#A0A0A0",
+                                              display: "-webkit-box!important",
+                                              WebkitLineClamp: 1,
+                                              overflow: "hidden",
+                                              textOverflow: "ellipsis",
+                                              WebkitBoxOrient: " vertical",
                                             }}
-                                            onClick={() => {}}
                                           >
-                                            Reply
+                                            {moment(
+                                              valuess.created_at
+                                            ).fromNow()}
                                           </Typography>
-                                        </Stack>
+                                        </Box>
+                                        <Box sx={{ position: "relative" }}>
+                                          <MoreVertIcon
+                                            sx={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              handleDot(valuess.id);
+                                            }}
+                                          />
+                                          {dot && valuess.id === Id && (
+                                            <Paper
+                                              elevation={1}
+                                              select
+                                              sx={{
+                                                width: "130px",
+                                                padding: "5px 0px 5px 0px",
+                                                alignItems: "center",
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                position: "absolute",
+                                                right: "1rem",
+                                                textAlign: "left",
+                                              }}
+                                            >
+                                              <MenuItem
+                                                sx={{
+                                                  width: "130px",
+                                                  display: "flex",
+                                                  justifyContent:
+                                                    "space-around",
+                                                  fontSize: "14px",
+                                                }}
+                                                onClick={() => {
+                                                  setOpen(true);
+                                                  setReportdesc(true);
+                                                  setReportid(valuess.id);
+                                                }}
+                                              >
+                                                <OutlinedFlagIcon />
+                                                report
+                                              </MenuItem>
+                                            </Paper>
+                                          )}
+                                        </Box>
+                                      </Box>
+                                      <Typography
+                                        sx={{
+                                          color: "#111112",
+                                          fontSize: {
+                                            xs: "14px",
+                                            md: "16px",
+                                            margin: "0px!important",
+                                          },
+                                        }}
+                                      >
+                                        {valuess.comment}
+                                      </Typography>
+                                      <Stack direction="row" spacing={2}>
+                                        <Box
+                                          onClick={() => {
+                                            handleRlike(
+                                              valuess.id,
+                                              valuess.isLiked,
+                                              valuess.isDisLiked,
+                                              ii
+                                            );
+                                          }}
+                                          sx={{ cursor: "pointer" }}
+                                        >
+                                          {valuess.isLiked ? (
+                                            <ThumbUpAltIcon
+                                              color="primary"
+                                              sx={{
+                                                fontSize: {
+                                                  xs: "16px",
+                                                  md: "18px",
+                                                },
+                                              }}
+                                            />
+                                          ) : (
+                                            <ThumbUpOutlinedIcon
+                                              color="#717478"
+                                              sx={{
+                                                fontSize: {
+                                                  xs: "16px",
+                                                  md: "18px",
+                                                },
+                                              }}
+                                            />
+                                          )}
+                                        </Box>
+                                        <Typography
+                                          sx={{
+                                            fontSize: "13px",
+                                            fontWeight: "400",
+                                            color: "#A0A0A0",
+                                          }}
+                                        >
+                                          {valuess.likes}
+                                        </Typography>
+                                        <Box
+                                          onClick={() => {
+                                            handleRdislike(
+                                              valuess.id,
+                                              valuess.isLiked,
+                                              valuess.isDisLiked,
+                                              ii
+                                            );
+                                          }}
+                                          sx={{ cursor: "pointer" }}
+                                        >
+                                          {valuess.isDisLiked ? (
+                                            <ThumbDownIcon
+                                              color="primary"
+                                              sx={{
+                                                fontSize: {
+                                                  xs: "16px",
+                                                  md: "18px",
+                                                },
+                                              }}
+                                            />
+                                          ) : (
+                                            <ThumbDownOffAltRoundedIcon
+                                              color="#717478"
+                                              sx={{
+                                                fontSize: {
+                                                  xs: "16px",
+                                                  md: "18px",
+                                                },
+                                              }}
+                                            />
+                                          )}
+                                        </Box>
+                                        <Typography
+                                          sx={{
+                                            fontSize: "13px",
+                                            fontWeight: "400",
+                                            color: "#A0A0A0",
+                                          }}
+                                        >
+                                          {valuess.dislikes}
+                                        </Typography>
+                                        <Typography
+                                          sx={{
+                                            fontSize: "12px",
+                                            fontWeight: "bold",
+                                            color: "#292929",
+                                            cursor: "pointer",
+                                          }}
+                                          onClick={() => {}}
+                                        >
+                                          Reply
+                                        </Typography>
                                       </Stack>
-                                    </Box>
-                                  ))}
-                                </Box>
-                              )}
-                            </Stack>
-                          </Box>
-                        ))}
-                      
+                                    </Stack>
+                                  </Box>
+                                ))}
+                              </Box>
+                            )}
+                          </Stack>
+                        </Box>
+                      ))}
                     </Grid>
-
                   </TabPanel>
                   <TabPanel value={value} index={1}>
-                    Item Two
+                    About Course
                   </TabPanel>
                   <TabPanel value={value} index={2}>
-                    Item Three
+                  Resources
                   </TabPanel>
                   <TabPanel value={value} index={3}>
-                 <Reviews
-                  buy={buy}
-                  currentuser={currentuser}
-                  ratings={parseInt(
-                    Math.round((userdata?.rating?.rating ?? 0) * 10) / 10
-                  )}
-                />
+                    <Reviews
+                      buy={buy}
+                      currentuser={currentuser}
+                      ratings={parseInt(
+                        Math.round((userdata?.rating?.rating ?? 0) * 10) / 10
+                      )}
+                    />
                   </TabPanel>
                 </Box>
 
@@ -2680,7 +2641,7 @@ const Coursevideo = () => {
           />
         </Grid>
       </Grid>
-         </>
+    </>
   );
 };
 

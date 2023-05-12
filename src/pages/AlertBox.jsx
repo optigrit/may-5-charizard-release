@@ -7,7 +7,6 @@ export const AlertBox = ( message, type ) => {
 
     const ALERT_TIME = 5000;
     const handlealert = (text, type) => {
-        console.log(text, type, "text,type")
         dispatch(
             manipulateuserdata(SET_ALERT_DATA, {
                 text: text,

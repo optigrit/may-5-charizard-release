@@ -14,6 +14,7 @@ import { storage } from "../../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 import { manipulateuserdata } from "../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
+import { coursesAPI } from "../../api/requests/coursesApi";
 
 const drawerWidth = 240;
 
@@ -36,16 +37,6 @@ const CourseUpdate = () => {
 
   const navigate = useNavigate();
 
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "http://localhost:8080",
-      Authorization: `bearer ${Token}`,
-    },
-  };
-
   const ALERT_TIME = 5000;
   const dispatch = useDispatch();
   const handlealert = (text, type) => {
@@ -64,19 +55,16 @@ const CourseUpdate = () => {
     const data = async () => {
       // setLoading(true);
       try {
-        const { data } = await axios.get(
-          `${process.env.REACT_APP_URL}course/${params.id}`,
-          config
-        );
-        setTitle(data?.data?.courseData?.title);
-        setPrice(data?.data?.courseData?.price);
-        setCategories(data?.data?.courseData?.categories);
-        setTechStack(data?.data?.courseData?.techStack);
-        setDescription(data?.data?.courseData?.description);
-        setDescriptionPoints(data?.data?.courseData?.descriptionPoints);
-        setKeyPoints(data?.data?.courseData?.keyPoints);
-        setImageUrl(data?.data?.courseData?.imageUrl);
-        setTrailerUrl(data?.data?.courseData?.trailerUrl);
+        const { data } = await coursesAPI.getSpecificCourse(params.id)
+        setTitle(data?.courseData?.title);
+        setPrice(data?.courseData?.price);
+        setCategories(data?.courseData?.categories);
+        setTechStack(data?.courseData?.techStack);
+        setDescription(data?.courseData?.description);
+        setDescriptionPoints(data?.courseData?.descriptionPoints);
+        setKeyPoints(data?.courseData?.keyPoints);
+        setImageUrl(data?.courseData?.imageUrl);
+        setTrailerUrl(data?.courseData?.trailerUrl);
       } catch (err) {}
     };
 
@@ -108,21 +96,13 @@ const CourseUpdate = () => {
 
   const handleNormal = async (postData) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}course/${params.id}`,
-        postData,
-        config
-      );
+      const {data} = await coursesAPI.updateCourse(postData, params.id)
       handlealert("Course updated successfully", "success");
     } catch (err) {}
   };
   const handleUpdateImgTrailer = async (imageDataUrl, videoDataUrl) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}course/links/${params.id}`,
-        { imageUrl: imageDataUrl, trailerUrl: videoDataUrl },
-        config
-      );
+      const { data } = await coursesAPI.updateImageAndTrailer({ imageUrl: imageDataUrl, trailerUrl: videoDataUrl }, params.id)
     } catch (err) {}
   };
 
@@ -212,14 +192,12 @@ const CourseUpdate = () => {
   };
   const handleCreateCourse = (e) => {
     e.preventDefault();
-    console.log("uploadData");
     const trimed = descriptionPoints.map((item) => {
       return item.trim();
     });
     const keyPointTrimed = keyPoints.map((item) => {
       return item.trim();
     });
-    console.log(trimed.length, "trimed");
 
     if (keyPoints.length && !keyPointTrimed.includes("")) {
       uploadData();

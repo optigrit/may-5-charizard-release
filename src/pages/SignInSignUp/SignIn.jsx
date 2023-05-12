@@ -346,8 +346,8 @@ const SignIn = () => {
               backgroundColor: "#EBEFFF",
               height: { xs: "400px", md: "100vh" },
               fontSize: '55px',
-              fontFamily: 'Light'
             }}
+            style={{fontFamily: "Light"}}
             display="flex"
             alignItems={"center"}
             justifyContent="center"

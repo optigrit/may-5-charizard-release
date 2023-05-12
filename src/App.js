@@ -12,9 +12,11 @@ import SideBarResponsive from "./components/SideBarResponsive";
 import Dialogue from "./components/Dialogbox/Dialogue";
 import ReportABug from "./components/ReportABug/ReportABug";
 import ProtechtedRoute from "./Routes/ProtechtedRoute";
+import PrivateRoute from "./Routes/PrivateRoute";
 import BigLoader from "./components/Skeleton/BigLoader";
 import ContactSupport from "./pages/Courses/ContactSupport";
 import CourseUnderReview from "./pages/Courses/CourseUnderReview";
+import CourseStatusUpdate from "./pages/Courses/CourseStatusUpdate";
 const LazyCart = React.lazy(() => import("./pages/Courses/Cart"));
 const LazyContest = React.lazy(() => import("./pages/Contest/ContestHome"));
 const LazyCourseVideo = React.lazy(() =>
@@ -156,13 +158,14 @@ function App() {
                         path="/course-update/:id"
                         element={<LazyCourseUpdate />}
                       />
+
                       <Route path="/contest" element={<LazyContest />} />
                       <Route
                         path="/admin/contest"
                         element={<LazyCreateContest />}
                       />
                       <Route
-                        path="/admin/:contest_id"
+                        path="/admin/:contestId"
                         element={<LazyCreateProblem />}
                       />
                       <Route
@@ -170,35 +173,35 @@ function App() {
                         element={<LazyViewAll />}
                       />
                       <Route
-                        path="/contest/:contest_id/:contest_code"
+                        path="/contest/:contestId"
                         element={<LazyContestDetail />}
                       />
                       <Route
-                        path="/contest/:contest_id/:time/:contest_code/ranking"
+                        path="/contest/:contestId/:time/:contest_code/ranking"
                         element={<LazyContestRanking />}
                       />
                       <Route
-                        path="/problem/:id"
+                        path="/problem/:problemId"
                         element={<LazyContestProbleme />}
                       >
                         <Route
-                          path="/problem/:id"
+                          path="/problem/:problemId"
                           element={<LazyExplanation />}
                         />
                         <Route
-                          path="/problem/:id/explanation"
+                          path="/problem/:problemId/explanation"
                           element={<LazyExplanation />}
                         />
                         <Route
-                          path="/problem/:id/submit"
+                          path="/problem/:problemId/submit"
                           element={<LazyUploadCodeLink />}
                         />
                         <Route
-                          path="/problem/:id/submissions"
+                          path="/problem/:problemId/submissions"
                           element={<LazyProblemMySubmissions />}
                         />
                         <Route
-                          path="/problem/:id/discussion"
+                          path="/problem/:problemId/discussion"
                           element={<LazyDiscussion />}
                         />
                       </Route>
@@ -207,20 +210,19 @@ function App() {
                         element={<LazyUserProfile2 />}
                       />
                       <Route
-                        path="/admin/contest/:contest/edit"
+                        path="/admin/contest/:contestId/edit"
                         element={<LazyEditContest />}
                       />
                       <Route
                         path="/admin/:problem/edit/"
                         element={<LazyEditProblem />}
                       />
-                       <Route
-                      path="/coursevideos/:id"
-                      element={<LazyCourseVideo />}
-                    />
-                  
+                      <Route
+                        path="/coursevideos/:id"
+                        element={<LazyCourseVideo />}
+                      />
                     </Route>
-                  
+
                     <Route
                       path="/user-without-login"
                       element={<LazyUserWithoutLogin />}
@@ -233,10 +235,10 @@ function App() {
                     path="/forgot-password"
                     element={<LazyForgotPassword />}
                   />
-                    <Route
-                      path="/courseupload/:id"
-                      element={<LazyCourseupload />}
-                    />
+                  <Route
+                    path="/courseupload/:id"
+                    element={<LazyCourseupload />}
+                  />
                   <Route
                     path="/resetpassword/:id"
                     element={<LazyResetPassword />}
@@ -244,14 +246,23 @@ function App() {
                   <Route path="*" element={<LazyPageNotFound />} />
                   <Route path="/verifyuser/:id" element={<LazyVerifyuser />} />
                   <Route element={<ProtechtedRoute />}>
-                   
+                    <Route
+                      path="/update-course-status/:id"
+                      element={
+                        <PrivateRoute>
+                          <CourseStatusUpdate />
+                        </PrivateRoute>
+                      }
+                    />
                     <Route
                       path="/contact-support"
                       element={<ContactSupport />}
                     />
                   </Route>
-                  <Route path="/under-review" element={<CourseUnderReview />}>
-                  </Route>
+                  <Route
+                    path="/under-review"
+                    element={<CourseUnderReview />}
+                  ></Route>
                 </Routes>
               </React.Suspense>
             </>

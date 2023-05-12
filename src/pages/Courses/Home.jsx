@@ -114,11 +114,11 @@ const Home = () => {
             handleReset={handleReset}
             searchKeyword={searchKeyword}
           />
-          {/* <Product
+          <Product
             title={"Suggested Courses for you"}
             dataRender={data2}
             loading={loading}
-          /> */}
+          />
 
           <Product title={"Our Courses"} dataRender={filterItems} />
           {/* <Product title={"Highest Rated Courses"} dataRender={highest} /> */}

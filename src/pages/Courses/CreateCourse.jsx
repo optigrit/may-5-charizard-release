@@ -14,6 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { manipulateuserdata } from "../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
+import { coursesAPI } from "../../api/requests/coursesApi";
 
 const CreateCourse = () => {
   const drawerWidth = 240;
@@ -37,7 +38,6 @@ const CreateCourse = () => {
   const techStackRef = useRef(null);
   const descRef = useRef(null);
 
-  const Token = localStorage.getItem("Token");
   const params = useParams();
   const navigate = useNavigate();
   const handleGoToUploadpage = (id) => {
@@ -56,14 +56,6 @@ const CreateCourse = () => {
     setTimeout(() => {
       dispatch(manipulateuserdata(SET_ALERT_DATA, { text: "", type: "" }));
     }, ALERT_TIME);
-  };
-
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "http://localhost:8080",
-      Authorization: `bearer ${Token}`,
-    },
   };
 
   const uploadImage = async () => {
@@ -92,14 +84,9 @@ const CreateCourse = () => {
 
   const handleNormal = async (postData) => {
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL}course`,
-        postData,
-        config
-      );
+      const  data  = await coursesAPI.createCourse(postData)
       handlealert("Course created successfully", "success");
-
-      handleGoToUploadpage(data[0].id);
+      handleGoToUploadpage(data.id);
     } catch (err) {}
   };
 
@@ -124,7 +111,6 @@ const CreateCourse = () => {
     if (postData) {
       handleNormal(postData);
     } else {
-      console.log("else");
     }
   };
 
@@ -181,19 +167,14 @@ const CreateCourse = () => {
       handlealert("You need to fill one description point at least", "error");
     }
   };
-  console.log(descriptionPoints, "descriptionPoints");
-  console.log(!descriptionPoints.includes(""), "!de");
-
   const handleCreateCourse = (e) => {
     e.preventDefault();
-    console.log("uploadData");
     const trimed = descriptionPoints.map((item) => {
       return item.trim();
     });
     const keyPointTrimed = keyPoints.map((item) => {
       return item.trim();
     });
-    console.log(trimed.length, "trimed");
 
     if (keyPoints.length && !keyPointTrimed.includes("")) {
       uploadData();
@@ -440,7 +421,6 @@ const CreateCourse = () => {
                 Add Additional Description Point
               </Button>
             </Box>
-            {console.log(keyPoints, "keyPoints")}
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Button variant="contained" size="small" type="submit">
                 CREATE

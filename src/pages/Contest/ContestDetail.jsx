@@ -1,6 +1,4 @@
 import React, { useState, useEffect, memo, useMemo } from "react";
-import { Box } from "@mui/system";
-import SideBarResponsive from "../../components/SideBarResponsive/index";
 import ContestBanner from "../../components/Banner/ContestBanner";
 import ScorableProblems from "../../components/CodingContests/ContestDetailPage/ScorableProblems/ScorableProblems";
 import Announcements from "../../components/CodingContests/ContestDetailPage/announcements/Announcements";
@@ -11,13 +9,12 @@ import UpcomingContestCarousel from "../../components/CodingContests/UpcomingCon
 import ShowRank from "../../components/CodingContests/ShowRank";
 import BreadCrumb from "../../components/CodingContests/ContestDetailPage/BreadCrumb";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import Clock from "../../components/CodingContests/ContestDetailPage/Clock";
-import { ContainerOfTitle, ContestTitle } from "../../theme/VideoSlider";
 import { Grid, Typography } from "@mui/material";
+import { contestAPI } from "../../api/requests/contestAPI";
 
 const ContestDetail = () => {
-  const { contest_code, contest_id } = useParams();
+  const { contest_code, contestId } = useParams();
 
   const getLocalItems = () => {
     const ContestValue = sessionStorage.getItem("Contest");
@@ -39,39 +36,20 @@ const ContestDetail = () => {
     getAnnouncements();
   }, []);
 
-  // sessionStorage.setItem('Contest', JSON.stringify(Contest))
-
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: { Authorization: `bearer ${Token}` },
-  };
-
   var contest_going = true;
 
   const getContest = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_URL}contest/${contest_id}`,
-        config
-      );
-      setContest(res.data);
-      console.log(res?.data);
-    } catch (err) {
-      console.log(err);
-    }
+      const data = await contestAPI.getContest(contestId);
+      setContest(data);
+    } catch (err) {}
   };
 
   const getAnnouncements = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_URL}announcements/${contest_id}`,
-        config
-      );
-      setAnnouncements(res.data);
-    } catch (err) {
-      console.log(err);
-    }
+      const data = await contestAPI.getAnnouncements(contestId);
+      setAnnouncements(data);
+    } catch (err) {}
   };
 
   const selected = (crumb) => {};
@@ -138,9 +116,9 @@ const ContestDetail = () => {
             <ScorableProblems
               contestStatus={contest_going}
               ContestProbs={Contest?.problemData}
-              contest_id={contest_id}
+              contestId={contestId}
             />
-            {announcements.length > 0 && (
+            {announcements?.length > 0 && (
               <Announcements announcements={announcements} />
             )}
             {Contest?.contestData[0]?.sponsers?.length > 0 && (
@@ -173,7 +151,7 @@ const ContestDetail = () => {
 
             <ShowRank
               contestStatus={contest_going}
-              contest_id={contest_id}
+              contestId={contestId}
               time={Contest?.contestData[0]?.endingDate}
               contest_code={contest_code}
             />
@@ -200,7 +178,7 @@ const ContestDetail = () => {
             <UpcomingContestCarousel />
             <ShowRank
               contestStatus={contest_going}
-              contest_id={contest_id}
+              contestId={contestId}
               time={Contest?.contestData[0]?.endingDate}
               contest_code={contest_code}
             />

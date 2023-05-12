@@ -7,6 +7,7 @@ import ShipingDetails from "../../components/CheckOut";
 import OrderList from "../../components/CheckOut/OrderList";
 import Skeletons from "../../components/Skeleton/Skeletons";
 import { getCartCourses, getPrice } from "../../Config/Apis";
+import { coursesAPI } from "../../api/requests/coursesApi";
 
 const CheckOut = () => {
   const drawerWidth = 240;
@@ -14,22 +15,13 @@ const CheckOut = () => {
   const [price, setPrice] = useState();
   const [loading, setLoading] = useState(true);
 
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `bearer ${Token}`,
-    },
-  };
-
   useEffect(() => {
     getCourseFromCart();
   }, []);
 
   const getCourseFromCart = async () => {
     setLoading(true);
-    await axios
-      .get(`${process.env.REACT_APP_URL}courses/stage/CART`, config)
+    await coursesAPI.getCourses("CART")
       .then((res) => {
         setYourOrder(res?.data);
         setLoading(false);
@@ -43,8 +35,7 @@ const CheckOut = () => {
 
   const getPrices = async () => {
     setLoading(true);
-    await axios
-      .get(`${process.env.REACT_APP_URL}price`, config)
+    await coursesAPI.getCoursePrices()
       .then((res) => {
         setPrice(res?.data?.price);
       })

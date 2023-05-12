@@ -2,26 +2,19 @@ import { Box, Divider } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Product from "../../components/ProductCarousel/Product";
+import { coursesAPI } from "../../api/requests/coursesApi";
 const drawerWidth = 240;
 
 function MyCourses() {
   const [loading, setLoading] = useState(true);
   const [myCoursesData, setMyCoursesData] = useState([]);
   const [suggestedCourses, setSuggestedCourses] = useState([]);
-  const Token = localStorage.getItem("Token");
-  const config = {
-    headers: {
-      Authorization: `bearer ${Token}`,
-    },
-  };
+
   useEffect(() => {
     const data = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_URL}courses/stage/BOUGHT`,
-          config
-        );
+        const res = await coursesAPI.getCourses("BOUGHT")
         setMyCoursesData(res?.data);
         setLoading(false);
       } catch (err) {}
@@ -33,11 +26,8 @@ function MyCourses() {
     const data = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_URL}courses/1`,
-          config
-        );
-        setSuggestedCourses(res?.data);
+        const res = await coursesAPI.getCoursesByPage("1")
+        setSuggestedCourses(res);
         setLoading(false);
       } catch (err) {}
     };

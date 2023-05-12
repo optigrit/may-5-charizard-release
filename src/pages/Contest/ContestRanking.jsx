@@ -1,24 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Box } from "@mui/system";
-import SideBarResponsive from "../../components/SideBarResponsive/index";
 import RankingNavbar from "../../components/CodingContests/ContestRanking/RankingNavbar";
 import { useParams } from "react-router-dom";
 import RankingTable from "../../components/CodingContests/ContestRanking/RankingTable";
-import axios from "axios";
 import RankingTableUserInfo from "../../components/CodingContests/ContestRanking/RankingTableUserInfo";
 import { CardMedia, Grid } from "@mui/material";
 import bannerImage from "../../assets/CourseImages/SideBanner.png";
+import { contestAPI } from "../../api/requests/contestAPI";
 
 const ContestRanking = () => {
-  //     if (id === 1) {
-  //         setFilteredCountry(newFilteredCountry)
-  //     } else if (id === 2) {
-  //         setFilteredInstitution(newFilteredInstitution)
-  //     } else if (id === 3) {
-  //         setFilteredInstitutionType(newFilteredInstitutionType)
-  //     }
-
-  const { contest_id, time, contest_code } = useParams();
+  const { contestId, time, contest_code } = useParams();
   const [newObj, setNew] = useState([]);
   const [page, setPage] = React.useState(1);
   const [searchField, setSearchField] = useState("");
@@ -32,13 +22,9 @@ const ContestRanking = () => {
 
   const getContestRanks = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_URL}contest/${contest_id}/ranks/${page}`
-      );
-      setNew(res?.data?.ranks);
-    } catch (err) {
-      console.log(2);
-    }
+      const data = await contestAPI.getContestRanks(contestId, page);
+      setNew(data?.ranks);
+    } catch (err) {}
   };
 
   var perPage = 15;
@@ -51,17 +37,14 @@ const ContestRanking = () => {
 
   const handleSearchFromApi = async () => {
     try {
-      const res = await axios.get(
-        `${
-          process.env.REACT_APP_URL
-        }user/contest/${contest_id}?search=${searchField}&${ids.get(
-          id
-        )}=${filterSearch}`
+      const data = await contestAPI.searchUser(
+        contestId,
+        searchField,
+        ids.get(id),
+        filterSearch
       );
-      setNew(res?.data);
-    } catch (err) {
-      console.log(err, "error");
-    }
+      setNew(data);
+    } catch (err) {}
   };
 
   const is_ranking = true;
@@ -135,7 +118,8 @@ const ContestRanking = () => {
       userId: "abcfb034-0d18-45b8-bb62-525eac515172",
       username: "mgiorgione1",
       score: "50",
-    },  {
+    },
+    {
       country: "Mauritius",
       countryCode: "MU",
       firstName: "Margarette",
@@ -148,7 +132,8 @@ const ContestRanking = () => {
       userId: "abcfb034-0d18-45b8-bb62-525eac515172",
       username: "mgiorgione1",
       score: "50",
-    },  {
+    },
+    {
       country: "Mauritius",
       countryCode: "MU",
       firstName: "Margarette",
@@ -161,7 +146,8 @@ const ContestRanking = () => {
       userId: "abcfb034-0d18-45b8-bb62-525eac515172",
       username: "mgiorgione1",
       score: "50",
-    },  {
+    },
+    {
       country: "Mauritius",
       countryCode: "MU",
       firstName: "Margarette",
@@ -174,7 +160,8 @@ const ContestRanking = () => {
       userId: "abcfb034-0d18-45b8-bb62-525eac515172",
       username: "mgiorgione1",
       score: "50",
-    },  {
+    },
+    {
       country: "Mauritius",
       countryCode: "MU",
       firstName: "Margarette",
@@ -187,7 +174,8 @@ const ContestRanking = () => {
       userId: "abcfb034-0d18-45b8-bb62-525eac515172",
       username: "mgiorgione1",
       score: "50",
-    },  {
+    },
+    {
       country: "Mauritius",
       countryCode: "MU",
       firstName: "Margarette",
@@ -200,7 +188,8 @@ const ContestRanking = () => {
       userId: "abcfb034-0d18-45b8-bb62-525eac515172",
       username: "mgiorgione1",
       score: "50",
-    },  {
+    },
+    {
       country: "Mauritius",
       countryCode: "MU",
       firstName: "Margarette",
@@ -213,7 +202,8 @@ const ContestRanking = () => {
       userId: "abcfb034-0d18-45b8-bb62-525eac515172",
       username: "mgiorgione1",
       score: "50",
-    },  {
+    },
+    {
       country: "Mauritius",
       countryCode: "MU",
       firstName: "Margarette",
@@ -226,7 +216,8 @@ const ContestRanking = () => {
       userId: "abcfb034-0d18-45b8-bb62-525eac515172",
       username: "mgiorgione1",
       score: "50",
-    },  {
+    },
+    {
       country: "Mauritius",
       countryCode: "MU",
       firstName: "Margarette",
@@ -239,7 +230,8 @@ const ContestRanking = () => {
       userId: "abcfb034-0d18-45b8-bb62-525eac515172",
       username: "mgiorgione1",
       score: "50",
-    },  {
+    },
+    {
       country: "Mauritius",
       countryCode: "MU",
       firstName: "Margarette",
@@ -300,14 +292,14 @@ const ContestRanking = () => {
             setSearchField={setSearchField}
             is_scoring={is_scoring}
             contest_code={contest_code}
-            contest_id={contest_id}
+            contestId={contestId}
             setId={setId}
             time={time}
             handleSearchUser={handleSearchFromApi}
             searchField={searchField}
             setFilterSearch={setFilterSearch}
           />
-       
+
           {/* <ContestRankingContainer people={intersect(filteredNames, array)} /> */}
           <RankingTable
             is_scoring={is_scoring}
@@ -325,8 +317,11 @@ const ContestRanking = () => {
           item
           xs={0}
           lg={3}
-          display={{xs:"none",lg:"block"}}
-          sx={{ paddingTop: "0px!important", height:{xs:"none",lg: "100vh"} }}
+          display={{ xs: "none", lg: "block" }}
+          sx={{
+            paddingTop: "0px!important",
+            height: { xs: "none", lg: "100vh" },
+          }}
         >
           <CardMedia
             sx={{
