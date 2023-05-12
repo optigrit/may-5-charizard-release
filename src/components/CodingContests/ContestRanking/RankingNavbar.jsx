@@ -28,16 +28,16 @@ const RankingNavbar = ({
   handleSearchUser,
   setFilterSearch,
 }) => {
-  const { contest_id } = useParams();
+  const { contestId } = useParams();
 
   const arr = [
     {
       pathname: `${contest_code}`,
-      path: `/contest/${contest_id}/${contest_code}`,
+      path: `/contest/${contestId}/${contest_code}`,
     },
     {
       pathname: "RANK CURRENT PAGE",
-      path: `/contest/${contest_id}/${time}/${contest_code}/ranking`,
+      path: `/contest/${contestId}/${time}/${contest_code}/ranking`,
     },
   ];
 
@@ -95,7 +95,6 @@ const RankingNavbar = ({
       <Grid
         container
         sx={{
-         
           backgroundColor: "#ffffff",
           borderBottom: "1px solid #e5e5e5",
           p: { xs: 2, md: "28px 16px" },
@@ -291,28 +290,34 @@ const RankingNavbar = ({
             gap={{ xs: 1, sm: 1.5, md: 2 }}
             sx={{ mt: { xs: "12px", md: "0px" } }}
           >
-            <Box display={{ xs: "flex"}} sx={{justifyContent:{sm:"flex-end",alignItems:"center"},gap:1}}>
-            <Typography
-              variant="caption"
+            <Box
+              display={{ xs: "flex" }}
               sx={{
-                fontWeight: "200",
-                color: "grey",
-                display: "-webkit-box!important",
-                WebkitLineClamp: 1,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                WebkitBoxOrient: " vertical",
+                justifyContent: { sm: "flex-end", alignItems: "center" },
+                gap: 1,
               }}
             >
-              Contest ends in:
-            </Typography>
-            <ClockRankingForMobile
-              contestStatus={contestStatus}
-              days={Days}
-              mins={Minutes}
-              hours={Hours}
-              seconds={Seconds}
-            />
+              <Typography
+                variant="caption"
+                sx={{
+                  fontWeight: "200",
+                  color: "grey",
+                  display: "-webkit-box!important",
+                  WebkitLineClamp: 1,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  WebkitBoxOrient: " vertical",
+                }}
+              >
+                Contest ends in:
+              </Typography>
+              <ClockRankingForMobile
+                contestStatus={contestStatus}
+                days={Days}
+                mins={Minutes}
+                hours={Hours}
+                seconds={Seconds}
+              />
             </Box>
             <ClockRanking
               contestStatus={contestStatus}
@@ -321,7 +326,12 @@ const RankingNavbar = ({
               hours={Hours}
               seconds={Seconds}
             />
-            <Box sx={{ display: { xs: "none", sm: "flex", md: "none" },justifyContent:{sm:"right"} }}>
+            <Box
+              sx={{
+                display: { xs: "none", sm: "flex", md: "none" },
+                justifyContent: { sm: "right" },
+              }}
+            >
               <SearchArea
                 setSearchField={setSearchField}
                 onSearchChange={onSearchChangeName}

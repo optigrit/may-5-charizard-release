@@ -42,20 +42,21 @@ import {
 import { manipulateuserdata } from "../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
 import defaultImage from "../../assets/BannerImages/Thumbnail.png";
+import jwt_decode from "jwt-decode";
+
 const CarouselItem = ({
   ProductDetails,
   index,
   keyfrombackend,
   loading,
   isEditable,
-  isUserProfileInProduct
+  isUserProfileInProduct,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isGoToCartVisible, setIsGoToCartVisible] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.CartReducer.cartItems);
@@ -203,12 +204,16 @@ const CarouselItem = ({
     navigate("/my-cart");
   };
 
-  const handleGoToDetailPage = (id) => {
-    if(ProductDetails?.status==="UNDERREVIEW"){
-      navigate("/under-review")
-    }else if(ProductDetails?.status==="APPROVED"){
+  const isCurrentUser = (userId) => {
+    return jwt_decode(Token).id === userId;
+  };
+
+  const handleGoToDetailPage = (id, userId) => {
+    if (isCurrentUser(userId)) navigate(`/coursevideos/${id}`);
+    else if (ProductDetails?.status === "UNDERREVIEW")
+      navigate("/under-review");
+    else if (ProductDetails?.status === "APPROVED")
       navigate(`/coursevideos/${id}`);
-    }
   };
 
   const handleEditCourse = (ProductDetails) => {
@@ -256,12 +261,7 @@ const CarouselItem = ({
         <Box
           className="overlay_container"
           sx={{
-            py: "12px",
-            px: "12px",
             backgroundColor: "#fff",
-            mx: "8px",
-            my: "8px",
-            boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.10)",
           }}
         >
           {loading ? (
@@ -315,13 +315,17 @@ const CarouselItem = ({
                     >
                       {`${ProductDetails?.authorData?.firstName} ${ProductDetails?.authorData?.lastName}`}
                     </Typography>
-                    {isUserProfileInProduct===true? <Typography
-                      display="block"
-                      variant="caption"
-                      color="text.secondary"
-                    >
-                      {ProductDetails?.status}
-                    </Typography>: <></>}
+                    {isUserProfileInProduct === true ? (
+                      <Typography
+                        display="block"
+                        variant="caption"
+                        color="text.secondary"
+                      >
+                        {ProductDetails?.status}
+                      </Typography>
+                    ) : (
+                      <></>
+                    )}
                   </Box>
 
                   <Box
@@ -541,7 +545,12 @@ const CarouselItem = ({
                       fullWidth
                       sx={{ fontSize: "11px", fontWeight: "400" }}
                       variant="contained"
-                      onClick={() => handleGoToDetailPage(ProductDetails?.id)}
+                      onClick={() =>
+                        handleGoToDetailPage(
+                          ProductDetails?.id,
+                          ProductDetails?.userId
+                        )
+                      }
                     >
                       View Course
                     </Button>
@@ -591,7 +600,12 @@ const CarouselItem = ({
                         fullWidth
                         sx={{ fontSize: "11px", fontWeight: "400" }}
                         variant="outlined"
-                        onClick={() => handleGoToDetailPage(ProductDetails?.id)}
+                        onClick={() =>
+                          handleGoToDetailPage(
+                            ProductDetails?.id,
+                            ProductDetails?.userId
+                          )
+                        }
                       >
                         View Details
                       </Button>

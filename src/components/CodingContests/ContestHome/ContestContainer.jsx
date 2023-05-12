@@ -37,7 +37,7 @@ const ContestContainer = ({ title, Contests, startedContest }) => {
                 <>
                   {Contest.endingDate > d && Contest.startingDate < d ? (
                     <NavLink
-                      to={`/contest/${Contest.id}/${Contest.code}`}
+                      to={`/contest/${Contest.id}`}
                       style={{ textDecoration: "none" }}
                     >
                       <ContestCard

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import dayjs from "dayjs";
@@ -8,25 +6,18 @@ import { TextField, Grid, Button } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import axios from "axios";
 import { IconTextField } from "../../TextField";
 import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
 import { useNavigate, useParams } from "react-router-dom";
-import SideBarResponsive from "../../SideBarResponsive";
-import { AlertBox } from "../../../pages/AlertBox";
 import { manipulateuserdata } from "../../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../../Redux/UserData/User-Constants";
 import { useDispatch } from "react-redux";
-import Dialogue from "../../Dialogbox/Dialogue";
-import AddAnnouncement from "../../CodingContests/addAnnouncement/AddAnnouncement";
 import EditProblemCard from "../Components/EditProblemCard";
 import SubHeader from "../../SideBarResponsive/SubHeader";
-import ContestCardEdit from "../../UserProfile/ContestCardEdit";
-import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import "../../ProductCarousel/Product.css";
-import EditProblemCarousel from "../../../components/Admin/Components/EditProblemCarousel";
+import { contestAPI } from "../../../api/requests/contestAPI";
+
 const EditContest = () => {
   const params = useParams();
   const drawerWidth = 240;
@@ -185,13 +176,8 @@ const EditContest = () => {
     setendingDate(newValue);
   };
 
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: { Authorization: `bearer ${Token}` },
-  };
-
-  const uploadData = async () => {
+  const uploadData = async (e) => {
+    e.preventDefault();
     const postData = {
       title: title,
       startingDate: startingDate?.$d / 1000,
@@ -233,29 +219,15 @@ const EditContest = () => {
 
   const getContest = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_URL}contest/${params.contest}`,
-        config
-      );
-      setContest(res.data);
-      console.log(res?.data);
-    } catch (err) {
-      console.log(err);
-    }
+      const data = await contestAPI.getContest(params.contestId);
+      setContest(data);
+    } catch (err) {}
   };
 
   const handleUpload = async (postData) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}contest/${params.contest}`,
-        postData,
-        config
-      );
-      // navigate('/contest/e31cf1ed-88ad-496a-bf59-eac328450c60')
-      console.log(data);
-    } catch (err) {
-      console.log(err);
-    }
+      const data = await contestAPI.editContest(params.contestId, postData);
+    } catch (err) {}
   };
 
   return (
@@ -683,7 +655,7 @@ const EditContest = () => {
                       md: "min-content!important",
                     },
                   }}
-                  onClick={() => uploadData()}
+                  onClick={(e) => uploadData(e)}
                 >
                   Update Contest
                 </Button>
@@ -693,38 +665,42 @@ const EditContest = () => {
                   Problems
                 </Typography>
 
-                {Problems?.length>0 ? Problems?.map((item, index) => {
-                  return <EditProblemCard key={index} Problem={item} />;
-                }) : <>
-                <Box
-                    display="flex"
-                    flexDirection="row"
-                    sx={{ p: 4, alignItems: "center" }}
-                  >
-                    <Box>
-                      <Typography
-                        sx={{
-                          m: "auto",
-                          fontWeight: "200",
-                          fontSize: "13px",
-                        }}
-                        paragraph
-                      >
-                        No Problems, you can create your problem from
-                      </Typography>
+                {Problems?.length > 0 ? (
+                  Problems?.map((item, index) => {
+                    return <EditProblemCard key={index} Problem={item} />;
+                  })
+                ) : (
+                  <>
+                    <Box
+                      display="flex"
+                      flexDirection="row"
+                      sx={{ p: 4, alignItems: "center" }}
+                    >
+                      <Box>
+                        <Typography
+                          sx={{
+                            m: "auto",
+                            fontWeight: "200",
+                            fontSize: "13px",
+                          }}
+                          paragraph
+                        >
+                          No Problems, you can create your problem from
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Button
+                          size="small"
+                          onClick={() => {
+                            navigate(`/admin/${params.contestId}`);
+                          }}
+                        >
+                          Create Problem
+                        </Button>
+                      </Box>
                     </Box>
-                    <Box>
-                      <Button
-                        size="small"
-                        onClick={() => {
-                          navigate(`/admin/${params.contest_id}`);
-                        }}
-                      >
-                        Create Problem
-                      </Button>
-                    </Box>
-                  </Box>
-                </>}
+                  </>
+                )}
               </Grid>
             </Grid>
           </Grid>

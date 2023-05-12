@@ -38,18 +38,15 @@ const options = {
           return ``;
         },
         label: function (context) {
-          console.log(context);
           return `#${context.raw}000`;
         },
         footer: function (context) {
-          console.log(context);
           return context[0].dataset.label;
         },
         afterLabel: function (context) {
           return "Global ranking";
         },
         labelColor: function (context) {
-          console.log(context);
           return {
             backgroundColor: "fff",
             bodyFontColor: `${context.dataset.backgroundColor}`,
@@ -57,7 +54,6 @@ const options = {
           };
         },
         labelTextColor: function (context) {
-          console.log(context)
           return `${context.dataset.backgroundColor}`;
         },
         bodyFontColor: function (context) {

@@ -8,7 +8,7 @@ import { NavLink, useParams } from "react-router-dom";
 import axios from "axios";
 import { Typography } from "@mui/material";
 
-const ScorableProblems = ({ ContestProbs, contestStatus, contest_id }) => {
+const ScorableProblems = ({ ContestProbs, contestStatus, contestId }) => {
   const { contest_code } = useParams();
 
   return (

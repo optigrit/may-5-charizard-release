@@ -197,7 +197,7 @@ const ProblemNavbar = ({ problem, contestStatus, isLoading }) => {
               {tabs?.map((tab, index) => {
                 return (
                   <NavLink
-                    to={`/problem/${params.id}/${
+                    to={`/problem/${params.problemId}/${
                       routes[tab?.id - 1]
                     }`}
                     style={{ textDecoration: "none", color: "black" }}

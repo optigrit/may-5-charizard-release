@@ -1,6 +1,4 @@
 import React, { useState, useRef } from "react";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import dayjs from "dayjs";
@@ -8,19 +6,15 @@ import { TextField, Grid, Button } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import axios from "axios";
 import { IconTextField } from "../../TextField";
 import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
 import { useNavigate } from "react-router-dom";
-import SideBarResponsive from "../../SideBarResponsive";
 import { AlertBox } from "../../../pages/AlertBox";
 import { manipulateuserdata } from "../../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../../Redux/UserData/User-Constants";
 import { useDispatch } from "react-redux";
-import Dialogue from "../../Dialogbox/Dialogue";
-import AddAnnouncement from "../../CodingContests/addAnnouncement/AddAnnouncement";
 import SubHeader from "../../SideBarResponsive/SubHeader";
+import { contestAPI } from "../../../api/requests/contestAPI";
 
 const CreateContest = () => {
   const drawerWidth = 240;
@@ -169,12 +163,6 @@ const CreateContest = () => {
     setendingDate(newValue);
   };
 
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: { Authorization: `bearer ${Token}` },
-  };
-
   const dataforpost = {
     title: title,
     startingDate: startingDate.$d / 1000,
@@ -190,15 +178,15 @@ const CreateContest = () => {
 
   const [contestId, setContestId] = useState(null);
 
-  const addContest = async () => {
-    await axios
-      .post(`${process.env.REACT_APP_URL}contest`, dataforpost, config)
+  const addContest = async (e) => {
+    e.preventDefault();
+    await contestAPI
+      .createContest(dataforpost)
       .then((res) => {
-        console.log(res?.data[0]?.id);
-        setContestId(res?.data[0]?.id);
+        setContestId(res[0]?.id);
         setShowDialogue(true);
         handlealert("Contest Created", "success");
-        navigate(`/admin/${res?.data[0]?.id}`, { replace: true });
+        navigate(`/admin/${res[0]?.id}`, { replace: true });
       })
       .catch((err) => {
         handlealert(err?.message, "error");

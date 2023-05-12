@@ -1,19 +1,14 @@
 import React, { useState } from "react";
 import { ContainerOfTitle } from "../../../Style/VideoSlider";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Accordion } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Box } from "@mui/system";
 import Button from "@mui/material/Button";
 import { useOutletContext, useParams } from "react-router-dom";
-import axios from "axios";
-import { AlertBox } from "../../../pages/AlertBox";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -21,6 +16,7 @@ import Select from "@mui/material/Select";
 import { useDispatch } from "react-redux";
 import { manipulateuserdata } from "../../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../../Redux/UserData/User-Constants";
+import { contestAPI } from "../../../api/requests/contestAPI";
 
 const UploadCodeLink = () => {
   const { id } = useParams();
@@ -32,11 +28,6 @@ const UploadCodeLink = () => {
   const [language, setLanguage] = useState("");
   const [githubUsername, setGithubUsername] = useState("");
 
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: { Authorization: `bearer ${Token}` },
-  };
 
   function isUrlValid(userInput) {
     var regexQuery =
@@ -66,13 +57,9 @@ const UploadCodeLink = () => {
   };
 
   const submitSolution = async () => {
-    await axios
-      .post(
-        `${process.env.REACT_APP_URL}problem/${id}/submission`,
-        dataforpost,
-        config
-      )
-      .then((res) => {
+    await contestAPI
+      .submitSolution(id, dataforpost)
+      .then((data) => {
         handlealert("Submitted!", "success");
       })
       .catch((err) => {

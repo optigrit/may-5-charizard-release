@@ -7,7 +7,7 @@ import { Box } from "@mui/system";
 import Typography from "@mui/material/Typography";
 import { NavLink } from "react-router-dom";
 
-const ShowRank = ({ contestStatus, contest_code, time, contest_id }) => {
+const ShowRank = ({ contestStatus, contest_code, time, contestId }) => {
   return (
     <>
       <Grid container mt={4}>
@@ -36,14 +36,12 @@ const ShowRank = ({ contestStatus, contest_code, time, contest_id }) => {
             borderColor: "#e5e5e5",
             backgroundColor: "#g1g1g1",
             width: "100%",
-
           }}
         >
           <Grid item xs={12} display="flex" flexDirection="column" my={4}>
             {contestStatus === true && (
               <Typography
                 textAlign="center"
-                
                 sx={{ fontSize: "15px", fontWeight: "200", color: "grey" }}
                 variant="body2"
               >
@@ -53,7 +51,7 @@ const ShowRank = ({ contestStatus, contest_code, time, contest_id }) => {
             )}
             <Box textAlign="center" mt={2}>
               <NavLink
-                to={`/contest/${contest_id}/${time}/${contest_code}/ranking`}
+                to={`/contest/${contestId}/${time}/${contest_code}/ranking`}
                 style={{ textDecoration: "none" }}
               >
                 <Button

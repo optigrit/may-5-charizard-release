@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/system";
-import ProblemMySubmissionCard from "./ProblemMySubmissionCard";
 import { NavLink, useParams } from "react-router-dom";
-import axios from "axios";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import { Chip, Typography, Button, Grid } from "@mui/material";
 import styled from "styled-components";
 import ReusableButton from "../../ReusableButtons/ReusableButton";
+import { contestAPI } from "../../../api/requests/contestAPI";
 
 const ProblemMySubmissions = () => {
   const { id } = useParams();
@@ -23,19 +21,11 @@ const ProblemMySubmissions = () => {
     getSubmissions();
   }, []);
 
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: { Authorization: `bearer ${Token}` },
-  };
 
   const getSubmissions = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_URL}problem/submissions/${id}`,
-        config
-      );
-      setSubmissions(res.data);
+      const data = await contestAPI.getSubmissions(id);
+      setSubmissions(data);
     } catch (err) {}
   };
 

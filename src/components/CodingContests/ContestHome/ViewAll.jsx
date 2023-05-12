@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Box } from "@mui/system";
-import SideBarResponsive from "../../SideBarResponsive";
 import RankingNavbar from "../ContestRanking/RankingNavbar";
 import RankingTable from "../../CodingContests/ContestRanking/RankingTable";
 import RankingTableUserInfo from "../ContestRanking/RankingTableUserInfo";
-import axios from "axios";
 import { CardMedia, Grid } from "@mui/material";
 import bannerImage from "../../../assets/CourseImages/SideBanner.png";
+import { contestAPI } from "../../../api/requests/contestAPI";
 
 const ViewAll = () => {
   const view = [
@@ -74,37 +72,13 @@ const ViewAll = () => {
     getAllRanks();
   }, [page]);
 
-  // const [id, setId] = useState(1)
-
   const getAllRanks = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_URL}globalrankings/DEV/${page}`
-      );
-      //   console.log(res?.data?.data,"res?.data?.data")
-      setNew(res?.data?.data);
-      setRanks(res?.data.totalParticipants);
-    } catch (err) {
-      console.log(err);
-    }
+      const data = await contestAPI.getGlobalRanks(page);
+      setNew(data?.data);
+      setRanks(data && data.totalParticipants);
+    } catch (err) {}
   };
-
-  // const ids = new Map([
-  //     [1,"country"],
-  //     [2,"instituteName"],
-  //     [3,"instituteType"]
-  //   ]);
-
-  // const handleSearchFromApi = async () => {
-  //     try {
-  //         const res = await axios.get(
-  //             `http://localhost:8080/user/contest/${contest_id}?search=${searchField}&${ids.get(id)}=${filterSearch}`
-  //         );
-  //         setNew(res?.data);
-  //     } catch (err) {
-  //         console.log(err, "error");
-  //     }
-  // };
 
   const drawerWidth = 240;
 

@@ -1,31 +1,18 @@
 import React, { useState, useRef } from "react";
-import Paper from "@mui/material/Paper";
 import { Box } from "@mui/system";
-import {
-  TextField,
-  Grid,
-  Button,
-  AppBar,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import axios from "axios";
+import { TextField, Grid, Button, Typography } from "@mui/material";
 import { IconTextField } from "../../TextField";
 import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
-import SideBarResponsive from "../../SideBarResponsive";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { AlertBox } from "../../../pages/AlertBox";
 import { manipulateuserdata } from "../../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../../Redux/UserData/User-Constants";
 import { useDispatch } from "react-redux";
-import NewPage from "./NewPage";
 import SubHeader from "../../SideBarResponsive/SubHeader";
+import { contestAPI } from "../../../api/requests/contestAPI";
 
 const CreateProblem = () => {
   const [inputTags, setinputTags] = useState([""]);
@@ -316,12 +303,6 @@ const CreateProblem = () => {
     }
   };
 
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: { Authorization: `bearer ${Token}` },
-  };
-
   const ALERT_TIME = 5000;
 
   const dispatch = useDispatch();
@@ -339,13 +320,9 @@ const CreateProblem = () => {
   };
 
   const addProblem = async () => {
-    await axios
-      .post(
-        `${process.env.REACT_APP_URL}problem/${params.contest_id}`,
-        dataforpost,
-        config
-      )
-      .then((res) => {
+    await contestAPI
+      .createProblem(params.contestId, dataforpost)
+      .then((data) => {
         handlealert("Problem created!", "success");
         window.location.reload();
       })
@@ -355,14 +332,9 @@ const CreateProblem = () => {
   };
 
   const addProblemAndGoToHome = async () => {
-    await axios
-      .post(
-        `${process.env.REACT_APP_URL}problem/${params.contest_id}`,
-        dataforpost,
-        config
-      )
-      .then((res) => {
-        console.log(res.data);
+    await contestAPI
+      .createProblem(params.contestId, dataforpost)
+      .then((data) => {
         handlealert("Problem created!", "success");
         navigate(`/contest`, { replace: true });
       })
@@ -505,7 +477,7 @@ const CreateProblem = () => {
                     Difficulty Level
                   </InputLabel>
                   <Select
-                   required
+                    required
                     inputRef={difLevelRef}
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
@@ -530,7 +502,7 @@ const CreateProblem = () => {
                 }}
               >
                 <TextField
-                required
+                  required
                   size="small"
                   id="outlined-basic"
                   label="Maximum score"
@@ -1236,7 +1208,7 @@ const CreateProblem = () => {
             </Grid>
           </Grid>
         </Grid>
-        {/* <Link style={{ textDecoration: 'none' }} to={`/admin/${params.contest_id}`}> */}
+        {/* <Link style={{ textDecoration: 'none' }} to={`/admin/${params.contestId}`}> */}
         {/* </Link> */}
       </form>
     </>

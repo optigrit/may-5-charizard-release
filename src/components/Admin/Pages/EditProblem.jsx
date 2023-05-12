@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Paper from "@mui/material/Paper";
 import { Box } from "@mui/system";
 import {
   TextField,
@@ -9,23 +8,18 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import { IconTextField } from "../../TextField";
 import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
-import SideBarResponsive from "../../SideBarResponsive";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { AlertBox } from "../../../pages/AlertBox";
 import { manipulateuserdata } from "../../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../../Redux/UserData/User-Constants";
 import { useDispatch } from "react-redux";
-import NewPage from "./NewPage";
 import SubHeader from "../../SideBarResponsive/SubHeader";
+import { contestAPI } from "../../../api/requests/contestAPI";
 
 const EditProblem = () => {
   const [inputTags, setinputTags] = useState([""]);
@@ -47,7 +41,7 @@ const EditProblem = () => {
     { apiMethod: "", link: "", description: "" },
   ]);
 
-  const { problem } = useParams();
+  const { problemId } = useParams();
 
   const handleinputchangeTag = (e, index) => {
     const tag = [...inputTags];
@@ -313,11 +307,6 @@ const EditProblem = () => {
     }
   };
 
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: { Authorization: `bearer ${Token}` },
-  };
 
   const ALERT_TIME = 5000;
 
@@ -373,10 +362,8 @@ const EditProblem = () => {
       description: description.join(" "),
     };
   });
-  console.log(objectArray);
 
   useEffect(() => {
-    console.log(objectArray);
     setTitle(Problem?.title);
     setLanguages(Problem?.languages);
     setinputConstraints(Problem?.constraints);
@@ -400,28 +387,15 @@ const EditProblem = () => {
 
   const getProblem = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_URL}problem/${problem}`,
-        config
-      );
-      setProblem(res?.data?.probelmData);
-      console.log(res?.data);
-    } catch (err) {
-      console.log(err);
-    }
+      const data = await contestAPI.getProblem(problemId);
+      setProblem(data?.problemData);
+    } catch (err) {}
   };
 
   const handleUpload = async (postData) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}problem/${problem}`,
-        postData,
-        config
-      );
-      console.log(data);
-    } catch (err) {
-      console.log(err);
-    }
+      const  data  = await contestAPI.editProblem(problemId, postData);
+    } catch (err) {}
   };
 
   const drawerWidth = 240;
@@ -1226,7 +1200,6 @@ const EditProblem = () => {
             </Grid>
           </Grid>
         </Grid>
-
       </form>
     </>
   );

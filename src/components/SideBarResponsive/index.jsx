@@ -48,7 +48,7 @@ function SideBarResponsive(props, { type }) {
     (state) => state?.WishlistReducer?.wishlistItems
   );
   const cartItem = useSelector((state) => state?.CartReducer?.cartItems);
-  const Username = localStorage.getItem("Username");
+  // const Username = localStorage.getItem("Username");
 
   const location = useLocation();
 
@@ -57,7 +57,6 @@ function SideBarResponsive(props, { type }) {
   const isContestPage = location.pathname === "/contest";
   // let showAppBar = location.pathname.includes( "/contest");
   let isCoursePage = location.pathname.includes("/coursevideos");
-  console.log(isCoursePage, "isCoursePage");
 
   if (location.pathname.includes("/contest")) {
     showAppBar = true;
@@ -95,6 +94,11 @@ function SideBarResponsive(props, { type }) {
   }, []);
 
   const Token = localStorage.getItem("Token");
+
+    // Decoding the User Name
+    const decodeUsername = jwt_decode(Token)
+    const Username = decodeUsername.username
+
   const config = {
     headers: {
       Authorization: `bearer ${Token}`,

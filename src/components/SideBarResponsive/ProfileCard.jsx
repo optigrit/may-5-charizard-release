@@ -19,9 +19,9 @@ const ProfileCard = ({ Name, Email }) => {
           <ListItemAvatar>
             <Avatar
               sx={{ borderRadius: "10%" }}
-              alt={Name}
-              src="/static/images/avatar/1.jpg"
-            />
+            >
+            {Name?.charAt(0)}
+            </Avatar>
           </ListItemAvatar>
           <ListItemText
             sx={{ wordBreak: "break-word" }}

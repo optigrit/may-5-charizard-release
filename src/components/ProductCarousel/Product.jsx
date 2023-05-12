@@ -40,7 +40,7 @@ const Product = ({
 
   return (
     <>
-      <Grid>
+      <Grid sx={{bgcolor:"white",  p:"12px",     mt:"12px",       boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.05)",}}>
         <Typography
           variant="h5"
           sx={{

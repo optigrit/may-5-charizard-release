@@ -44,7 +44,6 @@ const AdditionalInformation = ({
         setResumeProgress(false);
         setAnyChange(false);
       });
-      console.log(fileName);
       return fileName;
     }
   };
