@@ -1,10 +1,7 @@
 import { Box } from "@mui/material";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Image2 from "../../assets/CourseImages/Banner1.png";
-import Carousel1 from "../../components/CarouselForBanner";
-import Filter from "../../components/Filter";
-import Product from "../../components/ProductCarousel/Product";
+import { courseAPI } from "../../api/requests/courses/courseAPI";
 
 function UserWithoutLogin() {
   const drawerWidth = 240;
@@ -16,13 +13,6 @@ function UserWithoutLogin() {
   const [highest, setHighest] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchLoad, setSearchLoad] = useState(false);
-
-  const Token = localStorage.getItem("Token");
-  const config = {
-    headers: {
-      Authorization: `bearer ${Token}`,
-    },
-  };
 
   const onSearchChangeName = (event) => {
     const searchFieldString = event.target.value;
@@ -38,6 +28,7 @@ function UserWithoutLogin() {
     });
     setHighest([...Highest]);
   };
+
   const handleReset = () => {
     setFilterItems(data2);
     setSearchKeyword("");
@@ -45,13 +36,12 @@ function UserWithoutLogin() {
 
   const handleClickCategory = (event) => {
   };
+
   const handleSearchFromApi = async () => {
     setSearchLoad(true);
     try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_URL}course/search?search=${searchKeyword}`
-      );
-      setFilterItems(res?.data);
+      const data = await courseAPI.searchCourse(searchKeyword);
+      setFilterItems(data && data);
       setSearchLoad(false);
     } catch (err) {}
   };
@@ -59,9 +49,11 @@ function UserWithoutLogin() {
   useEffect(() => {
     handleSearchFromApi();
   }, []);
+
   useEffect(() => {
     filteredItems();
   }, [data2]);
+
   return (
     <>
       {/* <Box

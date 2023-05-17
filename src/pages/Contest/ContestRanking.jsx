@@ -5,7 +5,8 @@ import RankingTable from "../../components/CodingContests/ContestRanking/Ranking
 import RankingTableUserInfo from "../../components/CodingContests/ContestRanking/RankingTableUserInfo";
 import { CardMedia, Grid } from "@mui/material";
 import bannerImage from "../../assets/CourseImages/SideBanner.png";
-import { contestAPI } from "../../api/requests/contestAPI";
+import { contestAPI } from "../../api/requests/contests/contestAPI";
+import { contestRankAPI } from "../../api/requests/contests/contestRankAPI";
 
 const ContestRanking = () => {
   const { contestId, time, contest_code } = useParams();
@@ -22,7 +23,7 @@ const ContestRanking = () => {
 
   const getContestRanks = async () => {
     try {
-      const data = await contestAPI.getContestRanks(contestId, page);
+      const data = await contestRankAPI.getContestRanks(contestId, page);
       setNew(data?.ranks);
     } catch (err) {}
   };

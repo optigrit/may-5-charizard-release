@@ -48,7 +48,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import File from "../../assets/courseVideosUpload/FILE.svg";
 import Reviews from "../../components/Reviews/Reviews";
 import { useEffect } from "react";
-import axios from "axios";
 import moment from "moment";
 import { useNavigate, useParams } from "react-router-dom";
 import Getcourses from "../../components/Getcourses/Getcourses";
@@ -61,6 +60,11 @@ import { manipulateWishList } from "../../Redux/AddToWishlist/Wishlist-Action";
 import { REMOVE_ITEM_FROM_WISHLIST } from "../../Redux/AddToWishlist/Wishlist-Constants";
 // import Popper from '@mui/material/Popper';
 import ThumbDownOffAltRoundedIcon from "@mui/icons-material/ThumbDownOffAltRounded";
+import { courseAPI } from "../../api/requests/courses/courseAPI";
+import { courseVideoAPI } from "../../api/requests/courses/courseVideoAPI";
+import { courseStageAPI } from "../../api/requests/courses/courseStageAPI";
+import { courseCommentAPI } from "../../api/requests/courses/courseCommentAPI";
+import { userAPI } from "../../api/requests/users/userAPI";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -260,25 +264,14 @@ const Coursevideo = () => {
   const MouseIn = () => setReshover(true);
   const MouseOut = () => setReshover(false);
 
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `bearer ${Token} `,
-      "Content-type": "application/json",
-    },
-  };
-
   let { id } = useParams();
   const getdata = async () => {
     try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_URL}course/${id}`,
-        config
-      );
+      const data = await courseAPI.getSpecificCourse(id);
       return data;
     } catch (error) {}
   };
+
   const updateState = (data) => {
     setStage(data.data.courseStage);
     cartBtnText(data.data.courseStage);
@@ -290,22 +283,16 @@ const Coursevideo = () => {
 
   const userprogress = async () => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}progress/${id}`,
-        {
-          sectionId: coursedata[secindex]?.id,
-          videoId: coursedata[secindex]?.videosData[vidindex]?.id,
-        },
-        config
-      );
+      const data = await courseVideoAPI.updateUserProgress(id, {
+        sectionId: coursedata[secindex]?.id,
+        videoId: coursedata[secindex]?.videosData[vidindex]?.id,
+      });
     } catch (err) {}
   };
+
   const getuserprogress = async () => {
     try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_URL}progress/${id}`,
-        config
-      );
+      const data = await courseVideoAPI.getUserProgress(id);
       return data;
     } catch (err) {}
   };
@@ -344,12 +331,8 @@ const Coursevideo = () => {
   );
 
   const addCourseTocart = async (userdata) => {
-    await axios
-      .post(
-        `${process.env.REACT_APP_URL}course/stage/${id}`,
-        { stage: "CART" },
-        config
-      )
+    await courseStageAPI
+      .addCourseToWishListOrCart(id, "CART")
       .then((res) => {})
       .catch((err) => {});
   };
@@ -376,12 +359,9 @@ const Coursevideo = () => {
     }
   };
 
-  const getcomments = async () => {
+  const getComments = async () => {
     try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_URL}comment/${id}/${page}`,
-        config
-      );
+      const data = await courseCommentAPI.getComments(id, page);
       setComments(data.commentsData);
       setTotalcomments(parseInt(data.commentsCount));
     } catch (err) {}
@@ -389,21 +369,16 @@ const Coursevideo = () => {
 
   const userinfo = async () => {
     try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_URL}user`,
-        config
-      );
-      setCurrentuser(data);
+      const data = await userAPI.getUserInfo();
+      setCurrentuser(data && data);
     } catch (err) {}
   };
 
-  const addcomments = async () => {
+  const addComment = async () => {
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL}comment/${id}`,
-        { comment: usercommments },
-        config
-      );
+      const data = await courseCommentAPI.addComment(id, {
+        comment: usercommments,
+      });
       data[0].userData = currentuser;
       data[0].likes = 0;
       data[0].dislikes = 0;
@@ -415,38 +390,33 @@ const Coursevideo = () => {
 
   useEffect(() => {
     userinfo();
-    getcomments();
+    getComments();
   }, [page]);
 
-  const editcomments = async () => {
+  const editComment = async () => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}comment/${Id}`,
-        { newComment: editcom, commentId: Id },
-        config
-      );
+      const data = await courseCommentAPI.editComment(Id, {
+        newComment: editcom,
+        commentId: Id,
+      });
     } catch (err) {}
   };
 
-  const deletecomments = async (i) => {
+  const deleteComment = async (i) => {
     try {
-      const { data } = await axios.delete(
-        `${process.env.REACT_APP_URL}comment/${Id}`,
-        config
-      );
+      const data = await courseCommentAPI.deleteComment(Id);
       comments.splice(i, 1);
       setTotalcomments((a) => a - 1);
       setComments([...comments]);
     } catch (err) {}
   };
 
-  const givelikes = async (Id, isDisliked, i) => {
+  const giveLike = async (Id, isDisliked, i) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}comment/${id}`,
-        { action: "LIKE", commentId: Id },
-        config
-      );
+      const data = await courseCommentAPI.editComment(id, {
+        action: "LIKE",
+        commentId: Id,
+      });
       if (isDisliked) {
         comments[i].likes = comments[i].likes + 1;
         comments[i].dislikes = comments[i].dislikes - 1;
@@ -460,13 +430,12 @@ const Coursevideo = () => {
     } catch (err) {}
   };
 
-  const givedislike = async (Id, isLikes, i) => {
+  const giveDislike = async (Id, isLikes, i) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}comment/${id}`,
-        { action: "DISLIKE", commentId: Id },
-        config
-      );
+      const data = await courseCommentAPI.editComment(id, {
+        action: "DISLIKE",
+        commentId: Id,
+      });
       if (isLikes) {
         comments[i].dislikes = comments[i].dislikes + 1;
         comments[i].likes = comments[i].likes - 1;
@@ -480,68 +449,65 @@ const Coursevideo = () => {
     } catch (err) {}
   };
 
-  const removelike = async (Id, i) => {
+  const removeLike = async (Id, i) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}comment/${id}`,
-        { action: "REMOVELIKE", commentId: Id },
-        config
-      );
+      const data = await courseCommentAPI.editComment(id, {
+        action: "REMOVELIKE",
+        commentId: Id,
+      });
       comments[i].likes = comments[i].likes - 1;
       comments[i].isLiked = null;
       setComments([...comments]);
     } catch (err) {}
   };
-  const removedislike = async (Id, i) => {
+
+  const removeDislike = async (Id, i) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}comment/${id}`,
-        { action: "REMOVEDISLIKE", commentId: Id },
-        config
-      );
+      const data = await courseCommentAPI.editComment(id, {
+        action: "REMOVEDISLIKE",
+        commentId: Id,
+      });
       comments[i].dislikes = comments[i].dislikes - 1;
       comments[i].isDisLiked = null;
       setComments([...comments]);
     } catch (err) {}
   };
+
   const handleLike = (Id, isLikes, isDisliked, i) => {
     setLike(!like);
     setLid(Id);
     setDislike(false);
     if (!isLikes) {
-      givelikes(Id, isDisliked, i);
+      giveLike(Id, isDisliked, i);
     } else {
-      removelike(Id, i);
+      removeLike(Id, i);
     }
   };
+  
   const handleDislike = (Id, isLikes, isDisliked, i) => {
     setDislike(!dislike);
     setDid(Id);
     setLike(false);
     if (!isDisliked) {
-      givedislike(Id, isLikes, i);
+      giveDislike(Id, isLikes, i);
     } else {
-      removedislike(Id, i);
+      removeDislike(Id, i);
     }
   };
 
-  const getreply = async (Id) => {
+  const getReply = async (Id) => {
     try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_URL}comment/${id}/${page}?commentId=${Id}`,
-        config
-      );
+      const data = await courseCommentAPI.getReply(id, page, Id);
       return data;
     } catch (err) {}
   };
 
-  const givereplylikes = async (Id, isDisliked, i) => {
+  const giveReplyLikes = async (Id, isDisliked, i) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}comment/${id}`,
-        { action: "LIKE", commentId: Id },
-        config
-      );
+      const data = await courseCommentAPI.editComment(id, {
+        action: "LIKE",
+        commentId: Id,
+      });
       if (isDisliked) {
         reeply[i].likes = reeply[i].likes + 1;
         reeply[i].dislikes = reeply[i].dislikes - 1;
@@ -554,13 +520,13 @@ const Coursevideo = () => {
       setReeply([...reeply]);
     } catch (err) {}
   };
-  const givereplydislikes = async (Id, isLiked, i) => {
+
+  const giveReplyDislikes = async (Id, isLiked, i) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}comment/${id}`,
-        { action: "DISLIKE", commentId: Id },
-        config
-      );
+      const data = await courseCommentAPI.editComment(id, {
+        action: "DISLIKE",
+        commentId: Id,
+      });
       if (isLiked) {
         reeply[i].dislikes = reeply[i].dislikes + 1;
         reeply[i].likes = reeply[i].likes - 1;
@@ -573,25 +539,25 @@ const Coursevideo = () => {
       setReeply([...reeply]);
     } catch (err) {}
   };
-  const removereplylikes = async (Id, i) => {
+
+  const removeReplyLikes = async (Id, i) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}comment/${id}`,
-        { action: "REMOVELIKE", commentId: Id },
-        config
-      );
+      const data = await courseCommentAPI.editComment(id, {
+        action: "REMOVELIKE",
+        commentId: Id,
+      });
       reeply[i].likes = reeply[i].likes - 1;
       reeply[i].isLiked = null;
       setReeply([...reeply]);
     } catch (err) {}
   };
-  const removereplydislikes = async (Id, i) => {
+
+  const removeReplyDislikes = async (Id, i) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}comment/${id}`,
-        { action: "REMOVEDISLIKE", commentId: Id },
-        config
-      );
+      const data = await courseCommentAPI.removeReplyDislikes(id, {
+        action: "REMOVEDISLIKE",
+        commentId: Id,
+      });
       reeply[i].dislikes = reeply[i].dislikes - 1;
       reeply[i].isDisLiked = null;
       setReeply([...reeply]);
@@ -601,21 +567,23 @@ const Coursevideo = () => {
   const handleRlike = (Id, isLiked, isDisliked, ii) => {
     setRlid(Id);
     if (!isLiked) {
-      givereplylikes(Id, isDisliked, ii);
+      giveReplyLikes(Id, isDisliked, ii);
     } else {
-      removereplylikes(Id, ii);
+      removeReplyLikes(Id, ii);
     }
   };
 
   const handleRdislike = (Id, isLiked, isDisliked, ii) => {
     setRdid(Id);
     if (!isDisliked) {
-      givereplydislikes(Id, isLiked, ii);
+      giveReplyDislikes(Id, isLiked, ii);
     } else {
-      removereplydislikes(Id, ii);
+      removeReplyDislikes(Id, ii);
     }
   };
+
   const [addToCartText, setAddToCartText] = useState("Add to Cart");
+
   const cartBtnText = (stage) => {
     if (stage === "CART") {
       setAddToCartText("Go to Cart");
@@ -641,26 +609,21 @@ const Coursevideo = () => {
 
   const report = async () => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}comment/${id}`,
-        {
-          action: "REPORT",
-          commentId: reportid,
-          reportDescription: UserReport,
-        },
-        config
-      );
+      const data = await courseCommentAPI.editComment(id, {
+        action: "REPORT",
+        commentId: reportid,
+        reportDescription: UserReport,
+      });
       handlealert("report submitted", "success");
     } catch (err) {}
   };
 
-  const addreply = async (Id) => {
+  const addReply = async (Id) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}comment/${id}`,
-        { reply: userreply, commentId: Id },
-        config
-      );
+      const data = await courseCommentAPI.editComment(id, {
+        reply: userreply,
+        commentId: Id,
+      });
       data[0].userData = currentuser;
       data[0].likes = 0;
       data[0].dislikes = 0;
@@ -669,12 +632,15 @@ const Coursevideo = () => {
       setReeply([...reeply]);
     } catch (err) {}
   };
+
   const handleReply = async (Id) => {
     setRid(Id);
-    const data = await getreply(Id);
+    const data = await getReply(Id);
     setReeply(data.repliesData);
     setTotalreplies(parseInt(data.repliesCount));
   };
+
+  
 
   return (
     <>
@@ -964,7 +930,7 @@ const Coursevideo = () => {
             )}
             {buy && (
               <>
-                <Box sx={{ width: "100%",}}>
+                <Box sx={{ width: "100%" }}>
                   <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     <Tabs
                       value={value}
@@ -1105,7 +1071,7 @@ const Coursevideo = () => {
                             },
                           }}
                           onClick={() => {
-                            addcomments();
+                            addComment();
                             setUsercommments("");
                           }}
                           disabled={!usercommments}
@@ -1219,7 +1185,7 @@ const Coursevideo = () => {
                                         fontSize: "14px",
                                       }}
                                       onClick={() => {
-                                        deletecomments(i);
+                                        deleteComment(i);
                                         setDot(false);
                                       }}
                                     >
@@ -1413,7 +1379,7 @@ const Coursevideo = () => {
                                       },
                                     }}
                                     onClick={() => {
-                                      addreply(values.id);
+                                      addReply(values.id);
                                       setUserreply("");
                                       setCommments(true);
                                     }}
@@ -1681,10 +1647,154 @@ const Coursevideo = () => {
                     </Grid>
                   </TabPanel>
                   <TabPanel value={value} index={1}>
-                    About Course
+                    <Box>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "1rem",
+                          textAlign: "justify",
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          sx={{ color: "#292929", fontWeight: "bold" }}
+                        >
+                          Description
+                        </Typography>
+                        <Typography
+                          sx={{ color: "#646464", fontWeight: "400" }}
+                        >
+                          {userdata?.description}
+                        </Typography>
+                        <List
+                          sx={{
+                            listStyleType: "disc",
+                            color: "#646464",
+                            textTransform: "uppercase",
+                            marginLeft: "1em"
+                          }}
+                        >
+                          {userdata?.descriptionPoints?.map((value, id) => (
+                            <ListItem key={id} sx={{ display: "list-item", textAlign: "justify", padding: 0}}>
+                              <ListItemText
+                                primaryTypographyProps={{
+                                  fontSize: "14px",
+                                  fontWeight: "400",
+                                }}
+                              >
+                                {value}
+                              </ListItemText>
+                            </ListItem>
+                          ))}
+                        </List>
+                      </Box>
+                    </Box>
                   </TabPanel>
                   <TabPanel value={value} index={2}>
-                  Resources
+                    <Box>
+                        <Typography
+                          variant="h6"
+                          sx={{ color: "#292929", fontWeight: "bold" }}
+                        >
+                          Resources
+                        </Typography>
+                    <Grid mb={1} container spacing={2}>
+                      <Grid item sx={{textAlign: {xs:"center", sm: "start"}}}  xs={4} sm={6}>
+                          <Typography variant="caption" pl={{xs: 0, sm: 4}} sx={{ color: "#3D3D3D", flexBasis: "10%" }}>
+                          Name
+                        </Typography>
+                      </Grid>
+                      <Grid item sx={{textAlign: "center"}}  xs={2} sm={2}>
+                          <Typography variant="caption" sx={{ color: "#3D3D3D", flexBasis: "10%" }}>
+                          Size
+                        </Typography>
+                      </Grid>
+                      <Grid item sx={{textAlign: "center"}}  xs={3} sm={2}>
+                          <Typography variant="caption" sx={{ color: "#3D3D3D"}}>
+                           Uploaded at
+                        </Typography>
+                      </Grid>
+                      <Grid item sx={{textAlign: "center"}}  xs={3} sm={2}>
+                          <Typography variant="caption" sx={{ color: "#3D3D3D"}}>
+                          File
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                     
+                      <Box
+                      >
+                        <hr />
+                        {coursedata[secindex]?.videosData[
+                          vidindex
+                        ]?.extraFiles.map((values, index) => (
+                          <Grid container py={1} spacing={2} 
+                          >
+                            <Grid item  xs ={4} sm={6}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                gap: "5px",
+                                alignItems: "center",
+                                overFlow: "hidden",
+                                textOverflow: "elipsis",
+                              }}
+                            >
+                              <Box  sx={{display: {xs: "none", sm: "block"}}}>
+
+                              <img src={File} style={{width: "30px", height: "30px"}} alt="icon" />
+                              </Box>
+                              <Stack
+                                direction="column"
+                                sx={{overFlow: "hidden",textOverflow: "elipsis", width: {xs: "100%", sm: "auto"}}}
+                              >
+                                <Typography noWrap sx={{ color: "#3D3D3D"}}>
+                                  {values.fileName}
+                                </Typography>
+                              </Stack>
+                            </Box>
+                            </Grid>
+                            <Grid item sx={{textAlign: "center"}}  xs ={2} sm={2}>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: "#8C8C8C",
+                              }}
+                            >
+                              {Math.round(values.fileSize / 100000)}KB
+                            </Typography>
+                            </Grid>
+                            <Grid  item sx={{textAlign: "center"}}   xs={3} sm={2}>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: "#8C8C8C",
+                              }}
+                            >
+                              {values.created_at.slice(0, -14)}
+                            </Typography>
+                            </Grid>
+                           <Grid item sx={{textAlign: "center"}}  xs={3} sm={2}>
+                           <Button  variant="outlined" size=""> 
+                              <a
+                                target="_blank"
+                                href={values.fileUrl}
+                                style={{
+                                  fontSize: "12px",
+                                  fontWeight: "bold",
+                                  color: "#698AFF",
+                                  textTransform: "capitalize",
+                                  textDecoration: "none",
+                                }}
+                              >
+                                Preview
+                              </a>
+                            </Button>
+                           </Grid>
+                          </Grid>
+                        ))}
+                      </Box>
+                    </Box>
                   </TabPanel>
                   <TabPanel value={value} index={3}>
                     <Reviews
@@ -1859,7 +1969,7 @@ const Coursevideo = () => {
                         variant="contained"
                         sx={{ height: "44px", padding: "12px 14px" }}
                         onClick={() => {
-                          addcomments();
+                          addComment();
                           setUsercommments("");
                         }}
                         disabled={!usercommments}
@@ -1976,7 +2086,7 @@ const Coursevideo = () => {
                                           fontSize: "14px",
                                         }}
                                         onClick={() => {
-                                          deletecomments(i);
+                                          deleteComment(i);
                                           setDot(false);
                                         }}
                                       >
@@ -2169,7 +2279,7 @@ const Coursevideo = () => {
                                         },
                                       }}
                                       onClick={() => {
-                                        addreply(values.id);
+                                        addReply(values.id);
                                         setUserreply("");
                                         setCommments(true);
                                       }}

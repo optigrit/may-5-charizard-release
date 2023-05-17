@@ -6,7 +6,8 @@ import Carousel1 from "../../components/CarouselForBanner";
 import { Grid } from "@mui/material";
 import Image1 from "./Images/Banner1.png";
 import Image2 from "./Images/BannerContestPageSecond.png";
-import { contestAPI } from "../../api/requests/contestAPI";
+import { contestAPI } from "../../api/requests/contests/contestAPI";
+import { contestRankAPI } from "../../api/requests/contests/contestRankAPI";
 
 const BannerData = [Image1];
 const BannerData2 = [Image2];
@@ -72,10 +73,9 @@ const ContestHome = () => {
 
   const [togglemenu, setTogglemenu] = useState(false);
 
-
   const getContests = async () => {
     try {
-      const data = await contestAPI.getContests()
+      const data = await contestAPI.getContests();
       if (data !== "no upcoming contests for now") {
         setContests(data);
       }
@@ -86,10 +86,11 @@ const ContestHome = () => {
 
   const getRanks = async () => {
     try {
-      const res = await contestAPI.getGlobalRanks(1)
-      setRankings(Object.keys(res).length === 0 ? [] : []);
+      const data = await contestRankAPI.getGlobalRanks(1);
+      setRankings(Object.keys(data).length === 0 ? [] : []);
     } catch (err) {}
   };
+  
   useEffect(() => {
     getRanks();
   }, []);

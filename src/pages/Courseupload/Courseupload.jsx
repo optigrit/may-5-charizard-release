@@ -25,7 +25,6 @@ import loader from "../../assets/courseVideosUpload/loader1.gif";
 import { useEffect } from "react";
 import Dialogue from "../../components/Dialogbox/Dialogue";
 import VideoFileIcon from "@mui/icons-material/VideoFile";
-import axios from "axios";
 import Dropzone from "react-dropzone";
 import { v4 } from "uuid";
 import { ref, uploadBytes } from "firebase/storage";
@@ -34,6 +33,8 @@ import Updatevideo from "../../components/Dropzonevid/Updatevideo";
 import { useDispatch } from "react-redux";
 import { manipulateuserdata } from "../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
+import { courseAPI } from "../../api/requests/courses/courseAPI";
+import { courseUploadAPI } from "../../api/requests/courses/courseUploadAPI";
 
 const Courseupload = () => {
   const [togglemenu, setTogglemenu] = useState(false);
@@ -76,15 +77,6 @@ const Courseupload = () => {
     setAddmodule(false);
   };
 
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${Token}`,
-      "Content-type": "application/json",
-    },
-  };
-
   const ALERT_TIME = 5000;
 
   const dispatch = useDispatch();
@@ -102,34 +94,28 @@ const Courseupload = () => {
   };
 
   let { id } = useParams();
-  const createsec = async () => {
+
+  const createSection = async () => {
     try {
       setAddmodule(false);
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL}section/${id}`,
-        { sectionTitle: modtitle, sectionDescription: "" },
-        config
-      );
+      const data = await courseUploadAPI.createSection(id, {
+        sectionTitle: modtitle,
+        sectionDescription: "",
+      });
       const newdata = { ...data[0], videosData: [] };
       setModules([...modules, newdata]);
     } catch (err) {}
   };
 
-  const delsec = async () => {
+  const deleteSection = async () => {
     try {
-      const { data } = await axios.delete(
-        `${process.env.REACT_APP_URL}section/${chooseid}`,
-        config
-      );
+      const data = await courseUploadAPI.deleteSection(chooseid);
     } catch (err) {}
   };
 
-  const delvideo = async () => {
+  const deleteVideo = async () => {
     try {
-      const { data } = await axios.delete(
-        `${process.env.REACT_APP_URL}video/${ddiaid}`,
-        config
-      );
+      const data = await courseUploadAPI.deleteVideo(ddiaid);
     } catch (err) {}
   };
 
@@ -138,22 +124,19 @@ const Courseupload = () => {
     setOpendia(false);
     setChooseindex(null);
     setChoosename("No section selected");
-    delsec();
+    deleteSection();
     modules.splice(value, 1);
   };
 
-  const handledelvid = (value, index) => {
+  const handledeleteVideo = (value, index) => {
     setOpendia(false);
-    delvideo();
+    deleteVideo();
     modules[value].videosData.splice(index, 1);
   };
 
   const getdata = async () => {
     try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_URL}course/${id}`,
-        config
-      );
+      const data = await courseAPI.getSpecificCourse(id);
       return data;
     } catch (error) {}
   };
@@ -173,6 +156,7 @@ const Courseupload = () => {
   }, [errorFetchedChecker]);
 
   const [fileUpload, setFileUpload] = useState(null);
+
   const uploadFile = async () => {
     let filename = `extrafiles/${fileUpload?.name + v4()}`;
     const postdata = {
@@ -189,13 +173,10 @@ const Courseupload = () => {
     setFileUpload(null);
     return postdata;
   };
+
   const normal = async (postdata) => {
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL}file/${addresoid}`,
-        postdata,
-        config
-      );
+      const data = await courseUploadAPI.uploadFile(addresoid, postdata);
 
       modules[chooseindex].videosData[videoindex].extraFiles[
         modules[chooseindex].videosData[videoindex].extraFiles.length - 1
@@ -207,23 +188,23 @@ const Courseupload = () => {
       handlealert("Please upload again!", "error");
     }
   };
+
   const uploaddata = async () => {
     const postdata = await uploadFile();
     if (postdata) {
       normal(postdata);
     }
   };
+
   useEffect(() => {
     uploaddata();
   }, [fileUpload]);
 
   const updatesection = async () => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}section/${chooseid}`,
-        { sectionTitle: title },
-        config
-      );
+      const data = await courseUploadAPI.updateSection(chooseid, {
+        sectionTitle: title,
+      });
     } catch (err) {
       handlealert("Please update again!", "error");
     }
@@ -237,11 +218,10 @@ const Courseupload = () => {
 
   const updatevideos = async () => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}video/${editvidid}`,
-        { videoTitle: vidname, videoDescription: viddesc },
-        config
-      );
+      const data = await courseUploadAPI.updateVideo(editvidid, {
+        videoTitle: vidname,
+        videoDescription: viddesc,
+      });
     } catch (err) {}
   };
 
@@ -473,7 +453,7 @@ const Courseupload = () => {
                           setOpendia={setOpendia}
                           title={"Delete the video?"}
                           content={"Are you sure you want to delete the video?"}
-                          handleChange={handledelvid}
+                          handleChange={handledeleteVideo}
                           i={chooseindex}
                           id={index}
                         />
@@ -818,7 +798,7 @@ const Courseupload = () => {
                       padding: "px",
                       backgroundColor: "#698AFF",
                     }}
-                    onClick={createsec}
+                    onClick={createSection}
                   >
                     Add
                   </Button>

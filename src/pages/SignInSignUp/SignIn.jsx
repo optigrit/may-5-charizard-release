@@ -1,16 +1,11 @@
 import {
   Button,
-  Checkbox,
   Divider,
-  FormControlLabel,
   Grid,
-  Icon,
   IconButton,
   Typography,
 } from "@mui/material";
-import { Box } from "@mui/system";
-import { LoadingButton } from '@mui/lab';
-import axios from "axios";
+import { LoadingButton } from "@mui/lab";
 import React, { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -19,7 +14,9 @@ import { manipulateuserdata } from "../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import googleIcon from "../../assets/SignInSignUp/icon/google-icon 2.svg";
+import { userAuthAPI } from "../../api/requests/users/userAuthAPI";
+import GoogleSignInButton from "../../components/GoogleSignInButton";
+
 const ALERT_TIME = 5000;
 
 const SignIn = () => {
@@ -30,13 +27,14 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [loader, setLoader] = useState(false);
-  
+
   const passwordRef = useRef(null);
 
   const dispatch = useDispatch();
 
-  // Regex for validating the Email Address 
-  const validEmailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  // Regex for validating the Email Address
+  const validEmailRegex =
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   const handlealert = (text, type) => {
     dispatch(
@@ -53,39 +51,33 @@ const SignIn = () => {
   const navigate = useNavigate();
 
   const LoginApi = async (e) => {
-    // e.preventDefault();
     setLoader(true)
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL}signin`,
-        userData
-      );
+      const data = await userAuthAPI.signIn(userData);
       localStorage.setItem("Token", data?.token);
-      // localStorage.setItem("Username", data?.username);
-      // dispatch(manipulateuserdata(ADD_USER_DATA,data?.username))
       if (data.msg === "Incorrect Password") {
-        setLoader(false)
+        setLoader(false);
         handlealert(data?.msg, "error");
       } else if (data.msg === "please verify by the link you get in mail") {
-        setLoader(false)
+        setLoader(false);
         handlealert(data?.msg, "error");
       } else if (data?.msg === "please signUp first") {
-        setLoader(false)
+        setLoader(false);
         handlealert(
           "This email hasn't been registered try signing up",
           "error"
         );
       } else {
-        setLoader(false)
+        setLoader(false);
         handlealert(data?.msg, "success");
         navigate("/", { replace: true });
       }
     } catch (err) {
-      setLoader(false)
-      if(!(userData.email.match(validEmailRegex))){
-        handlealert("Invalid Email", "error")
-      }else {
-        handlealert(err.message, "error")
+      setLoader(false);
+      if (!userData.email.match(validEmailRegex)) {
+        handlealert("Invalid Email", "error");
+      } else {
+        handlealert(err.message, "error");
       }
     }
   };
@@ -98,11 +90,6 @@ const SignIn = () => {
   };
 
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
-  const svgIcon = (
-    <Icon sx={{ lineHeight: "0.75" }}>
-      <img alt="edit" src={googleIcon} />
-    </Icon>
-  );
 
   return (
     <>
@@ -273,7 +260,7 @@ const SignIn = () => {
               >
                 Sign in
               </LoadingButton>
-              {/* <Grid
+              <Grid
                 item
                 xs={12}
                 md={12}
@@ -287,8 +274,9 @@ const SignIn = () => {
                     OR
                   </Typography>
                 </Divider>
-              </Grid> */}
+              </Grid>
               {/* <Button
+                onClick={GoogleSignIn}
                 fullWidth
                 variant="outlined"
                 startIcon={svgIcon}
@@ -302,6 +290,7 @@ const SignIn = () => {
               >
                 Sign in with Google
               </Button> */}
+              <GoogleSignInButton />
 
               <Grid
                 item
@@ -345,9 +334,9 @@ const SignIn = () => {
               p: "16px",
               backgroundColor: "#EBEFFF",
               height: { xs: "400px", md: "100vh" },
-              fontSize: '55px',
+              fontSize: "55px",
             }}
-            style={{fontFamily: "Light"}}
+            style={{ fontFamily: "Light" }}
             display="flex"
             alignItems={"center"}
             justifyContent="center"
