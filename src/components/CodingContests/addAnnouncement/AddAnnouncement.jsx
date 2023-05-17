@@ -9,7 +9,8 @@ import { useDispatch } from "react-redux";
 import { manipulateuserdata } from "../../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../../Redux/UserData/User-Constants";
 import { useNavigate } from "react-router-dom";
-import { contestAPI } from "../../../api/requests/contestAPI";
+import { contestAPI } from "../../../api/requests/contests/contestAPI";
+import { contestAnnouncementAPI } from "../../../api/requests/contests/contestAnnouncementAPI";
 
 const AddAnnouncement = ({ contestId, setOpendia }) => {
   const drawerWidth = 240;
@@ -39,14 +40,13 @@ const AddAnnouncement = ({ contestId, setOpendia }) => {
     setShowTill(newValue);
   };
 
-
   const postAnnouncement = {
     announcement: announcement,
     showTill: showTill.$d / 1000,
   };
 
   const addAnnouncement = async () => {
-    await contestAPI
+    await contestAnnouncementAPI
       .createAnnouncement(contestId, postAnnouncement)
       .then((data) => {
         handlealert("Announcement added", "success");

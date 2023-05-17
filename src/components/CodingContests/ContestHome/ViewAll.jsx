@@ -4,7 +4,7 @@ import RankingTable from "../../CodingContests/ContestRanking/RankingTable";
 import RankingTableUserInfo from "../ContestRanking/RankingTableUserInfo";
 import { CardMedia, Grid } from "@mui/material";
 import bannerImage from "../../../assets/CourseImages/SideBanner.png";
-import { contestAPI } from "../../../api/requests/contestAPI";
+import { contestRankAPI } from "../../../api/requests/contests/contestRankAPI";
 
 const ViewAll = () => {
   const view = [
@@ -74,7 +74,7 @@ const ViewAll = () => {
 
   const getAllRanks = async () => {
     try {
-      const data = await contestAPI.getGlobalRanks(page);
+      const data = await contestRankAPI.getGlobalRanks(page);
       setNew(data?.data);
       setRanks(data && data.totalParticipants);
     } catch (err) {}

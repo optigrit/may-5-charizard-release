@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import dayjs from "dayjs";
-import { TextField, Grid, Button } from "@mui/material";
+import { TextField, Grid, Button, Stack } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -16,7 +16,7 @@ import EditProblemCard from "../Components/EditProblemCard";
 import SubHeader from "../../SideBarResponsive/SubHeader";
 import "react-multi-carousel/lib/styles.css";
 import "../../ProductCarousel/Product.css";
-import { contestAPI } from "../../../api/requests/contestAPI";
+import { contestAPI } from "../../../api/requests/contests/contestAPI";
 
 const EditContest = () => {
   const params = useParams();
@@ -666,9 +666,28 @@ const EditContest = () => {
                 </Typography>
 
                 {Problems?.length > 0 ? (
-                  Problems?.map((item, index) => {
-                    return <EditProblemCard key={index} Problem={item} />;
-                  })
+                  <>
+                    {Problems?.map((item, index) => {
+                      return <EditProblemCard key={index} Problem={item} />;
+                    })}
+                    <Stack alignItems="flex-end">
+                      <Button
+                        variant="contained"
+                        size="small"
+                        sx={{
+                          minWidth: {
+                            xs: "100%!important",
+                            md: "min-content!important",
+                          },
+                        }}
+                        onClick={() => {
+                          navigate(`/admin/${params.contestId}`);
+                        }}
+                      >
+                        Create More
+                      </Button>
+                    </Stack>
+                  </>
                 ) : (
                   <>
                     <Box

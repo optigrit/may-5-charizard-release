@@ -31,7 +31,6 @@ import {
   REMOVE_ITEM_FROM_WISHLIST,
 } from "../../Redux/AddToWishlist/Wishlist-Constants";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import axios from "axios";
 import { getCartCourses, getWishlistCourses } from "../../Config/Apis";
 import { StarBorder } from "@mui/icons-material";
 import { manipulateEditCourse } from "../../Redux/EditCourse/EditCourse-Action";
@@ -43,6 +42,8 @@ import { manipulateuserdata } from "../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
 import defaultImage from "../../assets/BannerImages/Thumbnail.png";
 import jwt_decode from "jwt-decode";
+import { courseStageAPI } from "../../api/requests/courses/courseStageAPI";
+import { courseAPI } from "../../api/requests/courses/courseAPI";
 
 const CarouselItem = ({
   ProductDetails,
@@ -64,11 +65,7 @@ const CarouselItem = ({
     (state) => state.WishlistReducer.wishlistItems
   );
   const Token = localStorage.getItem("Token");
-  const config = {
-    headers: {
-      Authorization: `bearer ${Token}`,
-    },
-  };
+ 
 
   useEffect(() => {
     if (cartItems?.filter((item) => item.id === ProductDetails.id).length) {
@@ -87,13 +84,8 @@ const CarouselItem = ({
   }, [wishlistItems]);
 
   const addCourseToWishlistApi = async (ProductDetails) => {
-    await axios
-      .post(
-        `${process.env.REACT_APP_URL}course/stage/${ProductDetails.id}`,
-        { stage: "WISHLIST" },
-        config
-      )
-      .then((res) => {
+    await courseStageAPI.addCourseToWishListOrCart(ProductDetails.id, "WISHLIST")
+      .then((data) => {
         getAllWishlistCourses();
       })
       .catch((err) => {});
@@ -108,10 +100,9 @@ const CarouselItem = ({
   };
 
   const getAllWishlistCourses = async () => {
-    await axios
-      .get(`${process.env.REACT_APP_URL}courses/stage/WISHLIST`, config)
-      .then((res) => {
-        res?.data?.map((item) => {
+    await courseStageAPI.getCourses("WISHLIST")
+      .then((data) => {
+        data?.map((item) => {
           if (
             wishlistItems?.filter((wishlistItem) => wishlistItem.id === item.id)
               .length
@@ -136,24 +127,18 @@ const CarouselItem = ({
   };
 
   const addCourseTocart = async (ProductDetails) => {
-    await axios
-      .post(
-        `${process.env.REACT_APP_URL}course/stage/${ProductDetails.id}`,
-        { stage: "CART" },
-        config
-      )
-      .then((res) => {
+    await courseStageAPI.addCourseToWishListOrCart("CART")
+      .then((data) => {
         getCourseFromCart();
       })
       .catch((err) => {});
   };
 
   const getCourseFromCart = async () => {
-    await axios
-      .get(`${process.env.REACT_APP_URL}courses/stage/CART`, config)
+    await courseStageAPI.getCourses("CART")
 
-      .then((res) => {
-        res.data.map((item) => {
+      .then((data) => {
+        data.map((item) => {
           if (
             cartItems?.filter((cartItems) => cartItems.id === item.id).length
           ) {
@@ -166,21 +151,16 @@ const CarouselItem = ({
   };
 
   const handleRemoveItem = async (id) => {
-    await axios
-      .delete(`${process.env.REACT_APP_URL}course/stage/${id}`, config)
-      .then((res) => {})
+    await courseStageAPI.removeFromWishListOrCart(id)
+      .then((data) => {})
       .catch((err) => {
         dispatch(manipulateCart(REMOVE_ITEM, id));
       });
   };
 
   const handleRemoveWishlist = async (ProductDetails) => {
-    await axios
-      .delete(
-        `${process.env.REACT_APP_URL}course/stage/${ProductDetails.id}`,
-        config
-      )
-      .then((res) => {})
+    await courseStageAPI.removeFromWishListOrCart(ProductDetails.id)
+      .then((data) => {})
       .catch((err) => {
         dispatch(
           manipulateWishList(REMOVE_ITEM_FROM_WISHLIST, ProductDetails.id)
@@ -239,8 +219,7 @@ const CarouselItem = ({
   const handleCloseDeleteDialog = () => [setOpenDeleteDialog(false)];
 
   const handleDeleteCourse = async (ProductDetails) => {
-    await axios
-      .delete(`${process.env.REACT_APP_URL}course/${ProductDetails.id}`, config)
+    await courseAPI.deleteCourse(ProductDetails.id)
       .then((res) => {
         dispatch(manipulateWishList(REMOVE_EDITABLE_COURSE, ProductDetails.id));
         handlealert(res?.data?.message, "success");

@@ -5,12 +5,12 @@ import { Button } from "@mui/material";
 import { IconTextField } from "../../components/TextField";
 import Skeletons from "../../components/Skeleton/Skeletons";
 import { storage } from "../../firebase";
-import axios from "axios";
 import { v4 } from "uuid";
 import { ref, uploadBytes } from "firebase/storage";
 import { useDispatch, useSelector } from "react-redux";
 import { manipulateuserdata } from "../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
+import { userAPI } from "../../api/requests/users/userAPI";
 
 const AdditionalInformation = ({
   resume,
@@ -25,11 +25,8 @@ const AdditionalInformation = ({
 }) => {
   const twitterLinkRef = useRef(null);
   const websiteLinkRef = useRef(null);
-  const Token = localStorage.getItem("Token");
 
-  const config = {
-    headers: { Authorization: `bearer ${Token}` },
-  };
+
 
   const dispatch = useDispatch();
 
@@ -50,11 +47,7 @@ const AdditionalInformation = ({
 
   const handleResumeUpload = async (postData) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}user/resume`,
-        postData,
-        config
-      );
+      const data = await userAPI.uploadUserResume(postData)
       handlealert("Resume updated", "success");
     } catch (err) {
       handlealert("Error, please try again!", "error");

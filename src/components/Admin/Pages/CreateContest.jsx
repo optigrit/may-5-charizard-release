@@ -14,7 +14,7 @@ import { manipulateuserdata } from "../../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../../Redux/UserData/User-Constants";
 import { useDispatch } from "react-redux";
 import SubHeader from "../../SideBarResponsive/SubHeader";
-import { contestAPI } from "../../../api/requests/contestAPI";
+import { contestAPI } from "../../../api/requests/contests/contestAPI";
 
 const CreateContest = () => {
   const drawerWidth = 240;

@@ -29,10 +29,10 @@ import { ADD_ITEM_IN_WISHLIST } from "../../Redux/AddToWishlist/Wishlist-Constan
 import Skeletons from "../Skeleton/Skeletons";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import GroupsIcon from "@mui/icons-material/Groups";
-import axios from "axios";
 import LoginIcon from "@mui/icons-material/Login";
-import LinearProgressWithLabelReusable from "../LinearProgress/LinearProgressWithLabelReusable";
+import { courseStageAPI } from "../../api/requests/courses/courseStageAPI"
 import jwt_decode from "jwt-decode";
+import { gapi } from "gapi-script";
 
 const drawerWidth = 240;
 
@@ -95,21 +95,14 @@ function SideBarResponsive(props, { type }) {
 
   const Token = localStorage.getItem("Token");
 
-    // Decoding the User Name
-    const decodeUsername = jwt_decode(Token)
-    const Username = decodeUsername.username
-
-  const config = {
-    headers: {
-      Authorization: `bearer ${Token}`,
-    },
-  };
+  // Decoding the User Name
+  const decodeUsername = jwt_decode(Token);
+  const Username = decodeUsername.username;
 
   const getCourseFromCart = async () => {
-    await axios
-      .get(`${process.env.REACT_APP_URL}courses/stage/CART`, config)
-      .then((res) => {
-        res.data.map((item) => {
+    await courseStageAPI.getCourses("CART")
+      .then((data) => {
+        data?.map((item) => {
           if (
             cartItem?.filter((cartItems) => cartItems.id === item.id).length
           ) {
@@ -122,10 +115,9 @@ function SideBarResponsive(props, { type }) {
   };
 
   const getAllWishlistCourses = async () => {
-    await axios
-      .get(`${process.env.REACT_APP_URL}courses/stage/WISHLIST`, config)
-      .then((res) => {
-        res?.data?.map((item) => {
+    await courseStageAPI.getCourses("WISHLIST")
+      .then((data) => {
+        data?.map((item) => {
           if (
             wishlistItems?.filter((wishlistItem) => wishlistItem.id === item.id)
               .length
@@ -144,9 +136,14 @@ function SideBarResponsive(props, { type }) {
 
   const handleLogout = () => {
     localStorage.clear();
+    const auth2 = gapi.auth2?.getAuthInstance();
+
+    if (auth2 != null) {
+      auth2.signOut().then(auth2.disconnect().then());
+    }
     navigate("/sign-in", { replace: true });
   };
-  let pages= [
+  let pages = [
     {
       name: "Home",
       path: "/",
@@ -166,16 +163,12 @@ function SideBarResponsive(props, { type }) {
     {
       name: "My Courses",
       path: "/my-courses",
-      icon: (
-        <ImportContactsOutlinedIcon sx={{ fontSize: { uxl: "28px" } }} />
-      ),
+      icon: <ImportContactsOutlinedIcon sx={{ fontSize: { uxl: "28px" } }} />,
     },
     {
       name: "Wishlist",
       path: "/wishlist",
-      icon: (
-        <FavoriteBorderOutlinedIcon sx={{ fontSize: { uxl: "28px" } }} />
-      ),
+      icon: <FavoriteBorderOutlinedIcon sx={{ fontSize: { uxl: "28px" } }} />,
       badgeContent: wishlistItems.length,
     },
     {
@@ -186,15 +179,14 @@ function SideBarResponsive(props, { type }) {
   ];
   if (decoded === "") {
     setDecoded(jwt_decode(Token));
-    
   }
   if (decoded.role == "ADMIN" || decoded.role == "SUPERADMIN") {
     pages.push({
       name: "Create Contest",
       path: "/admin/contest",
       icon: <GroupsIcon sx={{ fontSize: { uxl: "28px" } }} />,
-    })
-  } 
+    });
+  }
 
   const navigate = useNavigate();
   function truncate(source, size) {

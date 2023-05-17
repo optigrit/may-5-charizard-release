@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import { TextField } from "@mui/material";
 import { storage } from "../../firebase";
-import axios from "axios";
 import { v4 } from "uuid";
 import { ref, uploadBytes } from "firebase/storage";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,6 +29,7 @@ import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
 import { IconTextField } from "../TextField";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import { MuiTelInput } from "mui-tel-input";
+import { userAPI } from "../../api/requests/users/userAPI";
 
 const UserInformation = ({
   firstName,
@@ -57,12 +57,6 @@ const UserInformation = ({
 
   const dispatch = useDispatch();
 
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: { Authorization: `bearer ${Token}` },
-  };
-
   const uploadImage = async () => {
     let fileName = `files/${profilePhotoLink?.name + v4()}`;
     const fileRef = ref(storage, fileName);
@@ -74,11 +68,7 @@ const UserInformation = ({
 
   const handleImageUpload = async (postData) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}user/image`,
-        postData,
-        config
-      );
+      const data = await userAPI.uploadUserImage(postData)
       handlealert("Image updated", "success");
     } catch (err) {
       handlealert("Error, please try again!", "error");

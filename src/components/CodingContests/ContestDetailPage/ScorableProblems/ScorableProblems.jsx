@@ -5,7 +5,6 @@ import Paper from "@mui/material/Paper";
 import ProblemCard from "./ProblemCard";
 import { Box } from "@mui/system";
 import { NavLink, useParams } from "react-router-dom";
-import axios from "axios";
 import { Typography } from "@mui/material";
 
 const ScorableProblems = ({ ContestProbs, contestStatus, contestId }) => {

@@ -12,7 +12,7 @@ import { manipulateuserdata } from "../../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../../Redux/UserData/User-Constants";
 import { useDispatch } from "react-redux";
 import SubHeader from "../../SideBarResponsive/SubHeader";
-import { contestAPI } from "../../../api/requests/contestAPI";
+import { contestProblemAPI } from "../../../api/requests/contests/contestProblemAPI";
 
 const CreateProblem = () => {
   const [inputTags, setinputTags] = useState([""]);
@@ -320,7 +320,7 @@ const CreateProblem = () => {
   };
 
   const addProblem = async () => {
-    await contestAPI
+    await contestProblemAPI
       .createProblem(params.contestId, dataforpost)
       .then((data) => {
         handlealert("Problem created!", "success");
@@ -332,7 +332,7 @@ const CreateProblem = () => {
   };
 
   const addProblemAndGoToHome = async () => {
-    await contestAPI
+    await contestProblemAPI
       .createProblem(params.contestId, dataforpost)
       .then((data) => {
         handlealert("Problem created!", "success");
