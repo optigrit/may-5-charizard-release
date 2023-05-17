@@ -11,7 +11,8 @@ import BreadCrumb from "../../components/CodingContests/ContestDetailPage/BreadC
 import { useParams } from "react-router-dom";
 import Clock from "../../components/CodingContests/ContestDetailPage/Clock";
 import { Grid, Typography } from "@mui/material";
-import { contestAPI } from "../../api/requests/contestAPI";
+import { contestAPI } from "../../api/requests/contests/contestAPI";
+import { contestAnnouncementAPI } from "../../api/requests/contests/contestAnnouncementAPI";
 
 const ContestDetail = () => {
   const { contest_code, contestId } = useParams();
@@ -47,7 +48,7 @@ const ContestDetail = () => {
 
   const getAnnouncements = async () => {
     try {
-      const data = await contestAPI.getAnnouncements(contestId);
+      const data = await contestAnnouncementAPI.getAnnouncements(contestId);
       setAnnouncements(data);
     } catch (err) {}
   };

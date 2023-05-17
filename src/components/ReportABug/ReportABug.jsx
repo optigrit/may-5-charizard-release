@@ -1,23 +1,14 @@
 import { Button, TextField } from "@mui/material";
 import { Box } from "@mui/system";
-import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { manipulateuserdata } from "../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
-import Dialogue from "../Dialogbox/Dialogue";
+import { bugAPI } from "../../api/requests/bugs/bugAPI";
 
 function ReportABug({ setOpendia }) {
   const [bugDetails, setBugDetails] = useState("");
 
-  const Token = localStorage.getItem("Token");
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "http://localhost:8080",
-      Authorization: `bearer ${Token}`,
-    },
-  };
 
   const dispatch = useDispatch();
   const ALERT_TIME = 5000;
@@ -40,11 +31,7 @@ function ReportABug({ setOpendia }) {
       bugDetails: bugDetails,
     };
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL}reportbug `,
-        postData,
-        config
-      );
+      const data = await bugAPI.reportBug(postData);
       setOpendia(false);
       handlealert("Reported Sucessfully", "success");
     } catch (err) {}

@@ -6,15 +6,13 @@ import { IconTextField } from "../../components/TextField";
 import { v4 } from "uuid";
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
-import axios from "axios";
 import AddIcon from "@mui/icons-material/Add";
 import Skeletons from "../../components/Skeleton/Skeletons";
-import RemoveIcon from "@mui/icons-material/Remove";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { manipulateuserdata } from "../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
-import { coursesAPI } from "../../api/requests/coursesApi";
+import { courseAPI } from "../../api/requests/courses/courseAPI";
 
 const CreateCourse = () => {
   const drawerWidth = 240;
@@ -84,7 +82,7 @@ const CreateCourse = () => {
 
   const handleNormal = async (postData) => {
     try {
-      const  data  = await coursesAPI.createCourse(postData)
+      const data = await courseAPI.createCourse(postData);
       handlealert("Course created successfully", "success");
       handleGoToUploadpage(data.id);
     } catch (err) {}

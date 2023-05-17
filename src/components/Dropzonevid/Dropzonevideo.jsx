@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react';
 import { v4 } from "uuid"
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
-import axios from 'axios';
 import { manipulateuserdata } from '../../Redux/UserData/User-Action';
 import { useDispatch } from 'react-redux';
 import { SET_ALERT_DATA } from '../../Redux/UserData/User-Constants';
+import { courseUploadAPI } from '../../api/requests/courses/courseUploadAPI';
 
 const Dropzonevideo = ({ setModules, modules, id, secid, setLoading, setLoaderindex }) => {
     const [Id, setId] = useState();
@@ -40,16 +40,6 @@ const Dropzonevideo = ({ setModules, modules, id, secid, setLoading, setLoaderin
         }, ALERT_TIME);
     };
 
-    
-    const Token = localStorage.getItem("Token")
-    const config = {
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': 'http://localhost:8080',
-            'Authorization': `bearer ${Token}`
-        },
-    }
-
     const [fileUpload, setFileUpload] = useState(null)
     const uploadFile = async () => {
         let filename = `videos/${fileUpload?.name + v4()}`
@@ -66,7 +56,7 @@ const Dropzonevideo = ({ setModules, modules, id, secid, setLoading, setLoaderin
     }
     const normal = async (postdata) => {
         try {
-            const { data } = await axios.post(`${process.env.REACT_APP_URL}video/${secid}`, postdata, config)
+            const data= await courseUploadAPI.uploadVideo(secid, postdata)
             modules[id].videosData[modules[id].videosData.length - 1].id = data[0].id
             modules[id].videosData[modules[id].videosData.length - 1].extraFiles = []
             modules[id].videosData[modules[id].videosData.length - 1].sectionId = data[0].sectionId

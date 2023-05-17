@@ -139,8 +139,8 @@ function App() {
             <>
               <React.Suspense fallback={<BigLoader />}>
                 <Routes>
-                  <Route path="/" element={<Layout />}>
-                    <Route element={<ProtechtedRoute />}>
+                  <Route element={<ProtechtedRoute />}>
+                    <Route path="/" element={<Layout />}>
                       <Route path="/" element={<LazyHome />} />
                       <Route
                         path="/user-profile"

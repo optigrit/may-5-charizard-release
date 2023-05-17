@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Box, CardMedia, Grid, Typography } from "@mui/material";
-import axios from "axios";
 import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import Skeletons from "../../components/Skeleton/Skeletons";
 import { Link } from "react-router-dom";
 import verify from "../../assets/VerifyUserImages/Verified.svg";
 import notVerified from "../../assets/VerifyUserImages/NotVerified.svg";
+import { userAuthAPI } from "../../api/requests/users/userAuthAPI";
 
 const Verifyuser = () => {
   const navigate = useNavigate();
@@ -17,21 +17,11 @@ const Verifyuser = () => {
 
   const Token = localStorage.getItem("Token");
 
-  const config = {
-    headers: {
-      Authorization: `bearer ${Token} `,
-      "Content-type": "application/json",
-    },
-  };
-
   let { id } = useParams();
   const verifyuser = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_URL}verifyuser/${id}`,
-        config
-      );
+      const data = await userAuthAPI.verifyUser(id)
       if (data?.msg === "successfully verified") {
         localStorage.setItem("Token", data?.token);
         localStorage.setItem("Username", data?.username);

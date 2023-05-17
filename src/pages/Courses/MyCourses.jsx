@@ -1,8 +1,8 @@
 import { Box, Divider } from "@mui/material";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Product from "../../components/ProductCarousel/Product";
-import { coursesAPI } from "../../api/requests/coursesApi";
+import { courseAPI } from "../../api/requests/courses/courseAPI";
+import { courseStageAPI } from "../../api/requests/courses/courseStageAPI";
 const drawerWidth = 240;
 
 function MyCourses() {
@@ -14,8 +14,8 @@ function MyCourses() {
     const data = async () => {
       setLoading(true);
       try {
-        const res = await coursesAPI.getCourses("BOUGHT")
-        setMyCoursesData(res?.data);
+        const data = await courseStageAPI.getCourses("BOUGHT");
+        setMyCoursesData(data && data);
         setLoading(false);
       } catch (err) {}
     };
@@ -26,8 +26,8 @@ function MyCourses() {
     const data = async () => {
       setLoading(true);
       try {
-        const res = await coursesAPI.getCoursesByPage("1")
-        setSuggestedCourses(res);
+        const data = await courseAPI.getCoursesByPage(1);
+        setSuggestedCourses(data && data);
         setLoading(false);
       } catch (err) {}
     };

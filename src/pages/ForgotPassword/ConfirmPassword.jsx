@@ -6,7 +6,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -15,6 +14,7 @@ import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { IconTextField } from "../../components/TextField";
+import { userAuthAPI } from "../../api/requests/users/userAuthAPI";
 function ConfirmPass() {
   const [confirmPass, setConfirmPass] = useState({
     password: "",
@@ -39,15 +39,13 @@ function ConfirmPass() {
     }, ALERT_TIME);
   };
   const navigate = useNavigate();
+
   const handleConfirmPassword = async (e) => {
     e.preventDefault();
     if (confirmPass.password === confirmPass.confirmPassword) {
       setIsMatched(false);
       try {
-        const { data } = await axios.post(
-          `${process.env.REACT_APP_URL}resetpassword/${id}`,
-          { password: confirmPass.confirmPassword }
-        );
+        const data = await userAuthAPI.resetPassword(id, { password: confirmPass.confirmPassword });
         handlealert("Password changed now try signing in", "success");
         navigate("/sign-in", { replace: true });
       } catch (err) {

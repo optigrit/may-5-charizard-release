@@ -10,11 +10,10 @@ import {
   Typography,
 } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
-import axios from "axios";
 import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IconTextField } from "../../components/TextField";
-import GoogleIcon from "../../assets/SignInSignUp/icon/google-icon 2.svg";
+import GoogleIcon from "../../assets/SignInSignUp/icon/google-icon.svg";
 
 import Stack from "@mui/material/Stack";
 import CheckIcon from "@mui/icons-material/Check";
@@ -24,6 +23,7 @@ import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { MuiTelInput } from "mui-tel-input";
+import { userAuthAPI } from "../../api/requests/users/userAuthAPI";
 
 function SignUp() {
   const [open, setOpen] = useState(false);
@@ -69,19 +69,16 @@ function SignUp() {
   };
 
   const SignUpApi = async () => {
-    setLoader(true)
+    setLoader(true);
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL}signup`,
-        signUpUserData
-      );
+      const data = await userAuthAPI.signUp(signUpUserData)
       setMessage(data?.message);
       setOpen(true);
-      setLoader(false)
+      setLoader(false);
       handlealert("Sign up successfully now sign in", "success");
       Navigate("/sign-in", { replace: true });
     } catch (err) {
-      setLoader(false)
+      setLoader(false);
       handlealert(err.response?.data, "error");
     }
   };
@@ -428,7 +425,7 @@ function SignUp() {
             height: { xs: "400px", md: "100vh" },
             fontSize: "55px",
           }}
-          style={{fontFamily: "Light"}}
+          style={{ fontFamily: "Light" }}
           display="flex"
           alignItems={"center"}
           justifyContent="center"

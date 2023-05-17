@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import PageNotFound from "../pages/PageNotFound/PageNotFound";
-import { coursesAPI } from "../api/requests/coursesApi";
+import { courseAPI } from "../api/requests/courses/courseAPI";
 import { Box, CircularProgress } from "@mui/material";
 
 const PrivateRoute = ({ children }) => {
@@ -14,12 +14,12 @@ const PrivateRoute = ({ children }) => {
 
   const checkIdValidity = async () => {
     try {
-      const response = await coursesAPI.getSpecificCourse(id);
+      const response = await courseAPI.getSpecificCourse(id);
       setIsValidCourseId(response && true);
     } catch (error) {
       {
         error.request.status === 404 && setIsValidCourseId(false);
-      } 
+      }
     } finally {
       setLoading(false);
     }
@@ -30,18 +30,18 @@ const PrivateRoute = ({ children }) => {
   }, []);
 
   if (loading)
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "100vh",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <CircularProgress />
-    </Box>
-  );
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          height: "100vh",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
 
   return (
     <>

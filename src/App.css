@@ -83,9 +83,7 @@
 }
 
 @font-face {
-  font-family: "Light";   /*Can be any text*/
-  src: local("bodoni"),
-    url("./fonts/bodoni.ttf") format("truetype");
+  font-family: "Bodini", "Light";   /*Can be any text*/
 }
 
 /* 

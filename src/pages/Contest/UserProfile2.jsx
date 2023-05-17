@@ -7,7 +7,6 @@ import { Button, useMediaQuery } from "@mui/material";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import axios from "axios";
 import Product from "../../components/ProductCarousel/Product";
 import { useDispatch, useSelector } from "react-redux";
 import { manipulateEditCourse } from "../../Redux/EditCourse/EditCourse-Action";
@@ -25,7 +24,9 @@ import UserInformation from "../../components/UserprofileComponents/UserInformat
 import PersonalInformation from "../../components/UserprofileComponents/PersonalInformation";
 import ProfessionalInformation from "../../components/UserprofileComponents/ProfessionalInformation";
 import AdditionalInformation from "../../components/UserprofileComponents/AdditionalInformation";
-import { contestAPI } from "../../api/requests/contestAPI";
+import { contestAPI } from "../../api/requests/contests/contestAPI";
+import { courseAPI } from "../../api/requests/courses/courseAPI";
+import { userAPI } from "../../api/requests/users/userAPI";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -128,30 +129,21 @@ const UserProfile2 = () => {
     const data = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_URL}user/courses/1`,
-          config
-        );
-        setData2(res?.data);
-        dispatch(manipulateEditCourse(ADD_EDIT_COURSE, res?.data));
+        const data = await courseAPI.getUserCourses(1)
+        setData2(data && data);
+        dispatch(manipulateEditCourse(ADD_EDIT_COURSE, data && data));
       } catch (err) {}
       setLoading(false);
     };
     data();
   }, []);
-
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: { Authorization: `bearer ${Token}` },
-  };
-
+  
   const drawerWidth = 240;
 
   const getProfile = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_URL}user`, config);
-      setProfile(res?.data);
+      const data = await userAPI.getUserInfo()
+      setProfile(data && data);
     } catch (err) {}
   };
 
@@ -164,21 +156,14 @@ const UserProfile2 = () => {
 
   const getCourses = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_URL}user/courses/0`,
-        config
-      );
-      setCourses(res.data);
+      const data = await courseAPI.getUserCourses(0)
+      setCourses(data && data);
     } catch (err) {}
   };
 
   const handleUpload = async (postData) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}user/`,
-        postData,
-        config
-      );
+      const data = await userAPI.uploadUserInfo(postData);
       handlealert("Profile updated!", "success");
     } catch (err) {
       handlealert("Error!", "error");

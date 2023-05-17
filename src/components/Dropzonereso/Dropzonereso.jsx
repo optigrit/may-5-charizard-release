@@ -13,9 +13,9 @@ import edit from "../../assets/courseVideosUpload/edit.svg";
 import loader from "../../assets/courseVideosUpload//loader1.gif";
 import del from "../../assets/courseVideosUpload/delete.svg";
 import Dialogue from "../Dialogbox/Dialogue";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import Updatereso from "./Updatereso";
+import { courseUploadAPI } from "../../api/requests/courses/courseUploadAPI";
 
 const Dropzonereso = ({
   modules,
@@ -32,22 +32,11 @@ const Dropzonereso = ({
   const [resoname, setResoname] = useState();
   const [resoid, setResoid] = useState();
 
-  const Token = localStorage.getItem("Token");
-  const config = {
-    headers: {
-      Authorization: `Bearer ${Token}`,
-      "Content-type": "application/json",
-    },
-  };
-
   let { id } = useParams();
 
   const deletereso = async () => {
     try {
-      const { data } = await axios.delete(
-        `${process.env.REACT_APP_URL}file/${resoid}`,
-        config
-      );
+      const data = await courseUploadAPI.deleteFile(resoid)
     } catch (err) {}
   };
 
@@ -59,11 +48,7 @@ const Dropzonereso = ({
 
   const updatereso = async () => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}file/${resoid}`,
-        { fileName: resoname },
-        config
-      );
+      const data = await courseUploadAPI.updateFile(resoid, { fileName: resoname })
     } catch (err) {}
   };
 

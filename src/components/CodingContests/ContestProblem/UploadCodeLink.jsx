@@ -16,7 +16,7 @@ import Select from "@mui/material/Select";
 import { useDispatch } from "react-redux";
 import { manipulateuserdata } from "../../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../../Redux/UserData/User-Constants";
-import { contestAPI } from "../../../api/requests/contestAPI";
+import { contestProblemAPI } from "../../../api/requests/contests/contestProblemAPI";
 
 const UploadCodeLink = () => {
   const { id } = useParams();
@@ -27,7 +27,6 @@ const UploadCodeLink = () => {
   const [githubRepo, setGithubRepo] = useState("");
   const [language, setLanguage] = useState("");
   const [githubUsername, setGithubUsername] = useState("");
-
 
   function isUrlValid(userInput) {
     var regexQuery =
@@ -57,7 +56,7 @@ const UploadCodeLink = () => {
   };
 
   const submitSolution = async () => {
-    await contestAPI
+    await contestProblemAPI
       .submitSolution(id, dataforpost)
       .then((data) => {
         handlealert("Submitted!", "success");

@@ -26,7 +26,6 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { manipulateuserdata } from "../../Redux/UserData/User-Action";
 import {
@@ -34,6 +33,10 @@ import {
   SET_ALERT_DATA,
 } from "../../Redux/UserData/User-Constants";
 import ThumbDownOffAltRoundedIcon from "@mui/icons-material/ThumbDownOffAltRounded";
+import { courseVideoAPI } from "../../api/requests/courses/courseVideoAPI";
+import { courseReviewAPI } from "../../api/requests/courses/courseReviewAPI";
+import { userAPI } from "../../api/requests/users/userAPI";
+
 const labels = {
   1: "Useless",
   2: "Poor",
@@ -105,33 +108,21 @@ const Reviews = ({ buy, ratings, currentuser }) => {
     }, ALERT_TIME);
   };
 
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `bearer ${Token} `,
-      "Content-type": "application/json",
-    },
-  };
-
   const userinfo = async () => {
     try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_URL}user`,
-        config
-      );
+      const data = await userAPI.getUserInfo();
       return data;
     } catch (err) {}
   };
 
   const { id } = useParams();
-  const addreviews = async () => {
+
+  const addReviews = async () => {
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL}rating/${id}`,
-        { rating: value, review: UserReviews },
-        config
-      );
+      const data = await courseReviewAPI.addReviews(id, {
+        rating: value,
+        review: UserReviews,
+      });
       setDialog(false);
       data[0].userData = await userinfo();
       data[0].likes = 0;
@@ -145,12 +136,9 @@ const Reviews = ({ buy, ratings, currentuser }) => {
     }
   };
 
-  const getreviews = async () => {
+  const getReviews = async () => {
     try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_URL}rating/${id}/${page}`,
-        config
-      );
+      const data = await courseReviewAPI.getReviews(id, page);
       const totalstars =
         data.rating.Star1 +
         data.rating.Star2 +
@@ -170,16 +158,12 @@ const Reviews = ({ buy, ratings, currentuser }) => {
   };
 
   useEffect(() => {
-    getreviews();
+    getReviews();
   }, [page]);
 
-  const givelikes = async (id, isDisliked, i) => {
+  const giveLike = async (id, isDisliked, i) => {
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL}review/${id}/LIKE`,
-        {},
-        config
-      );
+      const data = await courseReviewAPI.handleLikesAndDislikes(id, "LIKE", {})
       if (isDisliked) {
         reviews[i].likes = reviews[i].likes + 1;
         reviews[i].disLikes = reviews[i].disLikes - 1;
@@ -193,13 +177,9 @@ const Reviews = ({ buy, ratings, currentuser }) => {
     } catch (err) {}
   };
 
-  const givedislikes = async (id, isLiked, i) => {
+  const giveDislike = async (id, isLiked, i) => {
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL}review/${id}/DISLIKE`,
-        {},
-        config
-      );
+      const data = await courseReviewAPI.handleLikesAndDislikes(id, "DISLIKE", {});
       if (isLiked) {
         reviews[i].disLikes = reviews[i].disLikes + 1;
         reviews[i].likes = reviews[i].likes - 1;
@@ -215,34 +195,23 @@ const Reviews = ({ buy, ratings, currentuser }) => {
 
   const report = async () => {
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL}review/${reportid}/REPORT`,
-        { reportDescription: UserReport },
-        config
-      );
+      const data = await courseReviewAPI.addReviewReport(reportid, { reportDescription: UserReport });
       handlealert("report submitted", "success");
     } catch (err) {}
   };
 
-  const removelikes = async (id, i) => {
+  const removeLikes = async (id, i) => {
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL}review/${id}/REMOVELIKE`,
-        {},
-        config
-      );
+      const data = await courseReviewAPI.handleLikesAndDislikes(id, "REMOVELIKE", {});
       reviews[i].likes = reviews[i].likes - 1;
       reviews[i].isLiked = null;
       setReviews([...reviews]);
     } catch (err) {}
   };
-  const removedislikes = async (id, i) => {
+
+  const removeDislikes = async (id, i) => {
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL}review/${id}/REMOVEDISLIKE`,
-        {},
-        config
-      );
+      const data = await courseReviewAPI.handleLikesAndDislikes(id, "REMOVEDISLIKE", {})
       reviews[i].disLikes = reviews[i].disLikes - 1;
       reviews[i].isDisLiked = null;
       setReviews([...reviews]);
@@ -254,9 +223,9 @@ const Reviews = ({ buy, ratings, currentuser }) => {
     setRevdlike(false);
     setRevlikeid(id);
     if (!isLiked) {
-      givelikes(id, isDisliked, i);
+      giveLike(id, isDisliked, i);
     } else {
-      removelikes(id, i);
+      removeLikes(id, i);
     }
   };
 
@@ -265,19 +234,15 @@ const Reviews = ({ buy, ratings, currentuser }) => {
     setRevlike(false);
     setRevdlikeid(id);
     if (!isDisliked) {
-      givedislikes(id, isLiked, i);
+      giveDislike(id, isLiked, i);
     } else {
-      removedislikes(id, i);
+      removeDislikes(id, i);
     }
   };
 
-  const updatereviews = async () => {
+  const updateReviews = async () => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}review/`,
-        { rating: "", review: "" },
-        config
-      );
+      const data = await courseReviewAPI.updateReviews({ rating: "", review: "" });
     } catch (err) {}
   };
 
@@ -702,7 +667,7 @@ const Reviews = ({ buy, ratings, currentuser }) => {
                 variant="contained"
                 sx={{ textTransform: "capitalize", width: "100%" }}
                 onClick={() => {
-                  addreviews();
+                  addReviews();
                 }}
               >
                 Rate Now{" "}

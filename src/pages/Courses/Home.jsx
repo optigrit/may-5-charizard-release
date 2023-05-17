@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import Carousel1 from "../../components/CarouselForBanner/index";
 import Product from "../../components/ProductCarousel/Product";
 import Filter from "../../components/Filter";
-import axios from "axios";
 import Image2 from "../../assets/CourseImages/Banner1.png";
 import Image3 from "../../assets/BannerImages/Banner2.png";
+import { courseAPI } from "../../api/requests/courses/courseAPI";
+
 const Home = () => {
   const drawerWidth = 240;
   const BannerData = [Image2, Image3];
@@ -18,13 +19,6 @@ const Home = () => {
   const [highest, setHighest] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchLoad, setSearchLoad] = useState(false);
-
-  const Token = localStorage.getItem("Token");
-  const config = {
-    headers: {
-      Authorization: `bearer ${Token}`,
-    },
-  };
 
   const onSearchChangeName = (event) => {
     const searchFieldString = event.target.value;
@@ -49,12 +43,8 @@ const Home = () => {
     const data = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_URL}courses/1`,
-          config
-        );
-        setData2(res?.data);
-
+        const data = await courseAPI.getCoursesByPage(1);
+        setData2(data && data);
         setLoading(false);
       } catch (err) {}
     };
@@ -68,11 +58,8 @@ const Home = () => {
   const handleSearchFromApi = async () => {
     setSearchLoad(true);
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_URL}courses/1?search=${searchKeyword}`,
-        config
-      );
-      setFilterItems(res?.data);
+      const data = await courseAPI.searchCourse(searchKeyword)
+      setFilterItems(data && data);
       setSearchLoad(false);
     } catch (err) {}
   };
@@ -114,11 +101,11 @@ const Home = () => {
             handleReset={handleReset}
             searchKeyword={searchKeyword}
           />
-          <Product
+          {/* <Product
             title={"Suggested Courses for you"}
             dataRender={data2}
             loading={loading}
-          />
+          /> */}
 
           <Product title={"Our Courses"} dataRender={filterItems} />
           {/* <Product title={"Highest Rated Courses"} dataRender={highest} /> */}

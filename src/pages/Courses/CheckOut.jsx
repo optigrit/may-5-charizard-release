@@ -1,13 +1,12 @@
 import { Grid } from "@mui/material";
 import { Box } from "@mui/system";
-import axios from "axios";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import ShipingDetails from "../../components/CheckOut";
 import OrderList from "../../components/CheckOut/OrderList";
 import Skeletons from "../../components/Skeleton/Skeletons";
-import { getCartCourses, getPrice } from "../../Config/Apis";
-import { coursesAPI } from "../../api/requests/coursesApi";
+import { courseStageAPI } from "../../api/requests/courses/courseStageAPI";
+import { coursePriceAPI } from "../../api/requests/courses/coursePriceAPI";
 
 const CheckOut = () => {
   const drawerWidth = 240;
@@ -21,9 +20,10 @@ const CheckOut = () => {
 
   const getCourseFromCart = async () => {
     setLoading(true);
-    await coursesAPI.getCourses("CART")
-      .then((res) => {
-        setYourOrder(res?.data);
+    await courseStageAPI
+      .getCourses("CART")
+      .then((data) => {
+        setYourOrder(data && data);
         setLoading(false);
       })
       .catch((err) => {});
@@ -35,9 +35,10 @@ const CheckOut = () => {
 
   const getPrices = async () => {
     setLoading(true);
-    await coursesAPI.getCoursePrices()
-      .then((res) => {
-        setPrice(res?.data?.price);
+    await coursePriceAPI
+      .getCoursePrices()
+      .then((data) => {
+        setPrice(data?.price);
       })
       .catch((err) => {});
   };
@@ -50,7 +51,7 @@ const CheckOut = () => {
         spacing={2}
         sx={{
           flexGrow: 1,
-          p: {xs:0,md:0,lg:4},
+          p: { xs: 0, md: 0, lg: 4 },
           m: 0,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },

@@ -4,7 +4,7 @@ import { Box } from "@mui/system";
 import { Outlet, useParams } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Grid } from "@mui/material";
-import { contestAPI } from "../../api/requests/contestAPI";
+import { contestAPI } from "../../api/requests/contests/contestAPI";
 
 const ContestProblem = () => {
   const { problemId } = useParams();
@@ -17,10 +17,9 @@ const ContestProblem = () => {
     getProblemById();
   }, []);
 
-
   const getProblemById = async () => {
     try {
-      const data = await contestAPI.getProblem(problemId)
+      const data = await contestAPI.getProblem(problemId);
       if (data?.contestData?.endingDate < d) {
         setContest_going(false);
       } else {

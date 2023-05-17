@@ -6,7 +6,7 @@ import CachedIcon from "@mui/icons-material/Cached";
 import { v4 } from "uuid";
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
-import axios from "axios";
+import { courseUploadAPI } from "../../api/requests/courses/courseUploadAPI";
 
 const Updatereso = ({
   resoid,
@@ -33,15 +33,6 @@ const Updatereso = ({
     },
   });
 
-  const Token = localStorage.getItem("Token");
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "http://localhost:8080",
-      Authorization: `bearer ${Token}`,
-    },
-  };
-
   const uploadFile = async (a) => {
     let filename = `extrafiles/${a?.name + v4()}`;
     const postdata = {
@@ -58,11 +49,7 @@ const Updatereso = ({
 
   const normal = async (postdata) => {
     try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_URL}file/${resoid}`,
-        postdata,
-        config
-      );
+      const data = await courseUploadAPI.updateFile(resoid, postdata)
     } catch (err) {}
   };
   const uploaddata = async (a) => {

@@ -1,5 +1,4 @@
 import { Box, Grid, Toolbar } from "@mui/material";
-import axios from "axios";
 import React, { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CartCard from "../../components/CartCourses/CartCard";
@@ -12,7 +11,8 @@ import {
   ADD_ITEM_IN_WISHLIST,
   REMOVE_ITEM_FROM_WISHLIST,
 } from "../../Redux/AddToWishlist/Wishlist-Constants";
-import { coursesAPI } from "../../api/requests/coursesApi";
+import { courseStageAPI } from "../../api/requests/courses/courseStageAPI";
+import { coursePriceAPI } from "../../api/requests/courses/coursePriceAPI";
 
 const Cart = () => {
   const drawerWidth = 240;
@@ -27,10 +27,11 @@ const Cart = () => {
 
   const getCourseFromCart = async () => {
     setLoading(true);
-    await coursesAPI.getCourses("CART")
-      .then((res) => {
+    await courseStageAPI
+      .getCourses("CART")
+      .then((data) => {
         setLoading(false);
-        res?.map((item) => {
+        data?.map((item) => {
           if (
             CartLength?.filter((cartItems) => cartItems.id === item.id).length
           ) {
@@ -44,12 +45,12 @@ const Cart = () => {
 
   const dispatch = useDispatch();
   const handleRemoveWishlist = async (item) => {
-    await coursesAPI.removeFromWishList(item.id)
-      .then((res) => {
+    await courseStageAPI
+      .removeFromWishListOrCart(item.id)
+      .then((data) => {
         dispatch(manipulateWishList(REMOVE_ITEM_FROM_WISHLIST, item?.id));
       })
-      .catch((err) => {
-      });
+      .catch((err) => {});
   };
 
   const handleMoveToWishlist = (item) => {
@@ -58,18 +59,19 @@ const Cart = () => {
   };
 
   const addCourseToWishlistApi = async (item) => {
-    await coursesAPI.addCourseToWishListOrCart( "WISHLIST", item.id)
-      .then((res) => {
+    await courseStageAPI
+      .addCourseToWishListOrCart(item.id, "WISHLIST")
+      .then((data) => {
         getAllWishlistCourses();
       })
       .catch((err) => {});
   };
 
   const getAllWishlistCourses = async () => {
-    // setLoading(true)
-    await coursesAPI.getCourses("WISHLIST")
-      .then((res) => {
-        res?.map((item) => {
+    await courseStageAPI
+      .getCourses("WISHLIST")
+      .then((data) => {
+        data?.map((item) => {
           if (
             WishlistItems?.filter(
               (wishlistItem) => wishlistItem?.id === item.id
@@ -81,16 +83,15 @@ const Cart = () => {
         });
       })
       .catch((err) => {});
-    // setLoading(false)
   };
 
   const handleRemoveItem = async (item) => {
-    await coursesAPI.removeCourseFromCart(item.id)
-      .then((res) => {
+    await courseStageAPI
+      .removeFromWishListOrCart(item.id)
+      .then((data) => {
         dispatch(manipulateCart(REMOVE_ITEM, item?.id));
       })
-      .catch((err) => {
-      });
+      .catch((err) => {});
   };
 
   const handleMoveToCart = (item) => {
@@ -98,8 +99,9 @@ const Cart = () => {
     addCourseTocart(item);
   };
   const addCourseTocart = async (item) => {
-    await coursesAPI.addCourseToWishListOrCart("CART", item.id)
-      .then((res) => {
+    await courseStageAPI
+      .addCourseToWishListOrCart(item.id, "CART")
+      .then((data) => {
         getCourseFromCart();
       })
       .catch((err) => {});
@@ -112,16 +114,18 @@ const Cart = () => {
   const getPrices = async () => {
     setLoading(true);
 
-    await coursesAPI.getCoursePrices()
-      .then((res) => {
+    await coursePriceAPI
+      .getCoursePrices()
+      .then((data) => {
         setLoading(false);
-        setPrice(res?.price);
+        setPrice(data?.price);
       })
       .catch((err) => {});
   };
   return (
     <>
-      <Grid container
+      <Grid
+        container
         sx={{
           flexGrow: 1,
           p: { xs: "16px 0px 0px 0px", sm: 2 },

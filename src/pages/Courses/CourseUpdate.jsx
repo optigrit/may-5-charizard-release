@@ -1,20 +1,18 @@
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import SubHeader from "../../components/SideBarResponsive/SubHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, IconButton, TextField, Typography } from "@mui/material";
 import { IconTextField } from "../../components/TextField";
 import Skeletons from "../../components/Skeleton/Skeletons";
-import axios from "axios";
 import { ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from "../../firebase";
 import { useNavigate, useParams } from "react-router-dom";
 import { manipulateuserdata } from "../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
-import { coursesAPI } from "../../api/requests/coursesApi";
+import { courseAPI } from "../../api/requests/courses/courseAPI";
 
 const drawerWidth = 240;
 
@@ -53,9 +51,8 @@ const CourseUpdate = () => {
 
   useEffect(() => {
     const data = async () => {
-      // setLoading(true);
       try {
-        const { data } = await coursesAPI.getSpecificCourse(params.id)
+        const { data } = await courseAPI.getSpecificCourse(params.id);
         setTitle(data?.courseData?.title);
         setPrice(data?.courseData?.price);
         setCategories(data?.courseData?.categories);
@@ -96,13 +93,16 @@ const CourseUpdate = () => {
 
   const handleNormal = async (postData) => {
     try {
-      const {data} = await coursesAPI.updateCourse(postData, params.id)
+      const data = await courseAPI.updateCourse(postData, params.id);
       handlealert("Course updated successfully", "success");
     } catch (err) {}
   };
   const handleUpdateImgTrailer = async (imageDataUrl, videoDataUrl) => {
     try {
-      const { data } = await coursesAPI.updateImageAndTrailer({ imageUrl: imageDataUrl, trailerUrl: videoDataUrl }, params.id)
+      const data = await courseAPI.updateImageAndTrailer(
+        { imageUrl: imageDataUrl, trailerUrl: videoDataUrl },
+        params.id
+      );
     } catch (err) {}
   };
 

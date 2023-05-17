@@ -27,7 +27,6 @@ import { storage } from "../../firebase";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import axios from "axios";
 import { v4 } from "uuid";
 import { ref, uploadBytes } from "firebase/storage";
 import { MuiTelInput } from "mui-tel-input";

@@ -10,7 +10,8 @@ import TableRow from "@mui/material/TableRow";
 import { Chip, Typography, Button, Grid } from "@mui/material";
 import styled from "styled-components";
 import ReusableButton from "../../ReusableButtons/ReusableButton";
-import { contestAPI } from "../../../api/requests/contestAPI";
+import { contestAPI } from "../../../api/requests/contests/contestAPI";
+import { contestProblemAPI } from "../../../api/requests/contests/contestProblemAPI";
 
 const ProblemMySubmissions = () => {
   const { id } = useParams();
@@ -21,10 +22,9 @@ const ProblemMySubmissions = () => {
     getSubmissions();
   }, []);
 
-
   const getSubmissions = async () => {
     try {
-      const data = await contestAPI.getSubmissions(id);
+      const data = await contestProblemAPI.getSubmissions(id);
       setSubmissions(data);
     } catch (err) {}
   };

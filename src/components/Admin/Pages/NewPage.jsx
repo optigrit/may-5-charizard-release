@@ -58,7 +58,6 @@ const NewPage = () => {
                     </div>
                 );
             })}
-            {console.log(api)}
             <button onClick={handleAddClick}>Add</button>
         </div>
     );

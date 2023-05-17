@@ -1,11 +1,11 @@
 import { async } from "@firebase/util";
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { manipulateuserdata } from "../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
+import { userAuthAPI } from "../../api/requests/users/userAuthAPI";
 
 function ForgotPasswordEmail() {
   const [email, setEmail] = useState("");
@@ -28,10 +28,7 @@ function ForgotPasswordEmail() {
   const EmailSent = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL}requestupdate`,
-        { email }
-      );
+      const data = await userAuthAPI.requestPasswordUpdate({ email });
       handlealert(data?.message, "success");
     } catch (err) {
       handlealert("This email hasn't been registered try signing up", "error");

@@ -19,7 +19,7 @@ import { manipulateuserdata } from "../../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../../Redux/UserData/User-Constants";
 import { useDispatch } from "react-redux";
 import SubHeader from "../../SideBarResponsive/SubHeader";
-import { contestAPI } from "../../../api/requests/contestAPI";
+import { contestProblemAPI } from "../../../api/requests/contests/contestProblemAPI";
 
 const EditProblem = () => {
   const [inputTags, setinputTags] = useState([""]);
@@ -307,7 +307,6 @@ const EditProblem = () => {
     }
   };
 
-
   const ALERT_TIME = 5000;
 
   const dispatch = useDispatch();
@@ -387,14 +386,14 @@ const EditProblem = () => {
 
   const getProblem = async () => {
     try {
-      const data = await contestAPI.getProblem(problemId);
+      const data = await contestProblemAPI.getProblem(problemId);
       setProblem(data?.problemData);
     } catch (err) {}
   };
 
   const handleUpload = async (postData) => {
     try {
-      const  data  = await contestAPI.editProblem(problemId, postData);
+      const data = await contestProblemAPI.editProblem(problemId, postData);
     } catch (err) {}
   };
 
