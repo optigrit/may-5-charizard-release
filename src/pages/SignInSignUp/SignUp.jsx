@@ -9,7 +9,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { LoadingButton } from '@mui/lab';
+import { LoadingButton } from "@mui/lab";
 import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IconTextField } from "../../components/TextField";
@@ -24,6 +24,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { MuiTelInput } from "mui-tel-input";
 import { userAuthAPI } from "../../api/requests/users/userAuthAPI";
+import GoogleSignInButton from "../../components/GoogleSignInButton";
 
 function SignUp() {
   const [open, setOpen] = useState(false);
@@ -71,7 +72,7 @@ function SignUp() {
   const SignUpApi = async () => {
     setLoader(true);
     try {
-      const data = await userAuthAPI.signUp(signUpUserData)
+      const data = await userAuthAPI.signUp(signUpUserData);
       setMessage(data?.message);
       setOpen(true);
       setLoader(false);
@@ -355,7 +356,8 @@ function SignUp() {
             >
               Sign Up
             </LoadingButton>
-            {/* <Grid
+            {/* <GoogleSignInButton /> */}
+            <Grid
               item
               xs={12}
               md={12}
@@ -369,21 +371,9 @@ function SignUp() {
                   OR
                 </Typography>
               </Divider>
-            </Grid> */}
-            {/* <Button
-              fullWidth
-              variant="outlined"
-              startIcon={svgIcon}
-              sx={{
-                textTransform: "none",
-                fontWeight: "400",
-                mb: 2,
-                borderColor: "#EBEBEB",
-                color: "#787878",
-              }}
-            >
-              Sign Up with Google
-            </Button> */}
+            </Grid>
+
+            <GoogleSignInButton />
 
             <Grid
               item

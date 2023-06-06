@@ -149,7 +149,7 @@ const UserProfile2 = () => {
 
   const getContests = async () => {
     try {
-      const data = await contestAPI.getContests();
+      const data = await contestAPI.getUserContests();
       setContests(data);
     } catch (err) {}
   };
