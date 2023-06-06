@@ -40,7 +40,15 @@ const Product = ({
 
   return (
     <>
-      <Grid sx={{bgcolor:"white",  p:"12px",     mt:"12px",       boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.05)",}}>
+      <Grid
+        sx={{
+          bgcolor: "#fff",
+          p: "12px",
+          mt: "12px",
+          boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.05)",
+          overflow: "scroll",
+      }}
+      >
         <Typography
           variant="h5"
           sx={{
@@ -64,7 +72,6 @@ const Product = ({
           removeArrowOnDeviceType={["mobile"]}
           className='carousel'
         >
-
           {loading ? (
             <Box sx={{ display: "flex" }} className="mainSkeletonContainer">
               <Skeletons type="feed1" />
@@ -73,7 +80,7 @@ const Product = ({
             dataRender?.map((item, index) => {
               return (
                 <>
-                  { (
+                  {
                     <CarouselItem
                       ProductDetails={item}
                       key={index}
@@ -81,8 +88,9 @@ const Product = ({
                       loading={loading}
                       isEditable={isEditable}
                       isUserProfileInProduct={isUserProfileInProduct}
+                      draggable={false}
                     />
-                  )}
+                  }
                 </>
               );
             })

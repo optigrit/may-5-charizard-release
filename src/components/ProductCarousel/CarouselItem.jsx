@@ -65,7 +65,6 @@ const CarouselItem = ({
     (state) => state.WishlistReducer.wishlistItems
   );
   const Token = localStorage.getItem("Token");
- 
 
   useEffect(() => {
     if (cartItems?.filter((item) => item.id === ProductDetails.id).length) {
@@ -84,7 +83,8 @@ const CarouselItem = ({
   }, [wishlistItems]);
 
   const addCourseToWishlistApi = async (ProductDetails) => {
-    await courseStageAPI.addCourseToWishListOrCart(ProductDetails.id, "WISHLIST")
+    await courseStageAPI
+      .addCourseToWishListOrCart(ProductDetails.id, "WISHLIST")
       .then((data) => {
         getAllWishlistCourses();
       })
@@ -100,7 +100,8 @@ const CarouselItem = ({
   };
 
   const getAllWishlistCourses = async () => {
-    await courseStageAPI.getCourses("WISHLIST")
+    await courseStageAPI
+      .getCourses("WISHLIST")
       .then((data) => {
         data?.map((item) => {
           if (
@@ -127,7 +128,8 @@ const CarouselItem = ({
   };
 
   const addCourseTocart = async (ProductDetails) => {
-    await courseStageAPI.addCourseToWishListOrCart("CART")
+    await courseStageAPI
+      .addCourseToWishListOrCart("CART")
       .then((data) => {
         getCourseFromCart();
       })
@@ -135,7 +137,8 @@ const CarouselItem = ({
   };
 
   const getCourseFromCart = async () => {
-    await courseStageAPI.getCourses("CART")
+    await courseStageAPI
+      .getCourses("CART")
 
       .then((data) => {
         data.map((item) => {
@@ -151,7 +154,8 @@ const CarouselItem = ({
   };
 
   const handleRemoveItem = async (id) => {
-    await courseStageAPI.removeFromWishListOrCart(id)
+    await courseStageAPI
+      .removeFromWishListOrCart(id)
       .then((data) => {})
       .catch((err) => {
         dispatch(manipulateCart(REMOVE_ITEM, id));
@@ -159,7 +163,8 @@ const CarouselItem = ({
   };
 
   const handleRemoveWishlist = async (ProductDetails) => {
-    await courseStageAPI.removeFromWishListOrCart(ProductDetails.id)
+    await courseStageAPI
+      .removeFromWishListOrCart(ProductDetails.id)
       .then((data) => {})
       .catch((err) => {
         dispatch(
@@ -219,7 +224,8 @@ const CarouselItem = ({
   const handleCloseDeleteDialog = () => [setOpenDeleteDialog(false)];
 
   const handleDeleteCourse = async (ProductDetails) => {
-    await courseAPI.deleteCourse(ProductDetails.id)
+    await courseAPI
+      .deleteCourse(ProductDetails.id)
       .then((res) => {
         dispatch(manipulateWishList(REMOVE_EDITABLE_COURSE, ProductDetails.id));
         handlealert(res?.data?.message, "success");
@@ -487,12 +493,20 @@ const CarouselItem = ({
                     {` (${ProductDetails?.rating?.ratedBy})`}
                   </Typography>
                 </Box>
-                <Typography variant="overline" className="value" sx={{ mr: 1 }}>
-                  {`Total Videos ${ProductDetails?.videosCount}`}
-                </Typography>
-                <Typography variant="overline">
-                  {`Total Sections ${ProductDetails?.sectionsCount}`}
-                </Typography>
+                {ProductDetails.videosCount && ProductDetails.sectionsCount && (
+                  <>
+                    <Typography
+                      variant="overline"
+                      className="value"
+                      sx={{ mr: 1 }}
+                    >
+                      {`Total Videos ${ProductDetails?.videosCount}`}
+                    </Typography>
+                    <Typography variant="overline">
+                      {`Total Sections ${ProductDetails?.sectionsCount}`}
+                    </Typography>
+                  </>
+                )}
               </Box>
               <Box>
                 {isEditable ? (

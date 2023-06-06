@@ -72,12 +72,19 @@ const Skeletons = ({ type }) => {
     </Box>
   );
 
+  const VideoPlayerSkeleton = () => (
+    <Box sx={{ marginLeft: "1rem" }}>
+      <Skeleton variant="rectangular" width="100%" height={480} />
+    </Box>
+  );
+
   if (type === "feed1") return Array(counter).fill(<FeedSkeleton />);
   if (type === "sideBar") return Array(5).fill(<SideBarSkeleton />);
   if (type === "sideBarBottom") return Array(3).fill(<SideBarSkeleton />);
   if (type === "CircularLoad") return <CircularLoader />;
   if (type === "smallCircularLoader") return <SmallCircularLoader />;
   if (type === "LazySmallCircularLoader") return <LazySmallCircularLoader />;
+  if (type === "videoPlayer") return <VideoPlayerSkeleton />;
 };
 
 export default Skeletons;

@@ -17,21 +17,19 @@ function LinearProgressWithLabel(props) {
 }
 
 export default function LinearProgressWithLabelReusable({ progressCount }) {
-  const [progress, setProgress] = React.useState(progressCount);
-
-//   React.useEffect(() => {
-//     const timer = setInterval(() => {
-//       setProgress((prevProgress) => (prevProgress >= 100 ? 10 : prevProgress + 10));
-//     }, 800);
-//     return () => {
-//       clearInterval(timer);
-//     };
-//   }, []);
-
   return (
-    <Box sx={{ width: "24%",display:{xs:"none",sm:"block"} }}>
-        <Typography variant="subtitle2" sx={{fontWeight:"400"}}>Your Progress</Typography>
-      <LinearProgressWithLabel value={progress} />
+    <Box
+      sx={{
+        width: "250px",
+        display: { xs: "none", sm: "block" },
+        // marginLeft: "1rem",
+        // marginTop: "1rem",
+      }}
+    >
+      <Typography variant="subtitle2" sx={{ fontWeight: "400" }}>
+        Your Progress
+      </Typography>
+      <LinearProgressWithLabel value={progressCount} />
     </Box>
   );
 }
