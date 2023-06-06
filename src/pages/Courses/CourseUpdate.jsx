@@ -225,13 +225,12 @@ const CourseUpdate = () => {
           // UploadTitle={"Update"}
           FormId={"create-course-form"}
         />
-        <Box sx={{ p: 2, width: "720px" }}>
+        <Box sx={{ p: 2, width: {xs: "100%",sm: "95%",md: "90%", lg: "75%", xl: "60%"} }}>
           <form onSubmit={handleCreateCourse} id="create-course-form">
-            <Box sx={{ mb: 2, display: "flex" }}>
+            <Box sx={{ mb: 2, display: "flex", flexDirection: {xs: "column", md: "row"}, gap: 2  }}>
               <TextField
                 size="small"
                 label={"Title"}
-                sx={{ mr: 2 }}
                 type="text"
                 required
                 fullWidth
@@ -249,8 +248,8 @@ const CourseUpdate = () => {
                 onChange={(event) => setPrice(event.target.value)}
               ></TextField>
             </Box>
-            <Box sx={{ mb: 2, display: "flex", gap: 2 }}>
-              <Box>
+            <Box sx={{ mb: 2, display: "flex", flexDirection: {xs: "column", md: "row"}, gap: 2  }}>
+              <Box sx={{ width: "100%"}}>
                 <IconTextField
                   size="small"
                   label={"Upload Thumbnail"}
@@ -282,7 +281,7 @@ const CourseUpdate = () => {
                   view previous Image
                 </Button>
               </Box>
-              <Box>
+              <Box sx={{ width: "100%"}}>
                 <IconTextField
                   size="small"
                   label={"Upload Trailer"}
@@ -314,11 +313,10 @@ const CourseUpdate = () => {
                 </Button>
               </Box>
             </Box>
-            <Box sx={{ mb: 2, display: "flex" }}>
+            <Box sx={{ mb: 2, display: "flex", flexDirection: {xs: "column", md: "row"}, gap: 2  }}>
               <TextField
                 size="small"
                 label={"categories"}
-                sx={{ mr: 2 }}
                 fullWidth
                 value={categories}
                 onChange={(event) => {
@@ -335,7 +333,7 @@ const CourseUpdate = () => {
                 }}
               />
             </Box>
-            <Box sx={{ mb: 2, display: "flex" }}>
+            <Box sx={{ mb: 2, display: "flex", flexDirection: {xs: "column", md: "row"}, gap: 2  }}>
               <TextField
                 size="small"
                 id="outlined-textarea"
@@ -461,18 +459,17 @@ const CourseUpdate = () => {
                 Add Additional Description Point
               </Button>
             </Box>
-            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 , justifyContent: {xs: "space-between",md: "flex-end"} }}>
+              <Button sx={{width: "240px", flexGrow: {xs: "1", md: "0"}}}
                 variant="outlined"
                 size="small"
-                sx={{ mr: 2 }}
                 onClick={() => {
                   navigate(`/courseupload/${params.id}`);
                 }}
               >
                 Upload Course Videos
               </Button>
-              <Button variant="contained" size="small" type="submit">
+              <Button sx={{width: "240px",flexGrow: {xs: "1", md: "0"}}}  variant="contained" size="small" type="submit">
                 Update Course
               </Button>
             </Box>

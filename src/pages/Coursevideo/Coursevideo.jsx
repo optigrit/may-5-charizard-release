@@ -48,7 +48,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import File from "../../assets/courseVideosUpload/FILE.svg";
 import Reviews from "../../components/Reviews/Reviews";
 import { useEffect } from "react";
-import moment from "moment";
+import axios from "axios";
+import moment, { duration } from "moment";
 import { useNavigate, useParams } from "react-router-dom";
 import Getcourses from "../../components/Getcourses/Getcourses";
 import { useDispatch, useSelector } from "react-redux";
@@ -65,6 +66,8 @@ import { courseVideoAPI } from "../../api/requests/courses/courseVideoAPI";
 import { courseStageAPI } from "../../api/requests/courses/courseStageAPI";
 import { courseCommentAPI } from "../../api/requests/courses/courseCommentAPI";
 import { userAPI } from "../../api/requests/users/userAPI";
+import BigLoader from "../../components/Skeleton/BigLoader";
+import Skeletons from "../../components/Skeleton/Skeletons";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -180,12 +183,16 @@ const Coursevideo = () => {
     });
   };
 
+  const [videoCompleted, setVideoCompleted] = useState(false);
+
   const handleEnd = () => {
+    setVideoCompleted(true);
     setStates({
       ...states,
       playing: false,
     });
   };
+
   const handleCom = () => {
     setCom(!com);
     setCourse(false);
@@ -244,7 +251,13 @@ const Coursevideo = () => {
     prevOpen.current = openMenu;
   }, [openMenu]);
 
+  const [playingTime, setPlayingTime] = useState(0);
+
   const handleProgress = (state) => {
+    setPlayingTime(state.playedSeconds);
+    if (Math.round(playingTime) % (intervalValue / 1000) === 0) {
+      userprogress();
+    }
     const playedTime = state.playedSeconds;
     const playedSeconds = new Date(playedTime * 1000)
       .toISOString()
@@ -264,64 +277,110 @@ const Coursevideo = () => {
   const MouseIn = () => setReshover(true);
   const MouseOut = () => setReshover(false);
 
+  const Token = localStorage.getItem("Token");
+
+  const config = {
+    headers: {
+      Authorization: `bearer ${Token} `,
+      "Content-type": "application/json",
+    },
+  };
+
+  const [openLoader, setOpenLoader] = useState(true);
+  const [coursePercentage, setCoursePercentage] = useState(0);
+
   let { id } = useParams();
   const getdata = async () => {
     try {
-      const data = await courseAPI.getSpecificCourse(id);
-      return data;
-    } catch (error) {}
+      const data = await courseAPI.getSpecificCourse(id).then((res) => {
+        updateState(res);
+        const playedDurationObj = {};
+        res.data.courseVideos[secindex].videosData.map((duration, i) => {
+          playedDurationObj[i] = duration.playedDuration;
+        });
+        localStorage.setItem(
+          "playedDurationObj",
+          JSON.stringify(playedDurationObj)
+        );
+        localStorage.setItem("coursePercentage", res.data.courseCompletion);
+        setOpenLoader(false);
+      });
+      // return data;
+    } catch (error) {
+      setOpenLoader(false);
+    }
   };
 
+  const [videoDuration, setVideoDuration] = useState(0);
   const updateState = (data) => {
     setStage(data.data.courseStage);
     cartBtnText(data.data.courseStage);
     setAuthordata(data.data.authorData);
     setCoursedata(data.data.courseVideos);
+    setCoursePercentage(data.data.courseCompletion);
     setUserdata(data.data.courseData);
-    setUrl(data.data.courseVideos[0].videosData[0].videoUrl);
+    setUrl(data.data.courseVideos[secindex].videosData[vidindex].videoUrl);
+    setVideoDuration(
+      data.data.courseVideos[secindex].videosData[vidindex].videoLength
+    );
+    setIntervalValue(
+      parseInt(
+        data.data.courseVideos[secindex].videosData[vidindex].videoLength
+      ) *
+        (1 / 5) *
+        1000
+    );
   };
 
   const userprogress = async () => {
-    try {
-      const data = await courseVideoAPI.updateUserProgress(id, {
-        sectionId: coursedata[secindex]?.id,
-        videoId: coursedata[secindex]?.videosData[vidindex]?.id,
-      });
-    } catch (err) {}
+    if (
+      coursedata &&
+      coursedata[secindex]?.id &&
+      coursedata[secindex]?.videosData[vidindex]?.id &&
+      playingTime !== 0 &&
+      stage === "BOUGHT"
+    ) {
+      try {
+        const { data } = await axios.patch(
+          `${process.env.REACT_APP_URL}progress/${id}`,
+          {
+            sectionId: coursedata[secindex]?.id,
+            videoId: coursedata[secindex]?.videosData[vidindex]?.id,
+            playedDuration: Math.round(playingTime),
+            isCompleted:
+              videoDuration - playingTime <= 3 || videoCompleted
+                ? "true"
+                : "false",
+          },
+          config
+        );
+      } catch (err) {}
+    }
   };
 
-  const getuserprogress = async () => {
-    try {
-      const data = await courseVideoAPI.getUserProgress(id);
-      return data;
-    } catch (err) {}
-  };
+  const [intervalValue, setIntervalValue] = useState(1000);
+
+  // useEffect(() => {
+  //   getdata().then(
+  //     (data) => updateState(data),
+  //     (error) => {
+  //       alert("Data Fetching error");
+  //       setErrorFetchedChecker((c) => !c);
+  //     }
+  //   );
+  // }, [errorFetchedChecker]);
 
   useEffect(() => {
-    getdata().then(
-      (data) => updateState(data),
-      (error) => {
-        alert("Data Fetching error");
-        setErrorFetchedChecker((c) => !c);
-      }
-    );
-    getuserprogress();
-  }, [errorFetchedChecker]);
+    const getCourseData = async () => {
+      await getdata();
+    };
+    getCourseData();
+  }, []);
 
   const updateuserState = (data) => {
     setUserprogresss(data[0]);
     setVid(data[0].videoId);
   };
-
-  useEffect(() => {
-    getuserprogress().then(
-      (data) => updateuserState(data),
-      (error) => {
-        alert("Data Fetching error");
-        setErrorrFetchedChecker((c) => !c);
-      }
-    );
-  }, [errorrFetchedChecker]);
 
   const cartItems = useSelector((state) => state.CartReducer.cartItems);
   const dispatch = useDispatch();
@@ -340,7 +399,7 @@ const Coursevideo = () => {
   const addCourseTocartWithCondition = async (userdata) => {
     if (stage === "CART") {
       navigate("/my-cart");
-    } else if (stage === "BUYED") {
+    } else if (stage === "BOUGHT") {
       setBuy(true);
     } else if (wishlistItems?.filter((item) => item.id === id).length) {
       dispatch(manipulateWishList(REMOVE_ITEM_FROM_WISHLIST, id));
@@ -483,7 +542,7 @@ const Coursevideo = () => {
       removeLike(Id, i);
     }
   };
-  
+
   const handleDislike = (Id, isLikes, isDisliked, i) => {
     setDislike(!dislike);
     setDid(Id);
@@ -587,7 +646,7 @@ const Coursevideo = () => {
   const cartBtnText = (stage) => {
     if (stage === "CART") {
       setAddToCartText("Go to Cart");
-    } else if (stage === "BUYED") {
+    } else if (stage === "BOUGHT") {
       setBuy(true);
     }
   };
@@ -640,7 +699,19 @@ const Coursevideo = () => {
     setTotalreplies(parseInt(data.repliesCount));
   };
 
-  
+  // Seek to particular time
+  const [isReady, setIsReady] = React.useState(false);
+  const playerRef = React.useRef();
+  const onReady = React.useCallback(() => {
+    if (!isReady) {
+      setIsReady(true);
+      const playedDurationObj = JSON.parse(
+        localStorage.getItem("playedDurationObj")
+      );
+      const timeToStrart = playedDurationObj[vidindex];
+      playerRef.current.seekTo(timeToStrart, "seconds");
+    }
+  }, [isReady]);
 
   return (
     <>
@@ -654,39 +725,52 @@ const Coursevideo = () => {
           width={!fullscreen ? "100%" : "75%"}
         >
           {/* <Box width={!fullscreen ? "100%" : '75%'}> */}
-          <Box
-            className="player-wrapper"
-            height="fit-content"
-            sx={{ position: "relative" }}
-            onMouseEnter={MouseEntered}
-            onMouseLeave={MouseLeave}
-          >
-            <ReactPlayer
-              url={url}
-              controls
-              className="react-player"
-              width="100%"
-              height="100%"
-              playing={playing}
-              onPlay={() => {
-                setStates({
-                  ...states,
-                  playing: true,
-                });
-              }}
-              onPause={() => {
-                setStates({
-                  ...states,
-                  playing: false,
-                });
-              }}
-              onPlaybackRateChange={handlePlayback}
-              onDuration={handleDuration}
-              onEnded={handleEnd}
-              onProgress={handleProgress}
-            />
-            {
-              // hover &&
+          {openLoader ? (
+            <Skeletons type={"videoPlayer"} />
+          ) : (
+            <Box
+              className="player-wrapper"
+              height="fit-content"
+              sx={{ position: "relative" }}
+              onMouseEnter={MouseEntered}
+              onMouseLeave={MouseLeave}
+            >
+              <ReactPlayer
+                url={url}
+                controls
+                className="react-player"
+                width="100%"
+                height="100%"
+                playing={playing}
+                onPlay={() => {
+                  setStates({
+                    ...states,
+                    playing: true,
+                  });
+                }}
+                onPause={() => {
+                  setStates({
+                    ...states,
+                    playing: false,
+                  });
+                  userprogress();
+                }}
+                onPlaybackRateChange={handlePlayback}
+                onDuration={handleDuration}
+                onEnded={handleEnd}
+                onProgress={handleProgress}
+                ref={playerRef}
+                onReady={onReady}
+                config={{
+                  file: {
+                    attributes: {
+                      controlsList: "nodownload",
+                      disablePictureInPicture: "true",
+                    },
+                  },
+                }}
+              />
+              {/* hover && */}
               <Box
                 sx={{
                   position: "absolute",
@@ -711,8 +795,8 @@ const Coursevideo = () => {
                   </Fab>
                 )}
               </Box>
-            }
-          </Box>
+            </Box>
+          )}
           {/* </Box > */}
           <Box
             sx={{
@@ -1672,11 +1756,18 @@ const Coursevideo = () => {
                             listStyleType: "disc",
                             color: "#646464",
                             textTransform: "uppercase",
-                            marginLeft: "1em"
+                            marginLeft: "1em",
                           }}
                         >
                           {userdata?.descriptionPoints?.map((value, id) => (
-                            <ListItem key={id} sx={{ display: "list-item", textAlign: "justify", padding: 0}}>
+                            <ListItem
+                              key={id}
+                              sx={{
+                                display: "list-item",
+                                textAlign: "justify",
+                                padding: 0,
+                              }}
+                            >
                               <ListItemText
                                 primaryTypographyProps={{
                                   fontSize: "14px",
@@ -1693,104 +1784,144 @@ const Coursevideo = () => {
                   </TabPanel>
                   <TabPanel value={value} index={2}>
                     <Box>
-                        <Typography
-                          variant="h6"
-                          sx={{ color: "#292929", fontWeight: "bold" }}
-                        >
-                          Resources
-                        </Typography>
-                    <Grid mb={1} container spacing={2}>
-                      <Grid item sx={{textAlign: {xs:"center", sm: "start"}}}  xs={4} sm={6}>
-                          <Typography variant="caption" pl={{xs: 0, sm: 4}} sx={{ color: "#3D3D3D", flexBasis: "10%" }}>
-                          Name
-                        </Typography>
-                      </Grid>
-                      <Grid item sx={{textAlign: "center"}}  xs={2} sm={2}>
-                          <Typography variant="caption" sx={{ color: "#3D3D3D", flexBasis: "10%" }}>
-                          Size
-                        </Typography>
-                      </Grid>
-                      <Grid item sx={{textAlign: "center"}}  xs={3} sm={2}>
-                          <Typography variant="caption" sx={{ color: "#3D3D3D"}}>
-                           Uploaded at
-                        </Typography>
-                      </Grid>
-                      <Grid item sx={{textAlign: "center"}}  xs={3} sm={2}>
-                          <Typography variant="caption" sx={{ color: "#3D3D3D"}}>
-                          File
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                     
-                      <Box
+                      <Typography
+                        variant="h6"
+                        sx={{ color: "#292929", fontWeight: "bold" }}
                       >
+                        Resources
+                      </Typography>
+                      <Grid mb={1} container spacing={2}>
+                        <Grid
+                          item
+                          sx={{ textAlign: { xs: "center", sm: "start" } }}
+                          xs={4}
+                          sm={6}
+                        >
+                          <Typography
+                            variant="caption"
+                            pl={{ xs: 0, sm: 4 }}
+                            sx={{ color: "#3D3D3D", flexBasis: "10%" }}
+                          >
+                            Name
+                          </Typography>
+                        </Grid>
+                        <Grid item sx={{ textAlign: "center" }} xs={2} sm={2}>
+                          <Typography
+                            variant="caption"
+                            sx={{ color: "#3D3D3D", flexBasis: "10%" }}
+                          >
+                            Size
+                          </Typography>
+                        </Grid>
+                        <Grid item sx={{ textAlign: "center" }} xs={3} sm={2}>
+                          <Typography
+                            variant="caption"
+                            sx={{ color: "#3D3D3D" }}
+                          >
+                            Uploaded at
+                          </Typography>
+                        </Grid>
+                        <Grid item sx={{ textAlign: "center" }} xs={3} sm={2}>
+                          <Typography
+                            variant="caption"
+                            sx={{ color: "#3D3D3D" }}
+                          >
+                            File
+                          </Typography>
+                        </Grid>
+                      </Grid>
+
+                      <Box>
                         <hr />
                         {coursedata[secindex]?.videosData[
                           vidindex
                         ]?.extraFiles.map((values, index) => (
-                          <Grid container py={1} spacing={2} 
-                          >
-                            <Grid item  xs ={4} sm={6}>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                gap: "5px",
-                                alignItems: "center",
-                                overFlow: "hidden",
-                                textOverflow: "elipsis",
-                              }}
-                            >
-                              <Box  sx={{display: {xs: "none", sm: "block"}}}>
-
-                              <img src={File} style={{width: "30px", height: "30px"}} alt="icon" />
-                              </Box>
-                              <Stack
-                                direction="column"
-                                sx={{overFlow: "hidden",textOverflow: "elipsis", width: {xs: "100%", sm: "auto"}}}
-                              >
-                                <Typography noWrap sx={{ color: "#3D3D3D"}}>
-                                  {values.fileName}
-                                </Typography>
-                              </Stack>
-                            </Box>
-                            </Grid>
-                            <Grid item sx={{textAlign: "center"}}  xs ={2} sm={2}>
-                            <Typography
-                              variant="caption"
-                              sx={{
-                                color: "#8C8C8C",
-                              }}
-                            >
-                              {Math.round(values.fileSize / 100000)}KB
-                            </Typography>
-                            </Grid>
-                            <Grid  item sx={{textAlign: "center"}}   xs={3} sm={2}>
-                            <Typography
-                              variant="caption"
-                              sx={{
-                                color: "#8C8C8C",
-                              }}
-                            >
-                              {values.created_at.slice(0, -14)}
-                            </Typography>
-                            </Grid>
-                           <Grid item sx={{textAlign: "center"}}  xs={3} sm={2}>
-                           <Button  variant="outlined" size=""> 
-                              <a
-                                target="_blank"
-                                href={values.fileUrl}
-                                style={{
-                                  fontSize: "12px",
-                                  fontWeight: "bold",
-                                  color: "#698AFF",
-                                  textTransform: "capitalize",
-                                  textDecoration: "none",
+                          <Grid container py={1} spacing={2}>
+                            <Grid item xs={4} sm={6}>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  gap: "5px",
+                                  alignItems: "center",
+                                  overFlow: "hidden",
+                                  textOverflow: "elipsis",
                                 }}
                               >
-                                Preview
-                              </a>
-                            </Button>
-                           </Grid>
+                                <Box
+                                  sx={{ display: { xs: "none", sm: "block" } }}
+                                >
+                                  <img
+                                    src={File}
+                                    style={{ width: "30px", height: "30px" }}
+                                    alt="icon"
+                                  />
+                                </Box>
+                                <Stack
+                                  direction="column"
+                                  sx={{
+                                    overFlow: "hidden",
+                                    textOverflow: "elipsis",
+                                    width: { xs: "100%", sm: "auto" },
+                                  }}
+                                >
+                                  <Typography noWrap sx={{ color: "#3D3D3D" }}>
+                                    {values.fileName}
+                                  </Typography>
+                                </Stack>
+                              </Box>
+                            </Grid>
+                            <Grid
+                              item
+                              sx={{ textAlign: "center" }}
+                              xs={2}
+                              sm={2}
+                            >
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color: "#8C8C8C",
+                                }}
+                              >
+                                {Math.round(values.fileSize / 100000)}KB
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              sx={{ textAlign: "center" }}
+                              xs={3}
+                              sm={2}
+                            >
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color: "#8C8C8C",
+                                }}
+                              >
+                                {values.created_at.slice(0, -14)}
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              sx={{ textAlign: "center" }}
+                              xs={3}
+                              sm={2}
+                            >
+                              <Button variant="outlined" size="">
+                                <a
+                                  target="_blank"
+                                  href={values.fileUrl}
+                                  style={{
+                                    fontSize: "12px",
+                                    fontWeight: "bold",
+                                    color: "#698AFF",
+                                    textTransform: "capitalize",
+                                    textDecoration: "none",
+                                  }}
+                                >
+                                  Preview
+                                </a>
+                              </Button>
+                            </Grid>
                           </Grid>
                         ))}
                       </Box>
@@ -2733,6 +2864,7 @@ const Coursevideo = () => {
         <Grid item xs={12} mds={3} sx={{ bgcolor: "#fff" }}>
           <Getcourses
             coursedata={coursedata}
+            coursePercentage={coursePercentage}
             userdata={userdata}
             states={states}
             setStates={setStates}

@@ -192,14 +192,13 @@ const CreateCourse = () => {
         }}
       >
         <SubHeader title={"Create Course"} FormId={"create-course-form"} />
-        <Box sx={{ p: 2, width: "720px" }}>
+        <Box sx={{ p: 2, width: {xs: "100%",sm: "95%",md: "90%", lg: "75%", xl: "60%"} }}>
           <form onSubmit={handleCreateCourse} id="create-course-form">
-            <Box sx={{ mb: 2, display: "flex" }}>
+            <Box sx={{mb: 2, display: "flex", flexDirection: {xs: "column", md: "row"}, gap: 2 }}>
               <TextField
                 autoFocus
                 size="small"
                 label={"Title"}
-                sx={{ mr: 2 }}
                 required
                 type="text"
                 fullWidth
@@ -222,10 +221,9 @@ const CreateCourse = () => {
                 onChange={(event) => setPrice(event.target.value)}
               ></TextField>
             </Box>
-            <Box sx={{ mb: 2, display: "flex" }}>
+            <Box sx={{ mb: 2, display: "flex", flexDirection: {xs: "column", md: "row"}, gap: 2  }}>
               <IconTextField
                 size="small"
-                sx={{ mr: 2 }}
                 type="file"
                 inputProps={{ accept: "image/jpeg,image/x-png" }}
                 label={"Upload Thumbnail"}
@@ -260,11 +258,10 @@ const CreateCourse = () => {
                 }}
               />
             </Box>
-            <Box sx={{ mb: 2, display: "flex" }}>
+            <Box sx={{ mb: 2, display: "flex", flexDirection: {xs: "column", md: "row"}, gap: 2  }}>
               <TextField
                 size="small"
                 label={"categories"}
-                sx={{ mr: 2 }}
                 fullWidth
                 value={categories}
                 onChange={(event) => {
@@ -419,8 +416,8 @@ const CreateCourse = () => {
                 Add Additional Description Point
               </Button>
             </Box>
-            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button variant="contained" size="small" type="submit">
+            <Box sx={{ display: "flex", justifyContent: {xs: "center", sm: "flex-end"} }}>
+              <Button sx={{width: "120px", flexGrow: {xs: "1", sm: "0"}}} variant="contained" size="small" type="submit">
                 CREATE
               </Button>
             </Box>

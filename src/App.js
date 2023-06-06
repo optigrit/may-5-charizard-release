@@ -14,9 +14,14 @@ import ReportABug from "./components/ReportABug/ReportABug";
 import ProtechtedRoute from "./Routes/ProtechtedRoute";
 import PrivateRoute from "./Routes/PrivateRoute";
 import BigLoader from "./components/Skeleton/BigLoader";
-import ContactSupport from "./pages/Courses/ContactSupport";
+import ContactSupport from "./pages/ContactSupport/ContactSupport";
 import CourseUnderReview from "./pages/Courses/CourseUnderReview";
+// import AdminTask from "./pages/Task/AdminTask/index";
+// import CreateTask from "./pages/Task/AdminTask/CreateTask";
+// import UserTask from "./pages/Task/UserTask";
+// import DynamicRoute from "./Routes/DynamicRoute";
 import CourseStatusUpdate from "./pages/Courses/CourseStatusUpdate";
+// import ViewTask from "./pages/Task/AdminTask/ViewTask";
 const LazyCart = React.lazy(() => import("./pages/Courses/Cart"));
 const LazyContest = React.lazy(() => import("./pages/Contest/ContestHome"));
 const LazyCourseVideo = React.lazy(() =>
@@ -78,6 +83,14 @@ const LazyForgotPassword = lazy(() =>
 );
 const LazyResetPassword = lazy(() =>
   import("./pages/ForgotPassword/ConfirmPassword")
+);
+
+const LazySessionTimedOut = lazy(() =>
+  import("./pages/SessionTimedOut/SessionTimedOut")
+);
+
+const LazyInternalServerError = lazy(() =>
+  import("./pages/InternalServerError/InternalServerError")
 );
 // const LazyContactSupport=lazy(()=> import("./pages/Courses/ContactSupport"))
 
@@ -221,6 +234,33 @@ function App() {
                         path="/coursevideos/:id"
                         element={<LazyCourseVideo />}
                       />
+                      {/* <Route
+                        path="/task"
+                        element={
+                          <DynamicRoute
+                            adminPage={<AdminTask />}
+                            userPage={<UserTask />}
+                          />
+                        }
+                      ></Route>
+                      <Route
+                        path="/task/:id"
+                        element={
+                          <DynamicRoute
+                            adminPage={<ViewTask/>}
+                            userPage={<UserTask />}
+                          />
+                        }
+                      ></Route>
+                      <Route
+                        path="/create-task"
+                        element={
+                          <DynamicRoute
+                            adminPage={<CreateTask />}
+                            userPage={<UserTask />}
+                          />
+                        }
+                      ></Route> */}
                     </Route>
 
                     <Route
@@ -242,6 +282,14 @@ function App() {
                   <Route
                     path="/resetpassword/:id"
                     element={<LazyResetPassword />}
+                  />
+                  <Route
+                    path="/session-expired"
+                    element={<LazySessionTimedOut />}
+                  />
+                  <Route
+                    path="/internal-server-error"
+                    element={<LazyInternalServerError />}
                   />
                   <Route path="*" element={<LazyPageNotFound />} />
                   <Route path="/verifyuser/:id" element={<LazyVerifyuser />} />
