@@ -3,7 +3,7 @@ import CardContent from "./CardContent";
 import CardHeader from "./CardHeader";
 import CardFooter from "./CardFooter";
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task, isParentTask }) => {
   return (
     <Stack
       spacing={2.2}
@@ -15,10 +15,10 @@ const TaskCard = ({ task }) => {
         height: "100%",
       }}
     >
-      <CardHeader task={task} />
-      <CardContent task={task} />
+      <CardHeader isParentTask={isParentTask} task={task} />
+      <CardContent isParentTask={isParentTask} task={task} />
       <Divider />
-      <CardFooter task={task} />
+      <CardFooter isParentTask={isParentTask} task={task} />
     </Stack>
   );
 };

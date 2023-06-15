@@ -44,8 +44,12 @@ const TaskForm = ({ editMode, isParentTask, handleSubmit }) => {
         </Grid>
       </Grid>
       <Stack my={3} alignItems="flex-end">
-        <Button type="submit" variant="contained" sx={{width: {xs: "100%", sm: "auto"}}} >
-        Save and Proceed
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ width: { xs: "100%", sm: "auto" } }}
+        >
+          Save and Proceed
         </Button>
       </Stack>
     </form>

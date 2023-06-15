@@ -15,7 +15,10 @@ const FormInput = (props) => {
       <Typography variant="subtitle2" sx={{ ml: 1.5, color: "grey" }}>
         {label}
       </Typography>
-      <Box className={style.inputContainer} sx={{display: "flex", gap: "6px"}}>
+      <Box
+        className={style.inputContainer}
+        sx={{ display: "flex", gap: "6px" }}
+      >
         <input
           className={style.formInput}
           {...inputProps}
@@ -23,18 +26,19 @@ const FormInput = (props) => {
           onBlur={handleFocus}
           focused={focused.toString()}
           name={name}
-          style={{width : name==="duration" && "120px"}}
+          style={{ width: name === "duration" && "120px" }}
         />
         {name === "duration" && (
-          <select className={style.formInput} style={{width: "90px", flexGrow: 0}} >
-          <option>hours</option>
-          <option>days</option>
+          <select
+            className={style.formInput}
+            style={{ width: "90px", flexGrow: 0 }}
+          >
+            <option>hours</option>
+            <option>days</option>
           </select>
         )}
-    </Box>
-        <Typography className={style.errorMsg}>
-      {errorMessage}
-    </Typography>
+      </Box>
+      <Typography className={style.errorMsg}>{errorMessage}</Typography>
     </Stack>
   );
 };

@@ -11,7 +11,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Badge, Toolbar, Grid, Typography } from "@mui/material";
+import { Badge, Grid, Toolbar, Typography } from "@mui/material";
 import ImportContactsOutlinedIcon from "@mui/icons-material/ImportContactsOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
@@ -206,8 +206,8 @@ function SideBarResponsive(props, { type }) {
 
   const handleNavigate = (e, path) => {
     e.preventDefault();
-    navigate(`${path}`)
-  }
+    navigate(`${path}`);
+  };
 
   function truncate(source, size) {
     return source.length > size ? source.slice(0, size - 1) + "…" : source;
@@ -428,104 +428,132 @@ function SideBarResponsive(props, { type }) {
                 >
                   OptiGrit
                 </Typography>
-
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: "500",
-                    cursor: "pointer",
-                    fontSize: "15px",
-                    lineHeight: "18px",
-                    marginRight: "2rem",
-                  }}
-                  onClick={(event) => {
-                    navigate("/courses");
-                  }}
-                >
-                  My Courses
-                </Typography>
-
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: "500",
-                    cursor: "pointer",
-                    fontSize: "15px",
-                    lineHeight: "18px",
-                    marginRight: "2rem",
-                  }}
-                  onClick={(event) => {
-                    navigate("/my-cart");
-                  }}
-                >
-                  My Cart
-                </Typography>
-
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: "500",
-                    cursor: "pointer",
-                    fontSize: "15px",
-                    lineHeight: "18px",
-                    marginRight: "2rem",
-                  }}
-                  onClick={(event) => {
-                    navigate("/wishlist");
-                  }}
-                >
-                  Wishlist
-                </Typography>
-
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: "500",
-                    cursor: "pointer",
-                    fontSize: "15px",
-                    lineHeight: "18px",
-                    marginRight: "2rem",
-                  }}
-                  onClick={(event) => {
-                    navigate("/create-course");
-                  }}
-                >
-                  Create Course
-                </Typography>
-              </Grid>
-
-              <Grid item sx={{ display: "flex", alignItems: "center" }}>
-                {coursePercentage !== "undefined" && (
-                  <>
-                    <LinearProgressWithLabelReusable
-                      progressCount={coursePercentage}
-                    />
-                    <Button
-                      variant="contained"
-                      size="small"
-                      disabled={coursePercentage === "100" ? false : true}
-                      sx={{ marginLeft: "2.5rem" }}
+                {isCoursePage && (
+                  <Grid
+                    item
+                    sx={{
+                      display: {
+                        xs: "none",
+                        sm: "none",
+                        md: "none",
+                        lg: "flex",
+                        xl: "flex",
+                      },
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        fontSize: "15px",
+                        lineHeight: "18px",
+                        marginRight: "2rem",
+                      }}
+                      onClick={(event) => {
+                        navigate("/my-courses");
+                      }}
                     >
-                      Get Certificate
-                    </Button>
-                  </>
+                      My Courses
+                    </Typography>
+
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        fontSize: "15px",
+                        lineHeight: "18px",
+                        marginRight: "2rem",
+                      }}
+                      onClick={(event) => {
+                        navigate("/my-cart");
+                      }}
+                    >
+                      My Cart
+                    </Typography>
+
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        fontSize: "15px",
+                        lineHeight: "18px",
+                        marginRight: "2rem",
+                      }}
+                      onClick={(event) => {
+                        navigate("/wishlist");
+                      }}
+                    >
+                      Wishlist
+                    </Typography>
+
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        fontSize: "15px",
+                        lineHeight: "18px",
+                        marginRight: "2rem",
+                      }}
+                      onClick={(event) => {
+                        navigate("/create-course");
+                      }}
+                    >
+                      Create Course
+                    </Typography>
+                  </Grid>
                 )}
-                <Avatar
-                  sx={{
-                    bgcolor: "#bdbdbd",
-                    ontSize: { uxl: "20px" },
-                    marginLeft: "2.5rem",
-                    cursor: "pointer",
-                    borderRadius: "10%",
-                  }}
-                  onClick={() => {
-                    navigate("/user-profile");
-                  }}
-                  variant="square"
-                >
-                  {Username.charAt(0)}
-                </Avatar>
               </Grid>
+              {isCoursePage && (
+                <Grid
+                  item
+                  sx={{
+                    display: {
+                      xs: "none",
+                      sm: "flex",
+                      md: "flex",
+                      lg: "flex",
+                      xl: "flex",
+                    },
+                    alignItems: "center",
+                  }}
+                >
+                  {coursePercentage !== "undefined" && (
+                    <>
+                      <LinearProgressWithLabelReusable
+                        progressCount={coursePercentage}
+                      />
+                      <Button
+                        variant="contained"
+                        size="small"
+                        disabled={coursePercentage === "100" ? false : true}
+                        sx={{ marginLeft: "2.5rem" }}
+                      >
+                        Get Certificate
+                      </Button>
+                    </>
+                  )}
+                  <Avatar
+                    sx={{
+                      bgcolor: "#bdbdbd",
+                      ontSize: { uxl: "20px" },
+                      marginLeft: "2.5rem",
+                      cursor: "pointer",
+                      borderRadius: "10%",
+                    }}
+                    onClick={() => {
+                      navigate("/user-profile");
+                    }}
+                    variant="square"
+                  >
+                    {Username.charAt(0)}
+                  </Avatar>
+                </Grid>
+              )}
             </Grid>
           </Toolbar>
         </AppBar>

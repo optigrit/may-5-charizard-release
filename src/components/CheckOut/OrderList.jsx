@@ -1,9 +1,9 @@
 import { Box, Divider, Grid, TextField, Typography } from "@mui/material";
-import axios from "axios";
 import React, { useState } from "react";
 import OrderItem from "./OrderItem";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useEffect } from "react";
+import { courseOrderAPI } from "../../api/requests/courses/courseOrderAPI";
 
 const OrderList = ({ yourOrder, price, getAppliedCouponIds }) => {
   const [coupon, setCoupon] = useState("");
@@ -15,22 +15,14 @@ const OrderList = ({ yourOrder, price, getAppliedCouponIds }) => {
     Total: 0,
     discountPrice: 0,
   });
-  const Token = localStorage.getItem("Token");
-
-  const config = {
-    headers: {
-      Authorization: `bearer ${Token}`,
-    },
-  };
 
   const GetPromoCode = async () => {
     setIsLoading(true);
-    await axios
-      .get(`${process.env.REACT_APP_URL}promocode/${coupon}`, config)
-      .then((res) => {
+    await courseOrderAPI.getPromoCode(coupon)
+      .then((data) => {
         setIsLoading(false);
-        res?.data?.length ? setCouponValidate(true) : setCouponValidate(false);
-        setPromoCodeRes(res?.data);
+        data?.length ? setCouponValidate(true) : setCouponValidate(false);
+        setPromoCodeRes(data && data);
       })
       .catch((err) => {});
   };

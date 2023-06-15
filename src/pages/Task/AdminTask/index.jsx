@@ -3,7 +3,7 @@ import TaskStatusTabs from "../../../components/Task/index/TaskStatusTabs";
 
 const AdminTask = () => {
   const drawerWidth = 240;
-
+  const tasks = [1,2,3,4,5,6,6,7,8,9,10]
   return (
     <Stack
       sx={{
@@ -12,11 +12,12 @@ const AdminTask = () => {
         ml: { sm: `${drawerWidth}px` },
         bgcolor: "#FAFBFB",
         minHeight: "100vh",
+        p:2
       }}
     >
       <Stack
         spacing={1}
-        sx={{ textAlign: "start", width: "100%", p: 2, pb: 0 }}
+        sx={{ textAlign: "start", width: "100%" }}
       >
         <Typography variant="h5">Tasks</Typography>
         <Typography sx={{ color: "grey" }} variant="subtitle1">
@@ -24,7 +25,7 @@ const AdminTask = () => {
         </Typography>
       </Stack>
 
-      <TaskStatusTabs />
+      <TaskStatusTabs tasks={tasks} isParentTask={true} />
     </Stack>
   );
 };

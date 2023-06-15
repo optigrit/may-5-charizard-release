@@ -11,12 +11,14 @@ import { useState } from "react";
 import AddTaskDetails from "../CreateAndEdit/AddTaskDetails";
 import TaskModal from "./TaskModal";
 import ViewTask from "../ViewTask/index.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function TaskMenu({ task, isParentTask }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
   const [openModal, setOpenModal] = useState(false);
   const [clicked, setClicked] = useState("");
+  const navigate = useNavigate();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -28,8 +30,11 @@ export default function TaskMenu({ task, isParentTask }) {
 
   const handleViewTask = () => {
     handleClose();
-    setOpenModal(true);
-    setClicked("view");
+    if (isParentTask) navigate("/task/id");
+    else {
+      setOpenModal(true);
+      setClicked("view");
+    }
   };
 
   const handleEditTask = () => {
