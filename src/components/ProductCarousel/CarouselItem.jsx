@@ -129,7 +129,7 @@ const CarouselItem = ({
 
   const addCourseTocart = async (ProductDetails) => {
     await courseStageAPI
-      .addCourseToWishListOrCart("CART")
+      .addCourseToWishListOrCart(ProductDetails.id, "CART")
       .then((data) => {
         getCourseFromCart();
       })

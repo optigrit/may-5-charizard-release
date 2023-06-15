@@ -53,7 +53,7 @@ const AddTaskDetails = ({ setOpen, editMode, isParentTask }) => {
           <AddSubTask />
           <Stack mt={5} alignItems="flex-end">
             <Stack direction="row" spacing={1}>
-              <Button 
+              <Button
                 onClick={() => setActive("taskForm")}
                 variant="outlined"
                 disableRipple

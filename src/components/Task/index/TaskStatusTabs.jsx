@@ -3,28 +3,42 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { useState } from "react";
 import NumberBadge from "./NumberBadge";
 import ButtonAddNew from "../CreateAndEdit/ButtonAddNew";
-import tabs from "./TabsData";
 import TaskTabContent from "./TaskTabContent";
 import { useSelector } from "react-redux";
 
-const TaskStatusTabs = () => {
+const TaskStatusTabs = ({ role, tasks, isParentTask }) => {
   const [value, setValue] = useState("1");
-  const tasks = useSelector((state) => state.TaskReducer.tasks);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const tabs = [
+    {
+      label: `All ${isParentTask ? "Tasks" : "Subtasks"}`,
+      value: "1",
+    },
+    {
+      label: "Ongoing",
+      value: "2",
+    },
+    {
+      label: "Completed",
+      value: "3",
+    },
+  ];
+
   return (
     <TabContext value={value}>
       <Box
-        sx={{ position: "sticky", top: 0, zIndex: 1, p: 1, bgcolor: "#FAFBFB" }}
+        sx={{ position: "sticky", top: 0, zIndex: 1, p: 0, bgcolor: "#FAFBFB" }}
       >
         <Stack
           sx={{
             bgcolor: "#fff",
             boxShadow: 3,
             borderRadius: "10px",
-            m: 1,
+            my: 1,
             px: 1,
             py: 0,
           }}
@@ -62,15 +76,18 @@ const TaskStatusTabs = () => {
             ))}
           </TabList>
           <Box
-            sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}
+            sx={{
+              display: role === "user" ? "none" : { xs: "none", md: "flex" },
+              alignItems: "center",
+            }}
           >
-            <ButtonAddNew isParentTask={true} />
+            <ButtonAddNew isParentTask={isParentTask} />
           </Box>
         </Stack>
       </Box>
       {tabs.map((tab) => (
-        <TabPanel sx={{ pt: 1 }} value={tab.value}>
-          <TaskTabContent tasks={tasks} />
+        <TabPanel sx={{ p:1 }} value={tab.value}>
+          <TaskTabContent isParentTask={isParentTask} tasks={tasks} />
         </TabPanel>
       ))}
     </TabContext>

@@ -16,7 +16,7 @@ function LinearProgressWithLabel(props) {
   );
 }
 
-export default function LinearProgressWithLabelReusable({ progressCount }) {
+export default function LinearProgressWithLabelReusable({ progressCount, displayTitle }) {
   return (
     <Box
       sx={{
@@ -26,7 +26,7 @@ export default function LinearProgressWithLabelReusable({ progressCount }) {
         // marginTop: "1rem",
       }}
     >
-      <Typography variant="subtitle2" sx={{ fontWeight: "400" }}>
+      <Typography variant="subtitle2" sx={{ fontWeight: "400", display: displayTitle }}>
         Your Progress
       </Typography>
       <LinearProgressWithLabel value={progressCount} />
