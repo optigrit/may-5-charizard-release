@@ -392,7 +392,26 @@ const Coursevideo = () => {
   const addCourseTocart = async (userdata) => {
     await courseStageAPI
       .addCourseToWishListOrCart(id, "CART")
-      .then((res) => {})
+      .then((res) => {
+        getCourseFromCart();
+      })
+      .catch((err) => {});
+  };
+
+  const getCourseFromCart = async () => {
+    await courseStageAPI
+      .getCourses("CART")
+
+      .then((data) => {
+        data.map((item) => {
+          if (
+            cartItems?.filter((cartItems) => cartItems.id === item.id).length
+          ) {
+          } else {
+            dispatch(manipulateCart(ADD_ITEM, item));
+          }
+        });
+      })
       .catch((err) => {});
   };
 

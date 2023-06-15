@@ -21,7 +21,12 @@ const CreateTask = () => {
           title="Task Title"
           subtitle="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Explicabo eligendi doloremque, incidunt eius quo"
         />
-        <Stack mt={2} spacing={1} direction={{md: "row"}} justifyContent="space-between" >
+        <Stack
+          mt={2}
+          spacing={1}
+          direction={{ md: "row" }}
+          justifyContent="space-between"
+        >
           <Stack direction="row" alignItems="center" spacing={1}>
             <Typography variant="subtitle2">Duration : </Typography>
             <Typography variant="subtitle2" sx={{ color: "grey" }}>
