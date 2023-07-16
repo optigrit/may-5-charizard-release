@@ -16,12 +16,12 @@ import PrivateRoute from "./Routes/PrivateRoute";
 import BigLoader from "./components/Skeleton/BigLoader";
 import ContactSupport from "./pages/ContactSupport/ContactSupport";
 import CourseUnderReview from "./pages/Courses/CourseUnderReview";
-import AdminTask from "./pages/Task/AdminTask/index";
-import CreateTask from "./pages/Task/AdminTask/CreateTask";
-import UserTask from "./pages/Task/UserTask";
-import DynamicRoute from "./Routes/DynamicRoute";
+// import AdminTask from "./pages/Task/AdminTask/index";
+// import CreateTask from "./pages/Task/AdminTask/CreateTask";
+// import UserTask from "./pages/Task/UserTask";
+// import DynamicRoute from "./Routes/DynamicRoute";
 import CourseStatusUpdate from "./pages/Courses/CourseStatusUpdate";
-import ViewTask from "./pages/Task/ViewTask";
+// import ViewTask from "./pages/Task/AdminTask/ViewTask";
 const LazyCart = React.lazy(() => import("./pages/Courses/Cart"));
 const LazyContest = React.lazy(() => import("./pages/Contest/ContestHome"));
 const LazyCourseVideo = React.lazy(() =>
@@ -247,7 +247,7 @@ function App() {
                         path="/task/:id"
                         element={
                           <DynamicRoute
-                            // adminPage={<ViewTask />}
+                            adminPage={<ViewTask/>}
                             userPage={<UserTask />}
                           />
                         }
