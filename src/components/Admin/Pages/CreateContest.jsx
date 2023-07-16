@@ -222,7 +222,7 @@ const CreateContest = () => {
             ml: { lg: `${drawerWidth}px` },
           }}
         >
-          <Grid xs={12} md={12}>
+          <Grid  item xs={12} md={12}>
             <SubHeader title={"Create Contest"} />
           </Grid>
           <Grid
