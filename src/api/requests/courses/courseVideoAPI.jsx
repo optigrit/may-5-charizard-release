@@ -20,4 +20,7 @@ export const courseVideoAPI = {
   handleLikesAndDislikes: async (id, text) => {
     return await performRequest(`review/${id}/${text}`, "POST");
   },
+  getVideoIntervals: async () => {
+    return await performRequest("intervals", "GET");
+  },
 };

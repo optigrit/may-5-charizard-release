@@ -4,7 +4,6 @@ import "./App.css";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import theme from "./theme/Theme";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
-import NotResponsive from "./pages/NotResponsive";
 import { Box } from "@mui/system";
 import { Fab } from "@mui/material";
 import AlertPopUp from "./components/Alert/AlertPopUp";
@@ -16,12 +15,12 @@ import PrivateRoute from "./Routes/PrivateRoute";
 import BigLoader from "./components/Skeleton/BigLoader";
 import ContactSupport from "./pages/ContactSupport/ContactSupport";
 import CourseUnderReview from "./pages/Courses/CourseUnderReview";
-// import AdminTask from "./pages/Task/AdminTask/index";
-// import CreateTask from "./pages/Task/AdminTask/CreateTask";
-// import UserTask from "./pages/Task/UserTask";
-// import DynamicRoute from "./Routes/DynamicRoute";
 import CourseStatusUpdate from "./pages/Courses/CourseStatusUpdate";
-// import ViewTask from "./pages/Task/AdminTask/ViewTask";
+const LazyCreateEditTask = React.lazy(() =>
+  import("./pages/Task/CreateEditTask")
+);
+const LazyViewTask = React.lazy(() => import("./pages/Task/ViewTask"));
+const LazyTask = React.lazy(() => import("./pages/Task/index"));
 const LazyCart = React.lazy(() => import("./pages/Courses/Cart"));
 const LazyContest = React.lazy(() => import("./pages/Contest/ContestHome"));
 const LazyCourseVideo = React.lazy(() =>
@@ -96,7 +95,6 @@ const LazyInternalServerError = lazy(() =>
 
 function App() {
   const matches = useMediaQuery("(max-width:1000px)");
-  const Token = localStorage.getItem("Token");
   const [openDialog, setOpenDialog] = useState(false);
 
   const Layout = () => {
@@ -234,33 +232,11 @@ function App() {
                         path="/coursevideos/:id"
                         element={<LazyCourseVideo />}
                       />
-                      {/* <Route
-                        path="/task"
-                        element={
-                          <DynamicRoute
-                            adminPage={<AdminTask />}
-                            userPage={<UserTask />}
-                          />
-                        }
-                      ></Route>
+                      <Route path="/task" element={<LazyTask />}></Route>
                       <Route
                         path="/task/:id"
-                        element={
-                          <DynamicRoute
-                            adminPage={<ViewTask/>}
-                            userPage={<UserTask />}
-                          />
-                        }
+                        element={<LazyViewTask />}
                       ></Route>
-                      <Route
-                        path="/create-task"
-                        element={
-                          <DynamicRoute
-                            adminPage={<CreateTask />}
-                            userPage={<UserTask />}
-                          />
-                        }
-                      ></Route> */}
                     </Route>
 
                     <Route
@@ -297,11 +273,19 @@ function App() {
                     <Route
                       path="/update-course-status/:id"
                       element={
-                        <PrivateRoute>
+                        <PrivateRoute accessibleTo={["SUPERADMIN"]}>
                           <CourseStatusUpdate />
                         </PrivateRoute>
                       }
                     />
+                    <Route
+                      path="/edit-task/:id"
+                      element={
+                        <PrivateRoute accessibleTo={["SUPERADMIN", "ADMIN"]}>
+                          <LazyCreateEditTask />
+                        </PrivateRoute>
+                      }
+                    ></Route>
                     <Route
                       path="/contact-support"
                       element={<ContactSupport />}
