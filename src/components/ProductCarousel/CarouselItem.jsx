@@ -41,9 +41,9 @@ import {
 import { manipulateuserdata } from "../../Redux/UserData/User-Action";
 import { SET_ALERT_DATA } from "../../Redux/UserData/User-Constants";
 import defaultImage from "../../assets/BannerImages/Thumbnail.png";
-import jwt_decode from "jwt-decode";
 import { courseStageAPI } from "../../api/requests/courses/courseStageAPI";
 import { courseAPI } from "../../api/requests/courses/courseAPI";
+import GetValidatedTokenData from "../../utils/helper";
 
 const CarouselItem = ({
   ProductDetails,
@@ -190,7 +190,7 @@ const CarouselItem = ({
   };
 
   const isCurrentUser = (userId) => {
-    return jwt_decode(Token).id === userId;
+    return GetValidatedTokenData().id === userId;
   };
 
   const handleGoToDetailPage = (id, userId) => {

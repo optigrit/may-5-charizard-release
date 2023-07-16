@@ -1,7 +1,6 @@
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
+import TaskHeader from "./TaskHeader";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { Stack, Box, Modal, Backdrop, Fade } from "@mui/material";
 
 export default function TaskModal({
   open,
@@ -9,6 +8,9 @@ export default function TaskModal({
   children,
   modalHeight,
   modalWidth,
+  borderRadius,
+  title,
+  subtitle,
 }) {
   const handleClose = () => setOpen(false);
 
@@ -32,7 +34,7 @@ export default function TaskModal({
     bgcolor: "background.paper",
     boxShadow: { sm: 24 },
     p: 4,
-    borderRadius: { sm: "10px" },
+    borderRadius: borderRadius ? borderRadius : { sm: "10px" },
   };
 
   return (
@@ -51,7 +53,19 @@ export default function TaskModal({
         }}
       >
         <Fade in={open}>
-          <Box sx={style}>{children}</Box>
+          <Stack sx={{ height: "100%", ...style }} spacing={2}>
+            {title  && (
+              <Stack direction="row" justifyContent="space-between">
+                <TaskHeader title={title} subtitle={subtitle} />
+                <CloseOutlinedIcon
+                  onClick={() => setOpen(false)}
+                  sx={{ color: "grey", cursor: "pointer" }}
+                />
+              </Stack>
+            )}
+
+            {children}
+          </Stack>
         </Fade>
       </Modal>
     </div>

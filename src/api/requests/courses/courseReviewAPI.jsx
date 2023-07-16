@@ -9,8 +9,8 @@ export const courseReviewAPI = {
     return await performRequest(`rating/${id}/${page}`, "GET");
   },
 
-  updateReviews: async (body) => {
-    return await performRequest(`review/`, "PATCH", body);
+  updateReviews: async (id, body) => {
+    return await performRequest(`review/${id}`, "PATCH", body);
   },
 
   handleLikesAndDislikes: async (id, text, body) => {
@@ -19,5 +19,8 @@ export const courseReviewAPI = {
 
   addReviewReport: async (id, body) => {
     return await performRequest(`review/${id}/REPORT`, "POST", body);
+  },
+  deleteReview: async (id, body) => {
+    return await performRequest(`review/${id}`, "DELETE", body);
   },
 };

@@ -4,7 +4,7 @@ import { useState } from "react";
 import TaskModal from "../utils/TaskModal";
 import AddTaskDetails from "./AddTaskDetails";
 
-const ButtonAddNew = ({ isParentTask }) => {
+const ButtonAddNew = ({ isParentTask, display }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -13,7 +13,7 @@ const ButtonAddNew = ({ isParentTask }) => {
   return (
     <Box
       sx={{
-        display: "flex",
+        display: display,
         alignItems: "center",
         width: { xs: "100%", md: "auto" },
       }}

@@ -1,7 +1,7 @@
 import axios from "axios";
 import handleError from "../errors";
 
-const performRequest = (url, method, body, params) => {
+const PerformRequest = (url, method, body, params) => {
   // initializing the axios instance with custom configs
   const Token = localStorage.getItem("Token");
 
@@ -26,4 +26,4 @@ const performRequest = (url, method, body, params) => {
   });
 };
 
-export default performRequest;
+export default PerformRequest;

@@ -32,9 +32,7 @@ function SearchResults({ itemType, input, setInput, results, setResults }) {
       dispatch(manipulateTask(ADD_ASSIGNEE, result));
       setInput("");
     } else {
-      dispatch(
-        manipulateTask(SET_SELECTED_SUBTASK, result)
-      );
+      dispatch(manipulateTask(SET_SELECTED_SUBTASK, result));
       setInput(result[key]);
     }
     setResults([]);
@@ -92,7 +90,11 @@ function SearchResults({ itemType, input, setInput, results, setResults }) {
 
               <ListItemText
                 sx={{ overflow: "hidden" }}
-                primary={itemType === "users" ? result.name : result.title}
+                primary={
+                  itemType === "users"
+                    ? result.firstName + " " + result.lastName
+                    : result.title
+                }
                 secondary={itemType === "users" ? result.username : ""}
               />
               {isDuplicate && (

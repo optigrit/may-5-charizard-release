@@ -68,6 +68,8 @@ import { courseCommentAPI } from "../../api/requests/courses/courseCommentAPI";
 import { userAPI } from "../../api/requests/users/userAPI";
 import BigLoader from "../../components/Skeleton/BigLoader";
 import Skeletons from "../../components/Skeleton/Skeletons";
+import LinearProgressWithLabelReusable from "../../components/LinearProgress/LinearProgressWithLabelReusable";
+import GetValidatedTokenData from "../../utils/helper";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -253,9 +255,34 @@ const Coursevideo = () => {
 
   const [playingTime, setPlayingTime] = useState(0);
 
+  const getVideoIntervals = async () => {
+    try {
+      const data = await courseVideoAPI.getVideoIntervals();
+      localStorage.setItem("courseVideoMapping", JSON.stringify(data));
+    } catch (err) {}
+  };
+
+  const videoMappingHelper = (courseVideoMapping, videoDuration) => {
+    let nearestKey;
+    let minDifference = Number.MAX_SAFE_INTEGER;
+
+    for (const key in courseVideoMapping.videoLengths) {
+      if (courseVideoMapping.videoLengths.hasOwnProperty(key)) {
+        const difference = Math.abs(
+          parseInt(videoDuration) / 60 - parseInt(key)
+        );
+        if (difference < minDifference) {
+          minDifference = difference;
+          nearestKey = key;
+        }
+      }
+    }
+    return nearestKey;
+  };
+
   const handleProgress = (state) => {
     setPlayingTime(state.playedSeconds);
-    if (Math.round(playingTime) % (intervalValue / 1000) === 0) {
+    if (Math.round(playingTime) % Math.round(intervalValue / 1000) === 0) {
       userprogress();
     }
     const playedTime = state.playedSeconds;
@@ -302,7 +329,7 @@ const Coursevideo = () => {
           "playedDurationObj",
           JSON.stringify(playedDurationObj)
         );
-        localStorage.setItem("coursePercentage", res.data.courseCompletion);
+        // localStorage.setItem("coursePercentage", res.data.courseCompletion);
         setOpenLoader(false);
       });
       // return data;
@@ -323,11 +350,21 @@ const Coursevideo = () => {
     setVideoDuration(
       data.data.courseVideos[secindex].videosData[vidindex].videoLength
     );
+
+    const courseVideoMapping = localStorage.getItem("courseVideoMapping");
+
+    const nearestKey = videoMappingHelper(
+      JSON.parse(courseVideoMapping),
+      parseInt(
+        data.data.courseVideos[secindex].videosData[vidindex].videoLength
+      )
+    );
+
     setIntervalValue(
       parseInt(
         data.data.courseVideos[secindex].videosData[vidindex].videoLength
       ) *
-        (1 / 5) *
+        JSON.parse(courseVideoMapping).videoLengths[parseInt(nearestKey)] *
         1000
     );
   };
@@ -374,6 +411,7 @@ const Coursevideo = () => {
     const getCourseData = async () => {
       await getdata();
     };
+    getVideoIntervals();
     getCourseData();
   }, []);
 
@@ -732,8 +770,176 @@ const Coursevideo = () => {
     }
   }, [isReady]);
 
+  // Decoding the User Name
+  const decodeUsername = GetValidatedTokenData();
+  const Username = decodeUsername.username;
+
   return (
     <>
+      <Grid
+        container
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{
+          padding: "1rem 1.2rem",
+          display: {
+            xs: "none",
+            sm: "flex",
+            md: "flex",
+            lg: "flex",
+            xl: "flex",
+          },
+          boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+        }}
+      >
+        <Grid
+          item
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "500",
+              cursor: "pointer",
+              fontSize: "18px",
+              lineHeight: "18px",
+              marginRight: "2rem",
+            }}
+            onClick={(event) => {
+              navigate("/");
+            }}
+          >
+            OptiGrit
+          </Typography>
+          <Grid
+            item
+            sx={{
+              display: {
+                xs: "none",
+                sm: "none",
+                md: "none",
+                lg: "flex",
+                xl: "flex",
+              },
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "500",
+                cursor: "pointer",
+                fontSize: "15px",
+                lineHeight: "18px",
+                marginRight: "2rem",
+              }}
+              onClick={(event) => {
+                navigate("/my-courses");
+              }}
+            >
+              My Courses
+            </Typography>
+
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "500",
+                cursor: "pointer",
+                fontSize: "15px",
+                lineHeight: "18px",
+                marginRight: "2rem",
+              }}
+              onClick={(event) => {
+                navigate("/my-cart");
+              }}
+            >
+              My Cart
+            </Typography>
+
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "500",
+                cursor: "pointer",
+                fontSize: "15px",
+                lineHeight: "18px",
+                marginRight: "2rem",
+              }}
+              onClick={(event) => {
+                navigate("/wishlist");
+              }}
+            >
+              Wishlist
+            </Typography>
+
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "500",
+                cursor: "pointer",
+                fontSize: "15px",
+                lineHeight: "18px",
+                marginRight: "2rem",
+              }}
+              onClick={(event) => {
+                navigate("/create-course");
+              }}
+            >
+              Create Course
+            </Typography>
+          </Grid>
+        </Grid>
+
+        <Grid
+          item
+          sx={{
+            display: {
+              xs: "none",
+              sm: "flex",
+              md: "flex",
+              lg: "flex",
+              xl: "flex",
+            },
+            alignItems: "center",
+          }}
+        >
+          {coursePercentage !== undefined && (
+            <>
+              <LinearProgressWithLabelReusable
+                progressCount={coursePercentage}
+              />
+              <Button
+                variant="contained"
+                size="small"
+                disabled={coursePercentage === 100 ? false : true}
+                sx={{ marginLeft: "2.5rem" }}
+              >
+                Get Certificate
+              </Button>
+            </>
+          )}
+          <Avatar
+            sx={{
+              bgcolor: "#bdbdbd",
+              ontSize: { uxl: "20px" },
+              marginLeft: "2.5rem",
+              cursor: "pointer",
+              borderRadius: "10%",
+            }}
+            onClick={() => {
+              navigate("/user-profile");
+            }}
+            variant="square"
+          >
+            {Username.charAt(0)}
+          </Avatar>
+        </Grid>
+      </Grid>
+
       <Grid container sx={{ p: 2, pt: 0 }}>
         {/* width={!fullscreen ? "100%" : '100%'}  */}
         <Grid

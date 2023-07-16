@@ -7,7 +7,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import AssigneesTab from "./AssigneesTab";
-import SubtasksTab from "./SubtasksTab";
+import SubtasksTab from "../utils/Subtask/SubtasksTab";
 
 export default function TaskSubTabs() {
   const [value, setValue] = useState("1");
@@ -59,7 +59,7 @@ export default function TaskSubTabs() {
           </TabList>
         </Box>
         <TabPanel value="1" sx={{ py: 2, px: 1 }}>
-          <SubtasksTab />
+          <SubtasksTab isParentTask={false} viewMode={false} />
         </TabPanel>
         <TabPanel value="2" sx={{ py: 2, px: 1 }}>
           <AssigneesTab />

@@ -3,8 +3,12 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-export default function SelectSubtask({type, setType}) {
-
+export default function SelectSubtask({
+  type,
+  setType,
+  editMode,
+  subtaskData,
+}) {
   const handleChange = (event) => {
     setType(event.target.value);
   };
@@ -29,9 +33,36 @@ export default function SelectSubtask({type, setType}) {
         label="Subtask Type"
         onChange={handleChange}
       >
-        <MenuItem value="course">Course</MenuItem>
-        <MenuItem value="contest">Contest</MenuItem>
-        <MenuItem value="text">Text</MenuItem>
+        <MenuItem
+          disabled={
+            editMode && subtaskData?.type.toLowerCase() !== "course"
+              ? true
+              : false
+          }
+          value="course"
+        >
+          Course
+        </MenuItem>
+        <MenuItem
+          disabled={
+            editMode && subtaskData?.type.toLowerCase() !== "contest"
+              ? true
+              : false
+          }
+          value="contest"
+        >
+          Contest
+        </MenuItem>
+        <MenuItem
+          disabled={
+            editMode && subtaskData?.type.toLowerCase() !== "text"
+              ? true
+              : false
+          }
+          value="text"
+        >
+          Text
+        </MenuItem>
       </Select>
     </FormControl>
   );

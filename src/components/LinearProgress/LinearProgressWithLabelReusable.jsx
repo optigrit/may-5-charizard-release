@@ -16,14 +16,12 @@ function LinearProgressWithLabel(props) {
   );
 }
 
-export default function LinearProgressWithLabelReusable({ progressCount, displayTitle }) {
+export default function LinearProgressWithLabelReusable({ progressCount, displayTitle, display }) {
   return (
     <Box
       sx={{
         width: "250px",
-        display: { xs: "none", sm: "block" },
-        // marginLeft: "1rem",
-        // marginTop: "1rem",
+        display: { xs: display? display: "none", sm: "block" },
       }}
     >
       <Typography variant="subtitle2" sx={{ fontWeight: "400", display: displayTitle }}>

@@ -9,7 +9,6 @@ function ProtechtedRoute({ children, ...rest }) {
       return null;
     }
   };
-
   const validateToken = () => {
     const token = localStorage.getItem("Token");
     if (token) {
