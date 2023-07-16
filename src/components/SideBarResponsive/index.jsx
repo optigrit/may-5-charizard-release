@@ -40,6 +40,7 @@ import { gapi } from "gapi-script";
 import LinearProgressWithLabelReusable from "../LinearProgress/LinearProgressWithLabelReusable";
 import { LegendToggleOutlined } from "@mui/icons-material";
 import { useState } from "react";
+import GetValidatedTokenData from "../../utils/helper";
 
 const drawerWidth = 240;
 
@@ -103,7 +104,7 @@ function SideBarResponsive(props, { type }) {
   const Token = localStorage.getItem("Token");
 
   // Decoding the User Name
-  const decodeUsername = jwt_decode(Token);
+  const decodeUsername = GetValidatedTokenData();
   const Username = decodeUsername.username;
 
   const getCourseFromCart = async () => {
@@ -180,11 +181,11 @@ function SideBarResponsive(props, { type }) {
       icon: <FavoriteBorderOutlinedIcon sx={{ fontSize: { uxl: "28px" } }} />,
       badgeContent: wishlistItems.length,
     },
-    // {
-    //   name: "Task",
-    //   path: "/task",
-    //   icon: <TaskIcon sx={{ fontSize: { uxl: "28px" } }} />,
-    // },
+    {
+      name: "Task",
+      path: "/task",
+      icon: <TaskIcon sx={{ fontSize: { uxl: "28px" } }} />,
+    },
     {
       name: "Create Course",
       path: "/create-course",
@@ -192,7 +193,8 @@ function SideBarResponsive(props, { type }) {
     },
   ];
   if (decoded === "") {
-    setDecoded(jwt_decode(Token));
+     const data = GetValidatedTokenData();
+    {data && setDecoded(data)}
   }
   if (decoded.role == "ADMIN" || decoded.role == "SUPERADMIN") {
     pages.push({
@@ -351,11 +353,19 @@ function SideBarResponsive(props, { type }) {
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
-  const coursePercentage = localStorage.getItem("coursePercentage");
-
   return (
     <div className="SideBar">
-      <Box>
+      <Box
+        sx={{
+          display: {
+            xs: "initial",
+            sm: isCoursePage ? "none" : "initial",
+            md: isCoursePage ? "none" : "initial",
+            lg: isCoursePage ? "none" : "initial",
+            xl: isCoursePage ? "none" : "initial",
+          },
+        }}
+      >
         <CssBaseline />
         <AppBar
           position="fixed"
@@ -406,154 +416,22 @@ function SideBarResponsive(props, { type }) {
             >
               <MenuIcon />
             </IconButton>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Grid item sx={{ display: "flex", alignItems: "center" }}>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: "500",
-                    cursor: "pointer",
-                    fontSize: "18px",
-                    lineHeight: "18px",
-                    marginRight: "2rem",
-                  }}
-                  onClick={(event) => {
-                    navigate("/");
-                  }}
-                >
-                  OptiGrit
-                </Typography>
-                {isCoursePage && (
-                  <Grid
-                    item
-                    sx={{
-                      display: {
-                        xs: "none",
-                        sm: "none",
-                        md: "none",
-                        lg: "flex",
-                        xl: "flex",
-                      },
-                      alignItems: "center",
-                    }}
-                  >
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: "500",
-                        cursor: "pointer",
-                        fontSize: "15px",
-                        lineHeight: "18px",
-                        marginRight: "2rem",
-                      }}
-                      onClick={(event) => {
-                        navigate("/my-courses");
-                      }}
-                    >
-                      My Courses
-                    </Typography>
-
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: "500",
-                        cursor: "pointer",
-                        fontSize: "15px",
-                        lineHeight: "18px",
-                        marginRight: "2rem",
-                      }}
-                      onClick={(event) => {
-                        navigate("/my-cart");
-                      }}
-                    >
-                      My Cart
-                    </Typography>
-
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: "500",
-                        cursor: "pointer",
-                        fontSize: "15px",
-                        lineHeight: "18px",
-                        marginRight: "2rem",
-                      }}
-                      onClick={(event) => {
-                        navigate("/wishlist");
-                      }}
-                    >
-                      Wishlist
-                    </Typography>
-
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        fontWeight: "500",
-                        cursor: "pointer",
-                        fontSize: "15px",
-                        lineHeight: "18px",
-                        marginRight: "2rem",
-                      }}
-                      onClick={(event) => {
-                        navigate("/create-course");
-                      }}
-                    >
-                      Create Course
-                    </Typography>
-                  </Grid>
-                )}
-              </Grid>
-              {isCoursePage && (
-                <Grid
-                  item
-                  sx={{
-                    display: {
-                      xs: "none",
-                      sm: "flex",
-                      md: "flex",
-                      lg: "flex",
-                      xl: "flex",
-                    },
-                    alignItems: "center",
-                  }}
-                >
-                  {coursePercentage !== "undefined" && (
-                    <>
-                      <LinearProgressWithLabelReusable
-                        progressCount={coursePercentage}
-                      />
-                      <Button
-                        variant="contained"
-                        size="small"
-                        disabled={coursePercentage === "100" ? false : true}
-                        sx={{ marginLeft: "2.5rem" }}
-                      >
-                        Get Certificate
-                      </Button>
-                    </>
-                  )}
-                  <Avatar
-                    sx={{
-                      bgcolor: "#bdbdbd",
-                      ontSize: { uxl: "20px" },
-                      marginLeft: "2.5rem",
-                      cursor: "pointer",
-                      borderRadius: "10%",
-                    }}
-                    onClick={() => {
-                      navigate("/user-profile");
-                    }}
-                    variant="square"
-                  >
-                    {Username.charAt(0)}
-                  </Avatar>
-                </Grid>
-              )}
+            <Grid item sx={{ display: "flex", alignItems: "center" }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "500",
+                  cursor: "pointer",
+                  fontSize: "18px",
+                  lineHeight: "18px",
+                  marginRight: "2rem",
+                }}
+                onClick={(event) => {
+                  navigate("/");
+                }}
+              >
+                OptiGrit
+              </Typography>
             </Grid>
           </Toolbar>
         </AppBar>

@@ -1,12 +1,12 @@
-import userData from "./DummyData/userData";
+// import userData from "./DummyData/userData";
 import courseData from "./DummyData/courseData";
 import contestData from "./DummyData/contestData";
 import filterItem from "./FilterItem";
 
-const filteredData = (itemType, value) => {
+const filteredData = (itemType, value, taskUsersData) => {
   const data =
     itemType === "users"
-      ? userData
+      ? taskUsersData
       : itemType === "courses"
       ? courseData
       : contestData;

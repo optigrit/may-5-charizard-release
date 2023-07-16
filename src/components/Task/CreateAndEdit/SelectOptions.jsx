@@ -5,6 +5,9 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
+import { TaskAPI } from "../../../api/requests/tasks/taskAPI";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -20,8 +23,22 @@ const MenuProps = {
 export default function SelectOptions({
   selectedSections,
   setSelectedSections,
+  courseSelected,
 }) {
-  const options = ["option1", "option2", "option3", "option4", "option5"];
+  const [options, setOptions] = useState([]);
+
+  const getSectionsData = async () => {
+    if (courseSelected) {
+      try {
+        const data = await TaskAPI.getCourseSections(courseSelected);
+        setOptions(data);
+      } catch (err) {}
+    }
+  };
+
+  useEffect(() => {
+    getSectionsData();
+  }, [courseSelected]);
 
   const handleChange = (event) => {
     const {
@@ -59,14 +76,20 @@ export default function SelectOptions({
           value={selectedSections}
           onChange={handleChange}
           input={<OutlinedInput label="Select Sections" />}
-          renderValue={(selected) => selected.join(", ")}
+          renderValue={(selected) =>
+            options
+              .filter((name) => selected.includes(name.id))
+              .map((record) => record.sectionTitle)
+              .join(", ")
+          }
           MenuProps={MenuProps}
         >
-          {options &&
+          {courseSelected &&
+            options &&
             options.map((name) => (
-              <MenuItem key={name} value={name}>
-                <Checkbox checked={selectedSections.indexOf(name) > -1} />
-                <ListItemText primary={name} />
+              <MenuItem key={name.id} value={name.id}>
+                <Checkbox checked={selectedSections.indexOf(name.id) > -1} />
+                <ListItemText primary={name.sectionTitle} />
               </MenuItem>
             ))}
         </Select>

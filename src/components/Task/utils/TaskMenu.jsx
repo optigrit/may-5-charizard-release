@@ -10,10 +10,33 @@ import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
 import { useState } from "react";
 import AddTaskDetails from "../CreateAndEdit/AddTaskDetails";
 import TaskModal from "./TaskModal";
-import ViewTask from "../ViewTask/index.jsx";
+import { TaskAPI } from "../../../api/requests/tasks/taskAPI";
+import { useDispatch } from "react-redux";
+import { manipulateuserdata } from "../../../Redux/UserData/User-Action";
+import { SET_ALERT_DATA } from "../../../Redux/UserData/User-Constants";
 import { useNavigate } from "react-router-dom";
+import { manipulateTask } from "../../../Redux/Task/Task-Action";
+import {
+  DELETE_SUBTASK,
+  DELETE_TASK,
+} from "../../../Redux/Task/Task-Constants";
 
-export default function TaskMenu({ task, isParentTask }) {
+export default function TaskMenu({ task, isParentTask, subtask }) {
+  const dispatch = useDispatch();
+
+  const ALERT_TIME = 5000;
+  const handlealert = (text, type) => {
+    dispatch(
+      manipulateuserdata(SET_ALERT_DATA, {
+        text: text,
+        type: type,
+      })
+    );
+    setTimeout(() => {
+      dispatch(manipulateuserdata(SET_ALERT_DATA, { text: "", type: "" }));
+    }, ALERT_TIME);
+  };
+
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
   const [openModal, setOpenModal] = useState(false);
@@ -28,10 +51,38 @@ export default function TaskMenu({ task, isParentTask }) {
     setAnchorEl(null);
   };
 
+  const handleDeleteTask = async () => {
+    handleClose();
+    if (isParentTask) {
+      try {
+        const id = task.id;
+        const data = await TaskAPI.deleteTask(id);
+        dispatch(manipulateTask(DELETE_TASK, data[0]));
+        handlealert("Task Deleted Successfully", "success");
+      } catch (err) {
+        handlealert("Failed to Delete Task", "error");
+      }
+    } else if (!isParentTask) {
+      try {
+        const id = subtask.id;
+        const data = await TaskAPI.deleteSubTask(id);
+        dispatch(manipulateTask(DELETE_SUBTASK, data[0]));
+        handlealert("Subtask Deleted Successfully", "success");
+      } catch (err) {
+        handlealert("Failed to Subtask Task", "error");
+      }
+    }
+  };
+
   const handleViewTask = () => {
     handleClose();
-    if (isParentTask) navigate("/task/id");
-    else {
+    if (isParentTask) {
+      navigate(`/task/${task.id}`, {
+        state: {
+          id: task.id,
+        },
+      });
+    } else {
       setOpenModal(true);
       setClicked("view");
     }
@@ -71,12 +122,15 @@ export default function TaskMenu({ task, isParentTask }) {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem sx={{ color: "grey" }} onClick={handleViewTask}>
-          <ListItemIcon>
-            <VisibilityOutlinedIcon sx={{ color: "grey" }} />
-          </ListItemIcon>
-          <ListItemText>View</ListItemText>
-        </MenuItem>
+        {isParentTask && (
+          <MenuItem sx={{ color: "grey" }} onClick={handleViewTask}>
+            <ListItemIcon>
+              <VisibilityOutlinedIcon sx={{ color: "grey" }} />
+            </ListItemIcon>
+            <ListItemText>View</ListItemText>
+          </MenuItem>
+        )}
+
         <MenuItem sx={{ color: "grey" }} onClick={handleEditTask}>
           <ListItemIcon>
             <EditOutlinedIcon sx={{ color: "grey" }} />
@@ -84,7 +138,7 @@ export default function TaskMenu({ task, isParentTask }) {
           <ListItemText>Edit</ListItemText>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose} sx={{ color: "#e57373" }}>
+        <MenuItem onClick={handleDeleteTask} sx={{ color: "#e57373" }}>
           <ListItemIcon>
             <DeleteOutlinedIcon sx={{ color: "#e57373" }} />
           </ListItemIcon>
@@ -102,10 +156,9 @@ export default function TaskMenu({ task, isParentTask }) {
             setOpen={setOpenModal}
             editMode={true}
             isParentTask={isParentTask}
+            taskData={task}
+            subtask={subtask}
           />
-        )}
-        {clicked === "view" && (
-          <ViewTask setOpen={setOpenModal} isParentTask={isParentTask} />
         )}
       </TaskModal>
     </div>

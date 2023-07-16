@@ -1,20 +1,18 @@
-import TaskForm from "../utils/TaskForm";
+import TaskForm from "../utils/TaskForm/TaskForm";
 import { Stack, Divider, Button } from "@mui/material";
 import TaskHeader from "../utils/TaskHeader";
 import { useState } from "react";
 import AddSubTask from "./AddSubTask";
-import { useNavigate } from "react-router-dom";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
-const AddTaskDetails = ({ setOpen, editMode, isParentTask }) => {
+const AddTaskDetails = ({
+  setOpen,
+  editMode,
+  isParentTask,
+  taskData,
+  subtask,
+}) => {
   const [active, setActive] = useState("taskForm");
-  const navigate = useNavigate();
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (isParentTask) navigate("/create-task");
-    else if (active === "taskForm") setActive("subtaskDetails");
-  };
 
   const title = isParentTask
     ? editMode
@@ -45,7 +43,9 @@ const AddTaskDetails = ({ setOpen, editMode, isParentTask }) => {
         <TaskForm
           editMode={editMode}
           isParentTask={isParentTask}
-          handleSubmit={handleSubmit}
+          taskData={taskData}
+          subtaskData={subtask}
+          setOpen={setOpen}
         />
       )}
       {active === "subtaskDetails" && (

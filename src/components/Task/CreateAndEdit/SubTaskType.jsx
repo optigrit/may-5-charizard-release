@@ -6,10 +6,10 @@ import SelectOptions from "./SelectOptions";
 const SubtaskType = ({ type, selectedSections, setSelectedSections }) => {
   return (
     <Stack sx={{ width: "100%", height: "100%" }} spacing={2}>
-      <Stack sx={{height: "100%"}} spacing={3}>
-        <Stack sx={{height: "100%"}} spacing={0.5}>
+      <Stack sx={{ height: "100%" }} spacing={3}>
+        <Stack sx={{ height: "100%" }} spacing={0.5}>
           {type !== "text" ? (
-            <Stack  direction="row" justifyContent="space-between">
+            <Stack direction="row" justifyContent="space-between">
               <Stack direction="row" spacing={2}>
                 <Box sx={{ width: 320 }}>
                   <SearchAndAdd itemType={type} />
@@ -26,9 +26,9 @@ const SubtaskType = ({ type, selectedSections, setSelectedSections }) => {
                         height: "27.2px",
                         padding: "12px",
                       },
-                      '& .MuiOutlinedInput-root': {
-                        '&:hover fieldset': {
-                          borderColor: '#698aff',
+                      "& .MuiOutlinedInput-root": {
+                        "&:hover fieldset": {
+                          borderColor: "#698aff",
                         },
                       },
                     }}
@@ -39,9 +39,7 @@ const SubtaskType = ({ type, selectedSections, setSelectedSections }) => {
               </Stack>
             </Stack>
           ) : (
-            <Box sx={{height: "100%"}} >
               <TextEditor />
-            </Box>
           )}
         </Stack>
       </Stack>

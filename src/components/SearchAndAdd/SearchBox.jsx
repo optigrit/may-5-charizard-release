@@ -6,11 +6,27 @@ import filteredData from "./SearchFilters";
 import { manipulateTask } from "../../Redux/Task/Task-Action";
 import { SET_SELECTED_SUBTASK } from "../../Redux/Task/Task-Constants";
 import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { TaskAPI } from "../../api/requests/tasks/taskAPI";
+import { useEffect } from "react";
 
 function SearchBox({ itemType, input, setInput, setResults }) {
+  // API call for getting all the users
+  const [usersData, setUsersData] = useState([]);
+  const getAllTaskUsers = async () => {
+    try {
+      const data = await TaskAPI.getAllUsers();
+      setUsersData(data);
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    getAllTaskUsers();
+  }, []);
+
   const dispatch = useDispatch();
   const getResults = async (value) => {
-    const results = filteredData(itemType, value);
+    const results = filteredData(itemType, value, usersData);
     setResults(results);
   };
 

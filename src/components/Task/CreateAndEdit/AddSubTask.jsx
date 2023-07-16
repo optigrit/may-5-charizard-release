@@ -6,6 +6,7 @@ import SubtaskType from "./SubTaskType";
 const AddSubTask = () => {
   const [type, setType] = useState("");
   const [selectedSections, setSelectedSections] = useState([]);
+
   return (
     <Stack spacing={3} sx={{ height: "100%" }}>
       <Stack direction="row" spacing={2} alignItems="center">
